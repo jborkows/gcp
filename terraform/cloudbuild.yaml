@@ -15,3 +15,5 @@ steps:
         echo "Branch '$BRANCH_NAME' does not represent an oficial environment."
         echo "*******************************************************************************"
       fi
+options:
+  logging: CLOUD_LOGGING_ONLY
