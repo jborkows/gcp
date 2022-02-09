@@ -21,3 +21,8 @@ output "service_account" {
 output "firebase_page" {
   value = module.firebase.authDomain
 }
+
+
+output "firebase_id" {
+  value = module.firebase.appId
+}

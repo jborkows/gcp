@@ -12,7 +12,7 @@ steps:
   dir: 'terraform'
 - id: "plan"
   name: 'hashicorp/terraform:1.0.0'
-  args: ['apply']
+  args: ['apply','-var=PROJECT_ID=$PROJECT_ID','-auto-approve']
   dir: 'terraform'
 options:
   logging: CLOUD_LOGGING_ONLY
