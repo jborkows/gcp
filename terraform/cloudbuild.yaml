@@ -1,6 +1,10 @@
 steps:
-- name: 'bash'
+- id: "pwd"
+  name: 'bash'
   args: ['pwd']
+- name: 'bash'
+  id: 'ls'
+  args: ['ls']  
 - id: "init"
   name: 'hashicorp/terraform:1.0.0'
   args: ['init']
