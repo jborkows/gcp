@@ -1,5 +1,8 @@
 steps:
 - name: 'bash'
+  id: 'echo'
+  args: ['echo', '$PROJECT_ID']  
+- name: 'bash'
   id: 'ls'
   args: ['ls']  
   dir: 'terraform'
@@ -9,7 +12,7 @@ steps:
   dir: 'terraform'
 - id: "plan"
   name: 'hashicorp/terraform:1.0.0'
-  args: ['plan']
+  args: ['apply']
   dir: 'terraform'
 options:
   logging: CLOUD_LOGGING_ONLY
