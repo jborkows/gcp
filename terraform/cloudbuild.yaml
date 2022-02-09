@@ -1,15 +1,15 @@
 steps:
-- id: "pwd"
-  name: 'bash'
-  args: ['pwd']
 - name: 'bash'
   id: 'ls'
   args: ['ls']  
+  dir: 'terraform'
 - id: "init"
   name: 'hashicorp/terraform:1.0.0'
   args: ['init']
+  dir: 'terraform'
 - id: "plan"
   name: 'hashicorp/terraform:1.0.0'
   args: ['plan']
+  dir: 'terraform'
 options:
   logging: CLOUD_LOGGING_ONLY
