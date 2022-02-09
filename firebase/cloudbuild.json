@@ -11,5 +11,9 @@
          ],
          "dir": "firebase"
     }
-    ]
+    ],
+    "options":{
+        "logging": "CLOUD_LOGGING_ONLY"
+    }
+    
   }
