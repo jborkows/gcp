@@ -34,6 +34,7 @@ def main():
         print("Commiting using commit message '{}'".format(args[0]))
         runCommand("git", "add", ".")
         runCommand("git", "commit", "-m", "'{}'".format(args[0]))
+        runCommand("git", "push")
     print(args)
 
 if __name__ == "__main__":
