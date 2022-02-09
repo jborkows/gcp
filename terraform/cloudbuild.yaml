@@ -1,4 +1,7 @@
 steps:
+- id: "init"
+  name: 'hashicorp/terraform:0.14.2'
+  args: ['init']
 - id: 'tf apply'
   name: 'hashicorp/terraform:1.0.0'
   entrypoint: 'sh'

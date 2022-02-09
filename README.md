@@ -15,3 +15,7 @@ gcloud services enable \
 
  terraform import module.firebase."google_firebase_project"."default" coastal-idea-336409
  
+PROJECT_ID=coastal-idea-336409
+CLOUDBUILD_SA=service-1032380584635@gs-project-accounts.iam.gserviceaccount.com
+ gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member serviceAccount:$CLOUDBUILD_SA --role projects/coastal-idea-336409/roles/CustomRole
