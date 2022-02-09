@@ -4,6 +4,10 @@ terraform {
       source = "hashicorp/google"
       version = "4.8.0"
     }
+    google-beta = {
+        source = "hashicorp/google-beta"
+      version = "4.8.0"
+    }
   }
   backend "gcs" {
     bucket  = "coastal-idea-336409-infrastructur"
@@ -11,6 +15,12 @@ terraform {
   }
 }
 provider "google" {
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
+}
+
+provider "google-beta" {
   project = var.project_id
   region  = var.region
   zone    = var.zone
@@ -30,4 +40,17 @@ resource "google_storage_bucket" "bucket" {
   }
   force_destroy = true
 
+}
+
+module "firebase" {
+  source = "./modules/firebase"
+  project_id = var.project_id
+  project_name = data.google_project.project.name
+  region  = var.region
+  zone    = var.zone
+  location = var.firebase_config.location
+  bucket_name = var.firebase_config.bucket_name
+#   depends_on = [
+
+#   ]
 }

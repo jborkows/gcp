@@ -12,3 +12,6 @@ gcloud services enable \
   cloudresourcemanager.googleapis.com
 
  export GOOGLE_APPLICATION_CREDENTIALS=/home/jborkows/gcloud/coastal-idea-336409-abf53916995b.json
+
+ terraform import module.firebase."google_firebase_project"."default" coastal-idea-336409
+ 

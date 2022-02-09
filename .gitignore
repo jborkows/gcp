@@ -113,3 +113,7 @@ modules.xml
 *.tfstate
 **/.terraform
 .idea
+
+*.lock.hcl
+**/.firebase
+*.firebaserc
