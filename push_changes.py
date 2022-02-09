@@ -19,7 +19,7 @@ def runCommand(*commandAsArray):
     errors = stderr.decode("utf-8")
     if errors:
         print("Error calling {}".format(commandAsArray))
-        print(st)
+        print(stderr)
         sys.exit(-1)
     print(stdout.decode("utf-8"))    
 
