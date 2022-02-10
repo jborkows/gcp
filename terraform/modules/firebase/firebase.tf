@@ -13,7 +13,7 @@
 # module.firebase.google_firebase_project.default:
 resource "google_firebase_project" "default" {
     provider = google-beta
-    # display_name   = var.display_name
+    display_name   = var.display_name
     project        = var.project_id
 }
 

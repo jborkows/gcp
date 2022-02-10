@@ -6,12 +6,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCUvNosFyw-hfmfkGnFdWysgUFrXIIXoeg",
-  authDomain: "coastal-idea-336409.firebaseapp.com",
-  projectId: "coastal-idea-336409",
-  storageBucket: "coastal-idea-336409.appspot.com",
-  messagingSenderId: "1032380584635",
-  appId: "1:1032380584635:web:fe3ed53b7acd1b295dcf9e"
+  apiKey: bbbb,
+  authDomain: bbbb,
+  projectId: bbbb,
+  storageBucket:bbb,
+  messagingSenderId: bbb,
+  appId: bbbb
 };
 
 // Initialize Firebase
