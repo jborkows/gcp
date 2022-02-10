@@ -8,7 +8,7 @@ variable "project_name" {
 
 variable "display_name" {
     type = string
-    default = "HomeApp-not working"
+    default = "HomeApp"
 }
 
 
