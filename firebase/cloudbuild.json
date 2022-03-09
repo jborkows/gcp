@@ -3,6 +3,13 @@
       {
         "name":"gcr.io/${PROJECT_ID}/react-base:1.0",
         "args":[
+          "npm","install"
+        ],
+        "dir": "firebase/my-app"
+      },
+      {
+        "name":"gcr.io/${PROJECT_ID}/react-base:1.0",
+        "args":[
           "npm","run","build"
         ],
         "dir": "firebase/my-app"
