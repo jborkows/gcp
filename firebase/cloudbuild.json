@@ -1,14 +1,14 @@
 {
     "steps": [
       {
-        "name":"gcr.io/$PROJECT_ID/react-base:1.2",
+        "name":"gcr.io/$PROJECT_ID/react-base:1.4",
         "args":[
-          "npm","install"
+          "npm","ci"
         ],
         "dir": "firebase/my-app"
       },
       {
-        "name":"gcr.io/$PROJECT_ID/react-base:1.2",
+        "name":"gcr.io/$PROJECT_ID/react-base:1.4",
         "args":[
           "npm","run","build"
         ],
