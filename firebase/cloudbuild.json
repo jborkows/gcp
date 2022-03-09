@@ -1,10 +1,10 @@
 {
     "steps": [
       {
-        "name":"gcr.io/$PROJECT_ID/react-base:1.4",
+        "name":"gcr.io/$PROJECT_ID/react-base:1.5",
         "entrypoint": "/bin/sh",
         "args":[
-          "-c", "NODE_PATH=/usr/lib/node_modules:$$NODE_PATH npm ci --verbose && NODE_PATH=/usr/lib/node_modules:$$NODE_PATH  npm run build"
+          "-c", "cp -R /my-app/node_modules . && npm run build"
         ],
         "dir": "firebase/my-app"
       },
