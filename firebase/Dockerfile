@@ -3,4 +3,4 @@ WORKDIR /my-app
 COPY my-app/package.json /my-app/
 COPY my-app/package-lock.json /my-app/
 RUN npm ci
-RUN npm ls --depth=0 | tail -n +2 | sed 's/+-- //g' | sed 's/`-- //g' | awk '!my-app' | xargs  -I {} echo {};
+# RUN npm ls --depth=0 | tail -n +2 | sed 's/+-- //g' | sed 's/`-- //g' | awk '!my-app' | xargs  -I {} echo {};
