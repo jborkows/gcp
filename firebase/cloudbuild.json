@@ -1,14 +1,14 @@
 {
     "steps": [
       {
-        "name":"gcr.io/${PROJECT_ID}/react-base:1.2",
+        "name":"node:17.6.0-alpine",
         "args":[
           "npm","install"
         ],
         "dir": "firebase/my-app"
       },
       {
-        "name":"gcr.io/${PROJECT_ID}/react-base:1.2",
+        "name":"node:17.6.0-alpine",
         "args":[
           "npm","run","build"
         ],
