@@ -4,7 +4,7 @@
         "name":"gcr.io/$PROJECT_ID/react-base:1.4",
         "entrypoint": "/bin/sh",
         "args":[
-          "-c", "NODE_PATH=/usr/lib/node_modules:$NODE_PATH npm ci --verbose && NODE_PATH=/usr/lib/node_modules:$NODE_PATH  npm run build"
+          "-c", "NODE_PATH=/usr/lib/node_modules:$$NODE_PATH npm ci --verbose && NODE_PATH=/usr/lib/node_modules:$$NODE_PATH  npm run build"
         ],
         "dir": "firebase/my-app"
       },
