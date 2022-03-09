@@ -3,7 +3,7 @@
       {
         "name":"gcr.io/$PROJECT_ID/react-base:1.4",
         "args":[
-          "npm","ci", "-v"
+          "npm","ci", "--verbose"
         ],
         "dir": "firebase/my-app"
       },
