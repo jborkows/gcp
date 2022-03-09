@@ -3,7 +3,7 @@
      {
         "name": "gcr.io/cloud-builders/docker",
         "args": [
-          "build", "-t", "gcr.io/$PROJECT_ID/react-base", "."
+          "build", "-t", "gcr.io/$PROJECT_ID/react-base:1.0", "."
          ],
          "dir": "firebase"
     }
