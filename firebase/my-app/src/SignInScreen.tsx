@@ -40,7 +40,7 @@ export const SignInScreen = ()=>{
     }
     return (
       <div>
-        <h1>My App</h1>
+        <h1>My App2</h1>
         <p>Welcome {auth.getAuth()?.currentUser?.displayName}! You are now signed-in!</p>
         <a onClick={() => auth.getAuth().signOut()}>Sign-out</a>
       </div>
