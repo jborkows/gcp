@@ -25,3 +25,4 @@ variable "firebase_config" {
     location = "europe-central2"
   }
 }
+

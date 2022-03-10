@@ -28,6 +28,10 @@ provider "google-beta" {
 
 data "google_project" "project" {}
 data "google_storage_project_service_account" gcs_account{}
+data "google_service_account" "gcp_account" {
+  account_id = "1032380584635-compute@developer.gserviceaccount.com"
+  project = var.project_id
+}
 
 # Create a Google Cloud Storage Bucket
 resource "google_storage_bucket" "bucket" {
@@ -53,4 +57,12 @@ module "firebase" {
 #   depends_on = [
 
 #   ]
+}
+
+module "triggers" {
+  source = "./modules/triggers"
+  owner = "jborkows"
+  repository_name="gcp"
+  project_id = var.project_id
+  service_account = data.google_service_account.gcp_account.id
 }
