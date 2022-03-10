@@ -13,9 +13,15 @@ output "project_name" {
 }
 
 
-output "service_account" {
+output "storage_service_account" {
   description = "service account"
   value = data.google_storage_project_service_account.gcs_account.email_address
+}
+
+
+output "cloud_build_service_account" {
+  description = "cloud build service account"
+  value =data.google_service_account.gcp_account.name
 }
 
 output "firebase_page" {
