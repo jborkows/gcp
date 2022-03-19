@@ -11,3 +11,6 @@ variable "service_account" {
 variable "region" {
     type = string
 }
+
+variable "image_digest" {
+}

@@ -26,7 +26,7 @@ resource "google_cloud_run_service" "recipes" {
     spec {
       service_account_name = google_service_account.recipes_worker.email
       containers {
-        image = data.external.image_digest.result.image
+        image = var.image_digest.result.image
         # env {
         #   name  = "BUCKET_NAME"
         #   value = google_storage_bucket.media.name

@@ -8,12 +8,23 @@ terraform {
         source = "hashicorp/google-beta"
       version = "4.8.0"
     }
+
+    external = {
+      source = "hashicorp/external"
+      version = "2.2.2"
+    }
   }
   backend "gcs" {
     bucket  = "coastal-idea-336409-infrastructur"
     prefix  = "terraform/state"
   }
 }
+
+
+provider "external" {
+  # Configuration options
+}
+
 provider "google" {
   project = var.project_id
   region  = var.region
@@ -32,6 +43,11 @@ data "google_service_account" "gcp_account" {
   account_id = "1032380584635-compute@developer.gserviceaccount.com"
   project = var.project_id
 }
+# WORKAROUND 
+data "external" "recipes_digest" {
+  program = ["bash", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
+}
+# END WORKAROUND
 
 # Create a Google Cloud Storage Bucket
 resource "google_storage_bucket" "bucket" {
@@ -75,9 +91,14 @@ resource "google_app_engine_application" "app" {
   database_type = "CLOUD_FIRESTORE"
 }
 
+
+
 module "recipes"{
   source = "./modules/recipes"
    project_id = var.project_id
    service_account="recipes-worker"
    region=var.region
+   image_digest=data.external.recipes_digest
 }
+
+
