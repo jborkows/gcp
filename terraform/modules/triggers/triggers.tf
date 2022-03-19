@@ -72,6 +72,7 @@ resource "google_cloudbuild_trigger" "firebase-react-build" {
 resource "google_cloudbuild_trigger" "recipes" {
   name = "recipes"
   project = var.project_id
+  description = "dish recipes"
   provider = google-beta
   filename = "recipes/cloudbuild.yaml"
   service_account = var.service_account
