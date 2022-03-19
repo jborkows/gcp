@@ -1,5 +1,5 @@
 resource "google_service_account" "recipes_worker" {
-  account_id   = "recipes-worker"
+  account_id   = var.service_account
   display_name = "Recipes worker SA"
 }
 
@@ -9,6 +9,7 @@ resource "google_project_iam_binding" "service_permissions" {
     "run.invoker"
   ])
 
+  project = var.project_id
   role       = "roles/${each.key}"
   members    = [local.recipes_worker_sa]
   depends_on = [google_service_account.recipes_worker]
@@ -50,7 +51,6 @@ resource "google_cloud_run_service" "recipes" {
       }
     }
 
-  depends_on = [google_project_service.run]
 }
 
 # Set service public
@@ -75,7 +75,7 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
 
 # WORKAROUND 
 data "external" "image_digest" {
-  program = ["bash", "../scripts/get_latest_tag.sh", var.project, "recipes"]
+  program = ["bash", "../scripts/get_latest_tag.sh", var.project_id, "recipes"]
 }
 # END WORKAROUND
 
