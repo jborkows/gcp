@@ -1,6 +1,6 @@
 steps:
  - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'gcr.io/$PROJECT_ID/recipes', '.']
+   args: ['build', '-t', 'gcr.io/$PROJECT_ID/recipes:latest', '.']
    dir: 'recipes'
 # - id: "init"
 #   name: 'hashicorp/terraform:1.0.0'

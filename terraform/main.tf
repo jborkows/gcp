@@ -93,12 +93,12 @@ resource "google_app_engine_application" "app" {
 
 
 
-module "recipes"{
-  source = "./modules/recipes"
-   project_id = var.project_id
-   service_account="recipes-worker"
-   region=var.region
-   image_digest=data.external.recipes_digest
-}
+# module "recipes"{
+#   source = "./modules/recipes"
+#    project_id = var.project_id
+#    service_account="recipes-worker"
+#    region=var.region
+#    image_digest=data.external.recipes_digest
+# }
 
 
