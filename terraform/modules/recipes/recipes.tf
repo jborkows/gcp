@@ -27,14 +27,6 @@ resource "google_cloud_run_service" "recipes" {
       service_account_name = google_service_account.recipes_worker.email
       containers {
         image = var.image
-        # env {
-        #   name  = "BUCKET_NAME"
-        #   value = google_storage_bucket.media.name
-        # }
-        # env {
-        #   name  = "FUNCTION_NAME"
-        #   value = google_cloudfunctions_function.function.https_trigger_url
-        # }
       }
     }
   }
