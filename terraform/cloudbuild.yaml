@@ -4,7 +4,7 @@ steps:
   args: ['echo', '$PROJECT_ID']  
 - name: 'bash'
   id: 'ls'
-  args: ['ls']  
+  args: ['ls',"-R"]  
   dir: 'terraform'
 - id: "init"
   name: 'hashicorp/terraform:1.0.0'
