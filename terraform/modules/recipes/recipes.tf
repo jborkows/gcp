@@ -57,7 +57,7 @@ data "google_iam_policy" "noauth" {
 }
 
 resource "google_cloud_run_service_iam_policy" "recipes_noauth" {
-   location = "europe-central2-a"
+   location = google_cloud_run_service.recipes.location
   project  = google_cloud_run_service.recipes.project
   service  = google_cloud_run_service.recipes.name
 
