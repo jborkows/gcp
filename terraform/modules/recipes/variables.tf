@@ -12,5 +12,6 @@ variable "region" {
     type = string
 }
 
-variable "image_digest" {
+variable "image" {
+    type = string 
 }
