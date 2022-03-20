@@ -21,3 +21,12 @@ CLOUDBUILD_SA=service-1032380584635@gs-project-accounts.iam.gserviceaccount.com
     --member serviceAccount:$CLOUDBUILD_SA --role projects/coastal-idea-336409/roles/CustomRole
 
 gcr.io    
+
+ gcloud projects add-iam-policy-binding coastal-idea-336409 \
+ --member=serviceAccount:1032380584635@cloudbuild.gserviceaccount.com \
+ --role=roles/resourcemanager.projectIamAdmin
+
+ gcloud projects get-iam-policy coastal-idea-336409 \
+--flatten="bindings[].members" \
+--format='table(bindings.role)' \
+--filter="bindings.members:serviceAccount:1032380584635@cloudbuild.gserviceaccount.com"

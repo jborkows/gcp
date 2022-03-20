@@ -45,6 +45,7 @@ resource "google_cloud_run_service" "recipes" {
 
 }
 
+
 # Set service public
 data "google_iam_policy" "noauth" {
   binding {
@@ -56,7 +57,7 @@ data "google_iam_policy" "noauth" {
 }
 
 resource "google_cloud_run_service_iam_policy" "recipes_noauth" {
-#   region = google_cloud_run_service.recipes.location
+   location = google_cloud_run_service.recipes.location
   project  = google_cloud_run_service.recipes.project
   service  = google_cloud_run_service.recipes.name
 
