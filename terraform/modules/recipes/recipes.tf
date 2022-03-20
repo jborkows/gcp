@@ -38,7 +38,7 @@ resource "google_cloud_run_service" "recipes" {
 
  metadata {
       annotations = {
-        "autoscaling.knative.dev/maxScale"      = "5"
+        "autoscaling.knative.dev/maxScale"      = "3"
         "run.googleapis.com/client-name"        = "terraform"
       }
     }
