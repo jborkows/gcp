@@ -45,7 +45,7 @@ data "google_service_account" "gcp_account" {
 }
 # WORKAROUND 
 data "external" "recipes_digest" {
-  program = ["bash", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
+  program = ["/bin/bash", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
 }
 # END WORKAROUND
 
@@ -98,8 +98,8 @@ module "recipes"{
    project_id = var.project_id
    service_account="recipes-worker"
    region=var.region
-  #  image=data.external.recipes_digest.result.image
-   image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
+   image=data.external.recipes_digest.result.image
+  #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
 }
 
 
