@@ -45,7 +45,7 @@ data "google_service_account" "gcp_account" {
 }
 # WORKAROUND 
 data "external" "recipes_digest" {
-  program = ["/bin/sh", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
+  program = ["bash", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
 }
 # END WORKAROUND
 
