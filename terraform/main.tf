@@ -2,17 +2,17 @@ terraform {
   required_providers {
     google = {
       source = "hashicorp/google"
-      version = "4.8.0"
+      version = "4.14.0"
     }
     google-beta = {
         source = "hashicorp/google-beta"
-      version = "4.8.0"
+      version = "4.14.0"
     }
 
-    external = {
-      source = "hashicorp/external"
-      version = "2.2.2"
-    }
+    # external = {
+    #   source = "hashicorp/external"
+    #   version = "2.2.2"
+    # }
   }
   backend "gcs" {
     bucket  = "coastal-idea-336409-infrastructur"
@@ -21,9 +21,9 @@ terraform {
 }
 
 
-provider "external" {
-  # Configuration options
-}
+# provider "external" {
+#   # Configuration options
+# }
 
 provider "google" {
   project = var.project_id
@@ -45,7 +45,7 @@ data "google_service_account" "gcp_account" {
 }
 # WORKAROUND 
 data "external" "recipes_digest" {
-  program = ["/bin/sh", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
+  program = ["bash", "scripts/get_latest_tag.sh", var.project_id, "recipes"]
 }
 # END WORKAROUND
 
@@ -93,13 +93,13 @@ resource "google_app_engine_application" "app" {
 
 
 
-module "recipes"{
-  source = "./modules/recipes"
-   project_id = var.project_id
-   service_account="recipes-worker"
-   region=var.region
-  #  image=data.external.recipes_digest.result.image
-   image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
-}
+# module "recipes"{
+#   source = "./modules/recipes"
+#    project_id = var.project_id
+#    service_account="recipes-worker"
+#    region=var.region
+#   #  image=data.external.recipes_digest.result.image
+#    image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
+# }
 
 

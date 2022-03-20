@@ -54,14 +54,14 @@ data "google_iam_policy" "noauth" {
     ]
   }
 }
+# v1/projects/coastal-idea-336409/locations/europe-central2/services/recipes
+# resource "google_cloud_run_service_iam_policy" "noauth" {
+#   location    = google_cloud_run_service.recipes.location
+#   project     = google_cloud_run_service.recipes.project
+#   service     = google_cloud_run_service.recipes.name
 
-resource "google_cloud_run_service_iam_policy" "noauth" {
-  location    = google_cloud_run_service.recipes.location
-  project     = google_cloud_run_service.recipes.project
-  service     = google_cloud_run_service.recipes.name
-
-  policy_data = data.google_iam_policy.noauth.policy_data
-}
+#   policy_data = data.google_iam_policy.noauth.policy_data
+# }
 
 
 

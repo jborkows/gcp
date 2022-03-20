@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # WORKAROUND SCRIPT
 
@@ -17,6 +17,7 @@ PROJECT=$1
 IMAGE=$2
 
 # deep JSON is invalid for terraform, so serve flat value
-LATEST=`gcloud container images describe gcr.io/${PROJECT}/${IMAGE}:latest  --format="value(image_summary.fully_qualified_digest)" | tr -d '\n'`
+LATEST=$(gcloud container images describe gcr.io/${PROJECT}/${IMAGE}:latest  --format="value(image_summary.fully_qualified_digest)" | tr -d '\n')
+GCLOUD_CCC=$(gcloud version --ongoing 2>&1)
 # echo "{\"image\": \"${LATEST}\"}"
-echo "{\"project\": \"${PROJECT}\", \"image\": \"${LATEST}\", \"name\": \"${IMAGE}\"}"
+echo "{\"project\": \"${PROJECT}\", \"image\": \"${LATEST}\", \"name\": \"${IMAGE}\",\"xxx\": \"${GCLOUD_CCC}\"}"
