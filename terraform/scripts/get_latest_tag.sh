@@ -16,8 +16,13 @@
 PROJECT=$1
 IMAGE=$2
 
+GCLOUD_PATH=/snap/bin/gcloud
+
 # deep JSON is invalid for terraform, so serve flat value
 LATEST=$(gcloud container images describe gcr.io/${PROJECT}/${IMAGE}:latest  --format="value(image_summary.fully_qualified_digest)" | tr -d '\n')
 GCLOUD_CCC=$(gcloud version --ongoing 2>&1)
+
 # echo "{\"image\": \"${LATEST}\"}"
-echo "{\"project\": \"${PROJECT}\", \"image\": \"${LATEST}\", \"name\": \"${IMAGE}\",\"xxx\": \"${GCLOUD_CCC}\"}"
+# SNAP_DIR=$(ls /snap/bin --format=comma |  sed -e 's/"/\n\,"/g' )
+SNAP_DIR=$(which terraform )
+echo "{\"project\": \"${PROJECT}\", \"image\": \"${LATEST}\", \"name\": \"${GCLOUD_CCC}\",\"xxx\": \"${SNAP_DIR}\", \"path\": \"${PATH}\", \"user\": \"${USER}\"}"
