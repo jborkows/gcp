@@ -51,10 +51,10 @@ data "google_container_registry_image" "recipes" {
   tag = "latest"
 }
 
-# WORKAROUND 
-data "external" "recipes_digest" {
-  program = ["bash", "${path.module}/scripts/get_latest_tag.sh", var.project_id, "recipes"]
-}
+# # WORKAROUND 
+# data "external" "recipes_digest" {
+#   program = ["bash", "${path.module}/scripts/get_latest_tag.sh", var.project_id, "recipes"]
+# }
 # END WORKAROUND
 
 # Create a Google Cloud Storage Bucket
