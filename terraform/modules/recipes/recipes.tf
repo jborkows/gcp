@@ -67,6 +67,7 @@ resource "google_cloud_run_service_iam_policy" "policy" {
                    {
                        members = [
                            "allAuthenticatedUsers",
+                          "allUsers"
                         ]
                        role    = "roles/run.invoker"
                     }
