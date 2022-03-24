@@ -2,6 +2,9 @@ steps:
  - name: 'gcr.io/cloud-builders/docker'
    args: ["build", "-t", "gcr.io/$PROJECT_ID/recipes:latest", "."]
    dir: 'recipes'
+- name: 'gcr.io/cloud-builders/docker'
+   args: ["push", "push", "gcr.io/$PROJECT_ID/recipes:latest"]
+   dir: 'recipes'  
  - id: "init"
    name: 'hashicorp/terraform:1.0.0'
    args: ['init']
@@ -10,6 +13,6 @@ steps:
    name: 'hashicorp/terraform:1.0.0'
    args: ['apply','-var=project_id=$PROJECT_ID','-auto-approve']
    dir: 'terraform'
-images: ["gcr.io/$PROJECT_ID/recipes"]
+# images: ["gcr.io/$PROJECT_ID/recipes"]
 options:
   logging: CLOUD_LOGGING_ONLY
