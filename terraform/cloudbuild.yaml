@@ -7,13 +7,11 @@ steps:
   args: ['ls',"-R"]  
   dir: 'terraform'
 - id: "init"
-  # name: 'hashicorp/terraform:1.1.7'
-  name: "gcr.io/$PROJECT_ID/terraformbuild:1.0"
+  name: 'hashicorp/terraform:1.1.7'
   args: ['init']
   dir: 'terraform'
 - id: "plan"
-  # name: 'hashicorp/terraform:1.1.7'
-  name: "gcr.io/$PROJECT_ID/terraformbuild:1.0"
+  name: 'hashicorp/terraform:1.1.7'
   args: ['apply','-var=project_id=$PROJECT_ID','-auto-approve']
   dir: 'terraform'
 options:
