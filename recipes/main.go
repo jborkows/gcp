@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+        "strings"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -67,7 +68,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
                         log.Fatalf("error initializing app: %v\n", err)
                 }
         client, err := app.Auth(ctx)
-        idToken := r.Header.Get("Authorization")
+        textLogin := r.Header.Get("Authorization")
+        idToken:=strings.ReplaceAll(textLogin, "Bearer ","")
         token, err := client.VerifyIDToken(ctx, idToken)
 
         if err != nil {
