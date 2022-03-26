@@ -30,7 +30,8 @@ const Foo = ()=>{
             // the content type header value is usually auto-set
             // depending on the request body
             "Content-Type": "text/plain;charset=UTF-8",
-            "Authorization": token
+            "Authorization": `Bearer ${token}`,
+            "AuthorizationX": token
           },
         });
         setText(`${promise}`)
