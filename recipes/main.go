@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
         "strings"
+        "regexp"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -69,9 +70,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
                 }
         client, err := app.Auth(ctx)
         reqToken := r.Header.Get("Authorization")
-        log.Printf("Request token: %v\n", reqToken)
-        splitToken := strings.Split(strings.TrimSpace(reqToken), "Bearer")
-        idToken := strings.TrimSpace(splitToken[0])
+        tokenExtractor := regexp.MustCompile(`[Bb]earer (?P<token>.+)`)
+        matches := tokenExtractor.FindStringSubmatch(reqToken)
+        if matches == nil {
+                log.Fatalf("Cannot extract bearer: %v\n", reqToken)
+        }
+        idTokenIndex := tokenExtractor.SubexpIndex("token")
+        idToken := matches[idTokenIndex]
         log.Printf("Id token: %v\n", idToken)
         token, err := client.VerifyIDToken(ctx, idToken)
 
