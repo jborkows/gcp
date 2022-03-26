@@ -68,8 +68,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
                         log.Fatalf("error initializing app: %v\n", err)
                 }
         client, err := app.Auth(ctx)
-        textLogin := r.Header.Get("Authorization")
-        idToken:=strings.ReplaceAll(textLogin, "Bearer ","")
+        reqToken := r.Header.Get("Authorization")
+        splitToken := strings.Split(strings.TrimSpace(reqToken), "Bearer")
+        idToken := strings.TrimSpace(splitToken[1])
         token, err := client.VerifyIDToken(ctx, idToken)
 
         if err != nil {
