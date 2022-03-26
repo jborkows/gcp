@@ -18,16 +18,19 @@ const uiConfig = {
     },
   };
 
+
 const Foo = ()=>{
     const [text,setText] = useState("")
     useEffect(()=>{
       async function fetcher() {
+        const token = await auth.getAuth().currentUser!!.getIdToken()
         let promise = await fetch("/helloworld", {
           method: "GET", // POST, PUT, DELETE, etc.
           headers: {
             // the content type header value is usually auto-set
             // depending on the request body
-            "Content-Type": "text/plain;charset=UTF-8"
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Authorization": token
           },
         });
         setText(`${promise}`)
