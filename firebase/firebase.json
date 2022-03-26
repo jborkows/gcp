@@ -10,7 +10,7 @@
       {
         "source": "/helloworld",
         "run": {
-          "serviceId": "recipes",  
+          "serviceId": "recipe",  
           "region": "europe-central2"    
         }
       }, 
