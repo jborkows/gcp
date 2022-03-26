@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import * as firebase from "firebase/app";
 import * as auth from  "firebase/auth";
+import { getRedirectResult, GoogleAuthProvider } from 'firebase/auth';
 
 const uiConfig = {
     // Popup signin flow rather than redirect flow.
@@ -23,7 +24,15 @@ const Foo = ()=>{
     const [text,setText] = useState("")
     useEffect(()=>{
       async function fetcher() {
-        const token = await auth.getAuth().currentUser!!.getIdToken()
+        const idToken = await auth.getAuth()!!.currentUser!!.getIdToken()
+
+  
+  let result = await getRedirectResult(auth.getAuth()!!)!!
+  
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result!!);
+    const token = credential!!.accessToken!!;
+
         let promise = await fetch("/helloworld", {
           method: "GET", // POST, PUT, DELETE, etc.
           headers: {
@@ -31,7 +40,8 @@ const Foo = ()=>{
             // depending on the request body
             "Content-Type": "text/plain;charset=UTF-8",
             "Authorization": `Bearer ${token}`,
-            "AuthorizationX": token
+            "AuthorizationX": token,
+            "AuthorizationId": idToken
           },
         });
         setText(`${promise}`)
