@@ -37,7 +37,7 @@ output "firebase_id" {
 #   value = data.external.recipes_digest.result.image
 # }
 
-output "recipes_page" {
-  value = module.recipes.service_url
-}
+# output "recipes_page" {
+#   value = module.recipes.service_url
+# }
 
