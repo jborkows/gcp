@@ -57,39 +57,39 @@ resource "google_cloud_run_service" "recipe_svc" {
 # }
 # v1/projects/coastal-idea-336409/locations/europe-central2/services/recipe
 
-resource "google_cloud_run_service_iam_policy" "policy" {
-  location = google_cloud_run_service.recipe_svc.location
-  project = google_cloud_run_service.recipe_svc.project
-  service = google_cloud_run_service.recipe_svc.name
-  policy_data = jsonencode(
-            {
-               bindings = [
-                   {
-                       members = [
-                           "allAuthenticatedUsers",
-                          "allUsers"
-                        ]
-                       role    = "roles/run.invoker"
-                    }
-                ]
-            }
-        )
-    depends_on = [
-      google_cloud_run_service.recipe_svc,
-      google_service_account.recipes_worker
-    ]
-}
-
-# resource "google_cloud_run_service_iam_member" "run_all_users" {
-#   service  =  google_cloud_run_service.recipes.name
-#   location =  google_cloud_run_service.recipes.location
-#   project = var.project_id
-#   role     = "roles/run.invoker"
-#   member   = "allUsers"
-#   depends_on = [
-#     google_cloud_run_service.recipes
-#   ]
+# resource "google_cloud_run_service_iam_policy" "policy" {
+#   location = google_cloud_run_service.recipe_svc.location
+#   project = google_cloud_run_service.recipe_svc.project
+#   service = google_cloud_run_service.recipe_svc.name
+#   policy_data = jsonencode(
+#             {
+#                bindings = [
+#                    {
+#                        members = [
+#                            "allAuthenticatedUsers",
+#                           "allUsers"
+#                         ]
+#                        role    = "roles/run.invoker"
+#                     }
+#                 ]
+#             }
+#         )
+#     depends_on = [
+#       google_cloud_run_service.recipe_svc,
+#       google_service_account.recipes_worker
+#     ]
 # }
+
+resource "google_cloud_run_service_iam_member" "service_privs" {
+  service  =  google_cloud_run_service.recipes.name
+  location =  google_cloud_run_service.recipes.location
+  project = var.project_id
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+  depends_on = [
+    google_cloud_run_service.recipes
+  ]
+}
 
 locals {
   deployment_name = "recipe"
