@@ -69,8 +69,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
                 }
         client, err := app.Auth(ctx)
         reqToken := r.Header.Get("Authorization")
+        log.Printf("Request token: %v\n", reqToken)
         splitToken := strings.Split(strings.TrimSpace(reqToken), "Bearer")
         idToken := strings.TrimSpace(splitToken[0])
+        log.Printf("Id token: %v\n", idToken)
         token, err := client.VerifyIDToken(ctx, idToken)
 
         if err != nil {
