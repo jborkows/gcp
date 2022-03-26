@@ -6,7 +6,7 @@ steps:
    args: ["push", "gcr.io/$PROJECT_ID/recipes:latest"]
    dir: 'recipes'  
  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-   args: ['gcloud', 'beta', 'build', 'triggers', '--project=${PROJECT}', 'run', 'terraform', '--branch', "${BRANCH_NAME}"]
+   args: ['gcloud', 'beta', 'build', 'triggers', '--project=${PROJECT_ID}', 'run', 'terraform', '--branch', "${BRANCH_NAME}"]
   #  gcloud beta builds triggers run --project=PROJECT_ID
 # images: ["gcr.io/$PROJECT_ID/recipes"]
 options:
