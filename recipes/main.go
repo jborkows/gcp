@@ -31,8 +31,8 @@ func main() {
 	}
 }
 
-func getUser(ctx context.Context, app *firebase.App, ) *auth.UserRecord {
-	uid := "some_string_uid"
+func getUser(ctx context.Context, app *firebase.App,uid string ) *auth.UserRecord {
+	
 
 	// [START get_user_golang]
 	// Get an auth client from the firebase.App
@@ -80,7 +80,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
         log.Printf("Verified ID token: %v\n", token)
        
 
-        // user := getUser(context.Background(), app)
+        user := getUser(context.Background(), app, token.UID)
        
 
         // app, err := firebase.NewApp(context.Background(), nil)
@@ -99,5 +99,5 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// log.Printf("Verified ID token: %v\n", token)
 
-	fmt.Fprintf(w, "AAxxxA %s!\n", name)
+	fmt.Fprintf(w, "AAxxxA %s %s!\n", name, user.DisplayName)
 }
