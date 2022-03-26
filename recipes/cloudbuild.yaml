@@ -5,14 +5,7 @@ steps:
  - name: 'gcr.io/cloud-builders/docker'
    args: ["push", "gcr.io/$PROJECT_ID/recipes:latest"]
    dir: 'recipes'  
- - id: "init"
-   name: 'hashicorp/terraform:1.0.0'
-   args: ['init']
-   dir: 'terraform'
- - id: "plan"
-   name: 'hashicorp/terraform:1.0.0'
-   args: ['apply','-var=project_id=$PROJECT_ID','-auto-approve']
-   dir: 'terraform'
+  #  gcloud beta builds triggers run --project=PROJECT_ID
 # images: ["gcr.io/$PROJECT_ID/recipes"]
 options:
   logging: CLOUD_LOGGING_ONLY

@@ -55,7 +55,7 @@ resource "google_cloud_run_service" "recipe_svc" {
 #     ]
 #   }
 # }
-
+# v1/projects/coastal-idea-336409/locations/europe-central2/services/recipe
 
 resource "google_cloud_run_service_iam_policy" "policy" {
   location = google_cloud_run_service.recipe_svc.location
@@ -66,7 +66,7 @@ resource "google_cloud_run_service_iam_policy" "policy" {
                bindings = [
                    {
                        members = [
-                           "allAuthenticatedUsers",
+                          #  "allAuthenticatedUsers",
                           "allUsers"
                         ]
                        role    = "roles/run.invoker"
