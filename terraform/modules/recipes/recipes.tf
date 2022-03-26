@@ -57,27 +57,37 @@ resource "google_cloud_run_service" "recipe_svc" {
 # }
 # v1/projects/coastal-idea-336409/locations/europe-central2/services/recipe
 
-resource "google_cloud_run_service_iam_policy" "policy" {
-  location = google_cloud_run_service.recipe_svc.location
-  project = google_cloud_run_service.recipe_svc.project
-  service = google_cloud_run_service.recipe_svc.name
-  policy_data = jsonencode(
-            {
-               bindings = [
-                   {
-                       members = [
-                           "allAuthenticatedUsers",
-                          # "allUsers"
-                        ]
-                       role    = "roles/run.invoker"
-                    }
-                ]
-            }
-        )
-    depends_on = [
-      google_cloud_run_service.recipe_svc,
-      google_service_account.recipes_worker
-    ]
+# resource "google_cloud_run_service_iam_policy" "policy" {
+#   location = google_cloud_run_service.recipe_svc.location
+#   project = google_cloud_run_service.recipe_svc.project
+#   service = google_cloud_run_service.recipe_svc.name
+#   policy_data = jsonencode(
+#             {
+#                bindings = [
+#                    {
+#                        members = [
+#                            "allAuthenticatedUsers",
+#                           # "allUsers"
+#                         ]
+#                        role    = "roles/run.invoker"
+#                     }
+#                 ]
+#             }
+#         )
+#     depends_on = [
+#       # google_cloud_run_service.recipe_svc,
+#       google_service_account.recipes_worker
+#     ]
+# }
+
+resource "google_cloud_run_service_iam_binding" "binding" {
+  location = google_cloud_run_service.default.location
+  project = google_cloud_run_service.default.project
+  service = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
+  members = [
+     "allAuthenticatedUsers",
+  ]
 }
 
 # resource "google_cloud_run_service_iam_member" "service_privs" {
