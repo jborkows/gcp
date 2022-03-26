@@ -6,7 +6,7 @@ resource "google_service_account" "recipes_worker" {
 # Set permissions
 resource "google_project_iam_binding" "service_permissions" {
   for_each = toset([
-    # "run.invoker",
+    "run.invoker",
     "firebaseauth.users.get"
   ])
 
@@ -59,28 +59,28 @@ resource "google_cloud_run_service" "recipe_svc" {
 # }
 # v1/projects/coastal-idea-336409/locations/europe-central2/services/recipe
 
-resource "google_cloud_run_service_iam_policy" "policy" {
-  location = google_cloud_run_service.recipe_svc.location
-  project = google_cloud_run_service.recipe_svc.project
-  service = google_cloud_run_service.recipe_svc.name
-  policy_data = jsonencode(
-            {
-               bindings = [
-                   {
-                       members = [
-                           "allAuthenticatedUsers",
-                          "allUsers"
-                        ]
-                       role    = "roles/run.invoker"
-                    }
-                ]
-            }
-        )
-    depends_on = [
-      # google_cloud_run_service.recipe_svc,
-      google_service_account.recipes_worker
-    ]
-}
+# resource "google_cloud_run_service_iam_policy" "policy" {
+#   location = google_cloud_run_service.recipe_svc.location
+#   project = google_cloud_run_service.recipe_svc.project
+#   service = google_cloud_run_service.recipe_svc.name
+#   policy_data = jsonencode(
+#             {
+#                bindings = [
+#                    {
+#                        members = [
+#                            "allAuthenticatedUsers",
+#                           "allUsers"
+#                         ]
+#                        role    = "roles/run.invoker"
+#                     }
+#                 ]
+#             }
+#         )
+#     depends_on = [
+#       # google_cloud_run_service.recipe_svc,
+#       google_service_account.recipes_worker
+#     ]
+# }
 
 # resource "google_cloud_run_service_iam_binding" "binding" {
 #   location = google_cloud_run_service.recipe_svc.location
