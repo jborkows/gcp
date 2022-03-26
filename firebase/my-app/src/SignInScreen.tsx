@@ -18,6 +18,26 @@ const uiConfig = {
     },
   };
 
+const Foo = ()=>{
+    const [text,setText] = useState("")
+    useEffect(()=>{
+      async function fetcher() {
+        let promise = await fetch("/helloworld", {
+          method: "GET", // POST, PUT, DELETE, etc.
+          headers: {
+            // the content type header value is usually auto-set
+            // depending on the request body
+            "Content-Type": "text/plain;charset=UTF-8"
+          },
+        });
+        setText(`${promise}`)
+      }
+      fetcher()
+    },[])
+
+    return <div>{text}</div>
+}
+
 export const SignInScreen = ()=>{
     const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
 
@@ -43,6 +63,7 @@ export const SignInScreen = ()=>{
         <h1>My App2</h1>
         <p>Welcome {auth.getAuth()?.currentUser?.displayName}! You are now signed-in!</p>
         <a onClick={() => auth.getAuth().signOut()}>Sign-out</a>
+        {auth.getAuth() != null && <Foo/>}
       </div>
     );
 }
