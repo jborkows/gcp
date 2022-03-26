@@ -33,4 +33,5 @@ gcr.io
 
 
 terraform import  -lock=false module.recipes.google_cloud_run_service.recipe_svc europe-central2/recipe
+terraform import  module.recipes.google_cloud_run_service.recipe_svc europe-central2/recipe
 terraform force-unlock 1648152473471409
