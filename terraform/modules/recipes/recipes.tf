@@ -80,7 +80,7 @@ resource "google_cloud_run_service_iam_policy" "policy" {
             }
         )
     depends_on = [
-      google_cloud_run_service.recipe_svc,
+      # google_cloud_run_service.recipe_svc,
       google_service_account.recipes_worker
     ]
 }
