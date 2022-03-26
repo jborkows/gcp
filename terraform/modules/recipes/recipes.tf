@@ -38,7 +38,7 @@ resource "google_cloud_run_service" "recipe_svc" {
 
  metadata {
       annotations = {
-        "autoscaling.knative.dev/maxScale"      = "3"
+        "autoscaling.knative.dev/maxScale"      = "2"
         "run.googleapis.com/client-name"        = "terraform"
         "run.googleapis.com/ingress"        = "all"
         # "run.googleapis.com/ingress"        = "internal"
@@ -68,7 +68,7 @@ resource "google_cloud_run_service_iam_policy" "policy" {
                    {
                        members = [
                            "allAuthenticatedUsers",
-                          # "allUsers"
+                          "allUsers"
                         ]
                        role    = "roles/run.invoker"
                     }
