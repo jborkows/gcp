@@ -40,7 +40,7 @@ resource "google_cloud_run_service" "recipe_svc" {
       annotations = {
         "autoscaling.knative.dev/maxScale"      = "3"
         "run.googleapis.com/client-name"        = "terraform"
-        "run.googleapis.com/ingress"        = "all"
+        "run.googleapis.com/ingress"        = "internal"
       }
     }
 
