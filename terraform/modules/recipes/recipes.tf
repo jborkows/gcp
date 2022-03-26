@@ -81,13 +81,13 @@ resource "google_cloud_run_service" "recipe_svc" {
 # }
 
 resource "google_cloud_run_service_iam_member" "service_privs" {
-  service  =  google_cloud_run_service.recipes.name
-  location =  google_cloud_run_service.recipes.location
+  service  =  google_cloud_run_service.recipe_svc.name
+  location =  google_cloud_run_service.recipe_svc.location
   project = var.project_id
   role     = "roles/run.invoker"
   member   = "allUsers"
   depends_on = [
-    google_cloud_run_service.recipes
+    google_cloud_run_service.recipe_svc
   ]
 }
 
