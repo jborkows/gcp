@@ -81,9 +81,9 @@ resource "google_cloud_run_service" "recipe_svc" {
 # }
 
 resource "google_cloud_run_service_iam_binding" "binding" {
-  location = google_cloud_run_service.default.location
-  project = google_cloud_run_service.default.project
-  service = google_cloud_run_service.default.name
+  location = google_cloud_run_service.recipe_svc.location
+  project = google_cloud_run_service.recipe_svc.project
+  service = google_cloud_run_service.recipe_svc.name
   role = "roles/run.invoker"
   members = [
      "allAuthenticatedUsers",
