@@ -68,7 +68,7 @@ resource "google_cloud_run_service_iam_policy" "policy" {
                bindings = [
                    {
                        members = [
-                           "allAuthenticatedUsers",
+                          #  "allAuthenticatedUsers",
                           "allUsers"
                         ]
                        role    = "roles/run.invoker"
