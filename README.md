@@ -39,3 +39,18 @@ terraform force-unlock 1648152473471409
 gcloud iam roles update CustomRole --project coastal-idea-336409 --add-permissions run.services.setIamPolicy
 
 gcloud iam roles list --project coastal-idea-336409
+
+gcloud iam roles create firebaseAuthGet --project=coastal-idea-336409  --stage=GA
+gcloud iam roles update firebaseAuthGet --project coastal-idea-336409 --add-permissions firebaseauth.users.get
+ gcloud projects add-iam-policy-binding coastal-idea-336409 \
+ --member=serviceAccount:recipes-worker@coastal-idea-336409.iam.gserviceaccount.com \
+ --role=roles/firebaseAuthGet 
+
+
+ gcloud iam service-accounts create recipe-worker2 --display-name "recipe worker" --project coastal-idea-336409
+ 
+ privs:
+ gcloud beta run services add-iam-policy-binding  --role=roles/firebaseAuthGet  --member=serviceAccount:recipe-worker2@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com --role=roles/run.invoker --platform managed --region us-central1
+ 
+ gcloud projects list -> extract project_number
+ gcloud projects add-iam-policy-binding coastal-idea-336409 --member=serviceAccount:service-1032380584635@gcp-sa-pubsub.iam.gserviceaccount.com --role=roles/firebaseAuthGet

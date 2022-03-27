@@ -3,18 +3,18 @@ resource "google_service_account" "recipes_worker" {
   display_name = "Recipes worker SA"
 }
 
-# Set permissions
-resource "google_project_iam_binding" "service_permissions" {
-  for_each = toset([
-    "run.invoker",
-    "firebaseauth.users.get"
-  ])
+# # Set permissions
+# resource "google_project_iam_binding" "service_permissions" {
+#   for_each = toset([
+#     "run.invoker",
+#     "firebaseauth.users.get"
+#   ])
 
-  project = var.project_id
-  role       = "roles/${each.key}"
-  members    = [local.recipes_worker_sa]
-  depends_on = [google_service_account.recipes_worker]
-}
+#   project = var.project_id
+#   role       = "roles/${each.key}"
+#   members    = [local.recipes_worker_sa]
+#   depends_on = [google_service_account.recipes_worker]
+# }
 
 
 # The Cloud Run service

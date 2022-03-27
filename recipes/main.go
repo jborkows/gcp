@@ -86,7 +86,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
         log.Printf("Verified ID token: %v\n", token)
        
 
-        user := getUser(context.Background(), app, token.UID)
+        //not working auth/insufficient-permission
+        // user := getUser(context.Background(), app, token.UID)
        
 
         // app, err := firebase.NewApp(context.Background(), nil)
@@ -105,5 +106,5 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// log.Printf("Verified ID token: %v\n", token)
 
-	fmt.Fprintf(w, "AAxxxA %s %s!\n", name, user.DisplayName)
+	fmt.Fprintf(w, "AAxxxA %s %s!\n", name, "verified")
 }
