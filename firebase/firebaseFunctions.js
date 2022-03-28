@@ -14,9 +14,10 @@ const nextjsServer = next({
 })
 const nextjsHandle = nextjsServer.getRequestHandler()
 
-const functionProvider = process.env.FUNCTIONS_EMULATOR ? functions :  functions.region("europe-central2");
+//If you are using HTTP functions to serve dynamic content for Firebase Hosting, you must use us-central1.
+// const functionProvider = process.env.FUNCTIONS_EMULATOR ? functions :  functions.region("europe-central2");
 
-exports.nextjsFunc = functionProvider
+exports.nextjsFunc = functions
   .https.onRequest((req, res) => {
     return nextjsServer.prepare().then(() => nextjsHandle(req, res))
   })
