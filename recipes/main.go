@@ -7,10 +7,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-        "regexp"
+	"regexp"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
+	"google.golang.org/api/option"
 )
 
 func main() {
@@ -63,7 +64,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
             }
 
         ctx := context.Background()
-        app, err := firebase.NewApp(ctx, nil)
+        projectId := os.Getenv("PROJECT_ID")
+        config := &firebase.Config{ProjectID: projectId}
+        // opt := option.WithCredentials("path/to/refreshToken.json")
+        app, err := firebase.NewApp(ctx, config)
         if err != nil {
                         log.Fatalf("error initializing app: %v\n", err)
                 }
@@ -87,24 +91,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
        
 
         //not working auth/insufficient-permission
-        // user := getUser(context.Background(), app, token.UID)
-       
+        user := getUser(context.Background(), app, token.UID)
 
-        // app, err := firebase.NewApp(context.Background(), nil)
-        // if err != nil {
-        //         log.Fatalf("error initializing app: %v\n", err)
-        // }
-	// client, err := app.Auth(ctx)
-	// if err != nil {
-	// 	log.Fatalf("error getting Auth client: %v\n", err)
-	// }
-
-	// token, err := client.VerifyIDToken(ctx, idToken)
-	// if err != nil {
-	// 	log.Fatalf("error verifying ID token: %v\n", err)
-	// }
-
-	// log.Printf("Verified ID token: %v\n", token)
+	log.Printf("User ID: %v\n", user)
 
 	fmt.Fprintf(w, "AAxxxA %s %s!\n", name, "verified")
 }

@@ -27,6 +27,10 @@ resource "google_cloud_run_service" "recipe_svc" {
       service_account_name = google_service_account.recipes_worker.email
       containers {
         image = var.image
+        env {
+          name = "PROJECT_ID"
+          value = var.project_id
+        }
       }
     }
   }
