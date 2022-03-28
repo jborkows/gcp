@@ -25,7 +25,3 @@ variable "firebase_config" {
     location = "europe-central2"
   }
 }
-
-# variable firebase_service_account{
-#  default = "firebase-adminsdk-dgsku@coastal-idea-336409.iam.gserviceaccount.com"
-# }

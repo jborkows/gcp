@@ -47,11 +47,6 @@ output "recipesPage" {
   value = module.recipes.service_url
 }
 
-
-output "executor" {
-  value = data.external.executor.result.username
-}
-
 output "firebaseSdkServiceAccount" {
   value = data.external.firebase_admin_sdk_account.result.account
 }
