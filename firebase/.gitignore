@@ -69,3 +69,6 @@ dev.js
 
 build/*
 !build/.gitkeep
+public/*
+!public/.gitkeep
+.next
