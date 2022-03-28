@@ -33,6 +33,12 @@ output "firebase_id" {
   value = module.firebase.appId
 }
 
+output "firebase_config"{
+  value = module.firebase.config
+  sensitive = true
+}
+
+
 output "recipes_image" {
   value = data.external.recipes_digest.result.image
 }

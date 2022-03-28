@@ -64,10 +64,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
             }
 
         ctx := context.Background()
-        projectId := os.Getenv("PROJECT_ID")
-        config := &firebase.Config{ProjectID: projectId}
+        // projectId := os.Getenv("PROJECT_ID")
+        // config := &firebase.Config{ProjectID: projectId}
+
         // opt := option.WithCredentials("path/to/refreshToken.json")
-        app, err := firebase.NewApp(ctx, config)
+        app, err := firebase.NewApp(ctx, nil)
         if err != nil {
                         log.Fatalf("error initializing app: %v\n", err)
                 }

@@ -20,3 +20,7 @@ output "authDomain"        {
 # output "measurementId"     {
 #      value = lookup(data.google_firebase_web_app_config.basic, "measurement_id", "") 
 # }
+output "config"  {
+ value = google_storage_bucket_object.default.content
+ sensitive = true
+}

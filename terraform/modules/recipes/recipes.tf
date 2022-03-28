@@ -31,6 +31,10 @@ resource "google_cloud_run_service" "recipe_svc" {
           name = "PROJECT_ID"
           value = var.project_id
         }
+        env {
+          name ="FIREBASE_CONFIG"
+          value = var.firebase_config
+        }
       }
     }
   }

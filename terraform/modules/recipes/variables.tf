@@ -15,3 +15,7 @@ variable "region" {
 variable "image" {
     type = string 
 }
+
+variable "firebase_config" {
+  
+}

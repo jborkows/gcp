@@ -113,6 +113,7 @@ module "recipes"{
    image=data.external.recipes_digest.result.image
   #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
   #  image="gcr.io/coastal-idea-336409/recipes:latest"
+  firebase_config =  module.firebase.config
 }
 
 
