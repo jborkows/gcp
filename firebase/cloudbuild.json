@@ -19,7 +19,9 @@
         "args": [
            "deploy",
            "--project",
-           "${PROJECT_ID}"
+           "${PROJECT_ID}",
+           "--only",
+           "hosting"
          ],
          "dir": "firebase"
     }
