@@ -56,6 +56,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if name == "" {
 		name = "World"
 	}
+        log.Printf("Firebase config %v\n", os.Getenv("FIREBASE_CONFIG"))
 
         if reqHeadersBytes, err := json.Marshal(r.Header); err != nil {
                 log.Println("Could not Marshal Req Headers")
