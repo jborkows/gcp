@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
+	"google.golang.org/api/option"
 	// "google.golang.org/api/option"
 )
 
@@ -51,12 +53,33 @@ func getUser(ctx context.Context, app *firebase.App,uid string ) *auth.UserRecor
 	return u
 }
 
+func exists(path string) bool {
+        _, err := os.Stat(path)
+        return !errors.Is(err, os.ErrNotExist)
+    }
+
+func writeConfig(path string){
+        f,err := os.Create(path)
+        if err != nil {
+                fmt.Println(err)
+        }
+        defer f.Close()
+        f.Write([]byte( os.Getenv("FIREBASE_CONFIG")))
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	name := os.Getenv("NAME")
 	if name == "" {
 		name = "World"
 	}
-        log.Printf("Firebase config %v\n", os.Getenv("FIREBASE_CONFIG"))
+
+        envPath := "firebase.json"
+        fileExists := exists(envPath)
+        if(!fileExists){
+                log.Printf("Firebase config %v\n", os.Getenv("FIREBASE_CONFIG"))
+                writeConfig(envPath)
+        }
+        
 
         if reqHeadersBytes, err := json.Marshal(r.Header); err != nil {
                 log.Println("Could not Marshal Req Headers")
@@ -65,11 +88,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
             }
 
         ctx := context.Background()
-        // projectId := os.Getenv("PROJECT_ID")
-        // config := &firebase.Config{ProjectID: projectId}
+        projectId := os.Getenv("PROJECT_ID")
+        config := &firebase.Config{ProjectID: projectId}
 
-        // opt := option.WithCredentials("path/to/refreshToken.json")
-        app, err := firebase.NewApp(ctx, nil)
+        opt := option.WithCredentialsJSON([]byte( os.Getenv("FIREBASE_CONFIG")))
+        app, err := firebase.NewApp(ctx, config, opt)
         if err != nil {
                         log.Fatalf("error initializing app: %v\n", err)
                 }
