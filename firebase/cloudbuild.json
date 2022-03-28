@@ -5,14 +5,14 @@
         "args":[
           "ln","-s", "/my-app/node_modules", "node_modules"
         ],
-        "dir": "firebase/my-app"
+        "dir": "firebase"
       },
        {
         "name":"gcr.io/$PROJECT_ID/react-base:1.7",
         "args":[
           "npm", "run","build"
         ],
-        "dir": "firebase/my-app"
+        "dir": "firebase"
       },
      {
         "name": "gcr.io/${PROJECT_ID}/firebase",
