@@ -11,7 +11,7 @@ import (
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"google.golang.org/api/option"
+	// "google.golang.org/api/option"
 )
 
 func main() {
