@@ -1,5 +1,4 @@
-console.error(`Mode is ${process.env.MODE}`)
-if (process.env.MODE === "production") {
+if (process.env.NEXT_PUBLIC_MODE === "production") {
   console.log("Using production")
   module.exports = require("./prod");
 } else {

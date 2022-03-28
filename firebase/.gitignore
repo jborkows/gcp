@@ -72,3 +72,4 @@ build/*
 public/*
 !public/.gitkeep
 .next
+.env.local
