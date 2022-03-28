@@ -16,6 +16,6 @@
       "npm --prefix \"$PROJECT_DIR\" install",
       "npm --prefix \"$PROJECT_DIR\" run build"
     ],
-    "runtime": "nodejs14"
+    "runtime": "nodejs16"
   }
 }
