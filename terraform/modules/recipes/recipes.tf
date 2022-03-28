@@ -6,8 +6,7 @@ resource "google_service_account" "recipes_worker" {
 # # Set permissions
 resource "google_project_iam_binding" "service_permissions" {
   for_each = toset([
-    "run.invoker",
-    "firebaseauth.users.get"
+    "run.invoker"
   ])
 
   project = var.project_id
