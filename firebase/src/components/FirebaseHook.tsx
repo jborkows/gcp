@@ -8,7 +8,7 @@ export const FirebaseHook = () =>{
     const [error, setError]=useState("")
     useEffect(() => {
         // @ts-ignore
-        getFirebaseConfig
+        getFirebaseConfig()
             // @ts-ignore
             .then((result: firebase.FirebaseOptions) => {
                 firebase.initializeApp(result);
