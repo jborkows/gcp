@@ -3,43 +3,43 @@
 #   value = google_storage_bucket.bucket.id
 # }
 
-output "project_number" {
+output "projectNumber" {
   value=data.google_project.project.number
 }
 
 
-output "project_name" {
+output "projectName" {
   value=data.google_project.project.name
 }
 
 
-output "storage_service_account" {
+output "storageServiceAccount" {
   description = "service account"
   value = data.google_storage_project_service_account.gcs_account.email_address
 }
 
 
-output "cloud_build_service_account" {
+output "cloudBuildServiceAccount" {
   description = "cloud build service account"
   value =data.google_service_account.gcp_account.name
 }
 
-output "firebase_page" {
+output "firebasePage" {
   value = module.firebase.authDomain
 }
 
 
-output "firebase_id" {
+output "firebaseId" {
   value = module.firebase.appId
 }
 
-output "firebase_config"{
+output "firebaseConfig"{
   value = module.firebase.config
   sensitive = true
 }
 
 
-output "recipes_image" {
+output "recipesImage" {
   value = data.external.recipes_digest.result.image
 }
 
@@ -48,7 +48,7 @@ output "executor" {
   value = data.external.executor.result.username
 }
 
-output "firebase_sdk_service_account" {
+output "firebaseSdkServiceAccount" {
   value = data.external.firebase_admin_sdk_account.result.account
 }
 
@@ -57,7 +57,7 @@ output "firebase_sdk_service_account" {
 #   value = data.external.executor.result.path
 # }
 
-output "recipes_page" {
+output "recipesPage" {
   value = module.recipes.service_url
 }
 
