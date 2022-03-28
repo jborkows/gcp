@@ -43,6 +43,10 @@ output "recipesImage" {
   value = data.external.recipes_digest.result.image
 }
 
+output "recipesPage" {
+  value = module.recipes.service_url
+}
+
 
 output "executor" {
   value = data.external.executor.result.username
@@ -57,9 +61,7 @@ output "firebaseSdkServiceAccount" {
 #   value = data.external.executor.result.path
 # }
 
-output "recipesPage" {
-  value = module.recipes.service_url
-}
+
 
 # output "cloud_version" {
 #   value = data.external.executor.result.gcloudVersion
