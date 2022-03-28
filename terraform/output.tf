@@ -45,15 +45,15 @@ output "executor" {
 }
 
 
-# output "terraform_path" {
-#   value = data.external.executor.result.path
-# }
+output "terraform_path" {
+  value = data.external.executor.result.path
+}
 
 output "recipes_page" {
   value = module.recipes.service_url
 }
 
-output "cloud_version" {
-  value = data.external.executor.result.gcloudVersion
-}
+# output "cloud_version" {
+#   value = data.external.executor.result.gcloudVersion
+# }
 
