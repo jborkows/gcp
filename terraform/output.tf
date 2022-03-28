@@ -37,8 +37,23 @@ output "recipes_image" {
   value = data.external.recipes_digest.result.image
 }
 
+
+
+
+output "executor" {
+  value = data.external.executor.result.username
+}
+
+
+output "terraform_path" {
+  value = data.external.executor.result.path
+}
+
 output "recipes_page" {
   value = module.recipes.service_url
 }
 
+output "cloud_version" {
+  value = data.external.executor.result.gcloudVersion
+}
 

@@ -57,6 +57,10 @@ data "external" "recipes_digest" {
 }
 # END WORKAROUND
 
+data "external" "executor" {
+  program = ["sh", "${path.module}/scripts/executor.sh"]
+}
+
 # Create a Google Cloud Storage Bucket
 resource "google_storage_bucket" "bucket" {
   name          = "${var.project_id}_example"
