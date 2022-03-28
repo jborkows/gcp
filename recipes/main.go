@@ -97,6 +97,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
                         log.Fatalf("error initializing app: %v\n", err)
                 }
         client, err := app.Auth(ctx)
+        if err != nil {
+                log.Fatalf("error initializing client: %v\n", err)
+        }
         reqToken := r.Header.Get("Authorization")
         tokenExtractor := regexp.MustCompile(`[Bb]earer (?P<token>.+)`)
         matches := tokenExtractor.FindStringSubmatch(reqToken)
