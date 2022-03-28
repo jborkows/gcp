@@ -44,10 +44,12 @@ output "recipes_image" {
 }
 
 
-
-
 output "executor" {
   value = data.external.executor.result.username
+}
+
+output "firebase_sdk_service_account" {
+  value = data.external.firebase_admin_sdk_account.result.account
 }
 
 

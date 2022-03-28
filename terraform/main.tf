@@ -103,8 +103,12 @@ resource "google_app_engine_application" "app" {
   database_type = "CLOUD_FIRESTORE"
 }
 
+data "external" "firebase_admin_sdk_account" {
+  program = ["sh", "${path.module}/scripts/firebaseadminsdk.sh", var.project_id]
+}
+
 data "google_service_account" "firebase_admin" {
-  account_id = var.firebase_service_account
+  account_id = data.external.firebase_admin_sdk_account.result.account
 }
 
 resource "google_service_account_key" "firebase_admin_key" {
