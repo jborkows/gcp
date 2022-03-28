@@ -103,7 +103,13 @@ resource "google_app_engine_application" "app" {
   database_type = "CLOUD_FIRESTORE"
 }
 
+data "google_service_account" "firebase_admin" {
+  account_id = var.firebase_service_account
+}
 
+resource "google_service_account_key" "firebase_admin_key" {
+  service_account_id = data.google_service_account.firebase_admin.name
+}
 
 module "recipes"{
   source = "./modules/recipes"
@@ -113,7 +119,7 @@ module "recipes"{
    image=data.external.recipes_digest.result.image
   #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
   #  image="gcr.io/coastal-idea-336409/recipes:latest"
-  firebase_config =  module.firebase.config
+  firebase_config =  base64decode(google_service_account_key.firebase_admin_key.private_key)
 }
 
 
