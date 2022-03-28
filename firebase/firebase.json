@@ -3,13 +3,7 @@
     "public": "public",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      {
-        "source": "/helloworld",
-        "run": {
-          "serviceId": "recipe",  
-          "region": "europe-central2"    
-        }
-      }, 
+
       {
         "source": "**",
         "function": "nextjsFunc"
