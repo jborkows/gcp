@@ -5,9 +5,17 @@ steps:
  - name: 'gcr.io/cloud-builders/docker'
    args: ["push", "gcr.io/$PROJECT_ID/recipes:latest"]
    dir: 'recipes'  
+ - name: gcr.io/$PROJECT_ID/snykbuild:0.1
+   args: ['sh', '-c', "snyk test --json --severity-threshold=high  > /workspace/report_recipes$$(date '+%d-%m-%Y').json"]
+   dir: 'recipes'      
+   secretEnv: ['SNYK_TOKEN'] 
+ - name: 'gcr.io/cloud-builders/gsutil'
+   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']    
  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
    args: ['gcloud', 'beta', 'builds', 'triggers', '--project=${PROJECT_ID}', 'run', 'terraform', '--branch', "${BRANCH_NAME}"]
-  #  gcloud beta builds triggers run --project=PROJECT_ID
-# images: ["gcr.io/$PROJECT_ID/recipes"]
 options:
   logging: CLOUD_LOGGING_ONLY
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_ID/secrets/snyk-token/versions/1
+    env: 'SNYK_TOKEN'  
