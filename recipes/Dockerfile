@@ -19,8 +19,8 @@
 # Use the offical golang image to create a binary.
 # This is based on Debian and sets the GOPATH to /go.
 # https://hub.docker.com/_/golang
-ARG BASE_IMAGE_VERSION
-FROM recipes-base:${BASE_IMAGE_VERSION} as builder
+ARG BASE_IMAGE
+FROM BASE_IMAGE as builder
 
 COPY go.* ./
 
