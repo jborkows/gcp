@@ -7,7 +7,7 @@ steps:
   dir: 'terraform'      
   secretEnv: ['SNYK_TOKEN']
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', '/workspace/report*.txt','gs://$${PROJECT_ID}_example/']  
+  args: ['sh', '-c','echo $${PROJECT_ID} && cp /workspace/report*.txt gs://$${PROJECT_ID}_example/']  
   env: 
   - 'PROJECT_ID=$PROJECT_ID'
 - id: "init"
