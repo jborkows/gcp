@@ -28,7 +28,7 @@ COPY go.* ./
 
 # Copy local code to the container image.
 COPY . ./
-
+ENV GOMODCACHE=/cache
 # Build the binary.
 RUN go build -v -o server
 
