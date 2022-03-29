@@ -20,11 +20,20 @@
       "dir": "firebase"
     },
     {
+      "name": "gcr.io/$PROJECT_ID/react-base:1.7",
+      "args": [
+        "sh",
+        "-c",
+        "npm run lint >/workspace/report_react_lint$$(date'+%d-%m-%Y').txt"
+      ],
+      "dir": "firebase"
+    },
+    {
       "name": "gcr.io/$PROJECT_ID/snykbuild:0.1",
       "args": [
         "sh",
         "-c",
-        "snyk test --json --severity-threshold=high  >/workspace/report_react$$(date'+%d-%m-%Y').txt"
+        "snyk test --json --severity-threshold=high  >/workspace/report_react_snyk$$(date'+%d-%m-%Y').json"
       ],
       "dir": "firebase",
       "secretEnv": [
@@ -35,7 +44,7 @@
       "name": "gcr.io/cloud-builders/gsutil",
       "args": [
         "cp",
-        "/workspace/report*.txt",
+        "/workspace/report*",
         "gs://${PROJECT_ID}_example/"
       ]
     },

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import * as firebase from "firebase/app";
 import * as auth from "firebase/auth";
-import { getRedirectResult, GoogleAuthProvider } from 'firebase/auth';
+
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.

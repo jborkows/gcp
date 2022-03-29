@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import getFirebaseConfig from "../fbconfig";
 import * as firebase from "firebase/app";
 
 
 export const FirebaseHook = () =>{
     const [canShowLogin, setLogin] = useState(false)
+    const ss = (aa,ax)=>{}
     const [error, setError]=useState("")
     useEffect(() => {
         // @ts-ignore
