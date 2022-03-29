@@ -10,13 +10,13 @@ steps:
   args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
   dir: 'terraform'      
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
-  args: ["infracost", "configure","set","api_key","$$INFRACOST_TOKEN"]
+  args: ["/bin/bash", "-c","infracost configure set api_key $$INFRACOST_TOKEN"]
   secretEnv: ['INFRACOST_TOKEN']  
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
-  args: ["sh", "-c","infracost breakdown --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
+  args: ["/bin/bash", "-c","infracost breakdown --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
   dir: 'terraform'   
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
-  args: ["sh", "-c","infracost diff --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]  
+  args: ["/bin/bash", "-c","infracost diff --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]  
   dir: 'terraform'   
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
