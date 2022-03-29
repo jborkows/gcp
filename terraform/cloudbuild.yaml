@@ -3,9 +3,11 @@ steps:
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
 - name: gcr.io/$PROJECT_ID/snykbuild:0.1
-  args: ['snyk', 'iac', 'test', '--json']
+  args: ['snyk', 'iac', 'test', '--json', '--severity-threshold=high', ' > /workspace/report$$(date '+%d-%m-%Y').txt']
   dir: 'terraform'      
   secretEnv: ['SNYK_TOKEN']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', '/workspace/report*.txt','gs://$PROJECT_ID_example/']  
 - id: "init"
   name: 'gcr.io/$PROJECT_ID/terraformbuild:0.1'
   args: ['init']
