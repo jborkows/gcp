@@ -7,9 +7,9 @@ steps:
   dir: 'terraform'      
   secretEnv: ['SNYK_TOKEN']
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', '/workspace/report*.txt','gs://$${PROJECT}_example/']  
+  args: ['cp', '/workspace/report*.txt','gs://$${PROJECT_ID}_example/']  
   env: 
-     - 'PROJECT=$PROJECT_ID'
+  - 'PROJECT_ID=$PROJECT_ID'
 - id: "init"
   name: 'gcr.io/$PROJECT_ID/terraformbuild:0.1'
   args: ['init']
