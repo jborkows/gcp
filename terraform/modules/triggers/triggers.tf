@@ -29,7 +29,11 @@ resource "google_cloudbuild_trigger" "firebase" {
   provider = google-beta
   filename = "firebase/cloudbuild.json"
   service_account = var.service_account
-  ignored_files   = ["firebase/Dockerfile", "firebase/myapp/package.json", "firebase/cloudbuild-react.json"]
+  ignored_files   = [
+      "firebase/Dockerfile", 
+      "firebase/myapp/package.json", 
+      "firebase/cloudbuild-react.json"
+      ]
     included_files  = [
         "firebase/**",
     ]
