@@ -8,4 +8,4 @@ RUN apk --no-cache add \
     libstdc++ \
     curl \
     && curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
