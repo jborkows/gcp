@@ -9,9 +9,12 @@ steps:
 - name:  gcr.io/$PROJECT_ID/tfsec:0.1
   args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
   dir: 'terraform'      
-- name: infracost/infracost:ci-0.9.20
+- name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
+  args: ["infracost", "configure","set","api_key",$INFRACOST_TOKEN]
+  secretEnv: ['INFRACOST_TOKEN']  
+- name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["sh", "-c","infracost breakdown --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
-- name: infracost/infracost:ci-0.9.20
+- name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["sh", "-c","infracost diff --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]  
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
@@ -29,3 +32,8 @@ availableSecrets:
   secretManager:
   - versionName: projects/$PROJECT_ID/secrets/snyk-token/versions/1
     env: 'SNYK_TOKEN'
+  - versionName: projects/$PROJECT_ID/secrets/infracost-token/versions/1
+    env: 'INFRACOST_TOKEN'  
+substitutions": 
+    - "_INFRACOST_VERSION": "0.1"
+     
