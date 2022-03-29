@@ -24,7 +24,7 @@
       "args": [
         "sh",
         "-c",
-        "npm run lint >/workspace/report_react_lint$$(date'+%d-%m-%Y').txt"
+        "npm run lint >/workspace/report_react_lint$$(date'+%d-%m-%Y').txt || true"
       ],
       "dir": "firebase"
     },
