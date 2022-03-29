@@ -14,8 +14,10 @@ steps:
   secretEnv: ['INFRACOST_TOKEN']  
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["sh", "-c","infracost breakdown --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
+  dir: 'terraform'   
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["sh", "-c","infracost diff --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]  
+  dir: 'terraform'   
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
 - id: "init"
