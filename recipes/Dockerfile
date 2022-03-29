@@ -20,7 +20,7 @@
 # This is based on Debian and sets the GOPATH to /go.
 # https://hub.docker.com/_/golang
 ARG BASE_IMAGE
-FROM BASE_IMAGE as builder
+FROM $BASE_IMAGE as builder
 
 COPY go.* ./
 
