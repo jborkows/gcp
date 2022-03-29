@@ -21,7 +21,7 @@
 # https://hub.docker.com/_/golang
 ARG BASE_IMAGE_VERSION
 ARG BASE_IMAGE_NAME
-FROM #{BASE_IMAGE_NAME}:${BASE_IMAGE_VERSION} as builder
+FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_VERSION} as builder
 
 COPY go.* ./
 
