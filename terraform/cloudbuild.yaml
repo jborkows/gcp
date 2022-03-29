@@ -7,7 +7,7 @@ steps:
   dir: 'terraform'      
   secretEnv: ['SNYK_TOKEN']
 - name:  gcr.io/$PROJECT_ID/tfsec:0.1
-  args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt"]
+  args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
   dir: 'terraform'      
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
