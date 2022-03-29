@@ -8,4 +8,7 @@ WORKDIR /app
 # Expecting to copy go.mod and if present go.sum.
 COPY go.* ./
 COPY . ./
-RUN go mod vendor
+RUN go mod vendor \
+    && mv vendor /cache \
+    && rm -rf * \
+    && mv /cache vendor
