@@ -7,6 +7,5 @@ WORKDIR /app
 # This allows the container build to reuse cached dependencies.
 # Expecting to copy go.mod and if present go.sum.
 COPY go.* ./
-RUN mkdir /cache
-ENV GOMODCACHE=/cache
-RUN go mod download
+COPY . ./
+RUN go mod vendor
