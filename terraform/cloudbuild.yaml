@@ -3,7 +3,7 @@ steps:
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
 - name: 'bash'  
-  args: ['echo', '$$SNYK_TOKEN']  
+  args: ['echo', 'xxxx $$SNYK_TOKEN']  
   secretEnv: [SNYK_TOKEN]
 - id: "init"
   name: 'gcr.io/$PROJECT_ID/terraformbuild:0.1'
