@@ -117,3 +117,4 @@ modules.xml
 *.lock.hcl
 **/.firebase
 *.firebaserc
+terraform/.infracost/
