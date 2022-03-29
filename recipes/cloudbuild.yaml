@@ -1,6 +1,6 @@
 steps:
  - name: 'gcr.io/cloud-builders/docker'
-   args: ["build", "-t", "gcr.io/$PROJECT_ID/recipes:latest", ".", "--build-arg", "BASE_IMAGE=`cat base_version.txt`"]
+   args: ["build", "-t", "gcr.io/$PROJECT_ID/recipes:latest", ".", "--build-arg", "BASE_IMAGE=gcr.io/$PROJECT_ID/`cat base_version.txt`"]
    dir: 'recipes'
  - name: 'gcr.io/cloud-builders/docker'
    args: ["push", "gcr.io/$PROJECT_ID/recipes:latest"]
