@@ -32,6 +32,7 @@ resource "google_cloudbuild_trigger" "firebase" {
   ignored_files   = [
       "firebase/Dockerfile", 
       "firebase/myapp/package.json", 
+      "firebase/myapp/package-lock.json", 
       "firebase/cloudbuild-react.json"
       ]
     included_files  = [
@@ -59,7 +60,7 @@ resource "google_cloudbuild_trigger" "firebase-react-build" {
   ignored_files   = []
     included_files  = [
         "firebase/Dockerfile",
-         "firebase/myapp/package.json", 
+         "firebase/package.json", 
          "firebase/cloudbuild-react.json"
     ]
    github {
