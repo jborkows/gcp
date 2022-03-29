@@ -1,33 +1,57 @@
 {
-    "steps": [
-      {
-        "name":"gcr.io/$PROJECT_ID/react-base:1.7",
-        "args":[
-          "ln","-s", "/my-app/node_modules", "node_modules"
-        ],
-        "dir": "firebase"
-      },
-       {
-        "name":"gcr.io/$PROJECT_ID/react-base:1.7",
-        "args":[
-          "npm", "run","build"
-        ],
-        "dir": "firebase"
-      },
-     {
-        "name": "gcr.io/${PROJECT_ID}/firebase",
-        "args": [
-           "deploy",
-           "--project",
-           "${PROJECT_ID}",
-           "--only",
-           "hosting"
-         ],
-         "dir": "firebase"
+  "steps": [
+    {
+      "name": "gcr.io/$PROJECT_ID/react-base:1.7",
+      "args": [
+        "ln",
+        "-s",
+        "/my-app/node_modules",
+        "node_modules"
+      ],
+      "dir": "firebase"
+    },
+    {
+      "name": "gcr.io/$PROJECT_ID/react-base:1.7",
+      "args": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "dir": "firebase"
+    },
+    {
+      "name": "gcr.io/$PROJECT_ID/snykbuild:0.1",
+      "args": [
+        "sh",
+        "-c",
+        "snyk test --json --severity-threshold=high  >/workspace/report_react$$(date'+%d-%m-%Y').txt"
+      ],
+      "dir": "firebase",
+      "secretEnv": [
+        "SNYK_TOKEN"
+      ]
+    },
+    {
+      "name": "gcr.io/cloud-builders/gsutil",
+      "args": [
+        "cp",
+        "/workspace/report*.txt",
+        "gs://${PROJECT_ID}_example/"
+      ]
+    },
+    {
+      "name": "gcr.io/${PROJECT_ID}/firebase",
+      "args": [
+        "deploy",
+        "--project",
+        "${PROJECT_ID}",
+        "--only",
+        "hosting"
+      ],
+      "dir": "firebase"
     }
-    ],
-    "options":{
-        "logging": "CLOUD_LOGGING_ONLY"
-    }
-    
+  ],
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY"
   }
+}
