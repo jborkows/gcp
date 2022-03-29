@@ -2,12 +2,12 @@ steps:
 - name: 'bash'
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
-- name: snyk/snyk-cli:npm
-  args:
+- name: snyk/snyk-cli:1.864.0-docker
+  args: 
      - '-c'
      - |-
-        snyk config set api=$$SNYK_T
-        snyk iac test main.tf
+        SNYK_TOKEN=$$SNYK_T snyk iac test main.tf
+  dir: 'terraform'      
   secretEnv: ['SNYK_T']
 - id: "init"
   name: 'gcr.io/$PROJECT_ID/terraformbuild:0.1'
