@@ -6,6 +6,9 @@ steps:
   args: ['sh', '-c', "snyk iac test --json --severity-threshold=high  > /workspace/report$$(date '+%d-%m-%Y').json"]
   dir: 'terraform'      
   secretEnv: ['SNYK_TOKEN']
+- name:  gcr.io/$PROJECT_ID/tfsec:0.1
+  args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt"]
+  dir: 'terraform'      
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
 - id: "init"
