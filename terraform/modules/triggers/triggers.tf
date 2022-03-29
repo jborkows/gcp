@@ -81,7 +81,7 @@ resource "google_cloudbuild_trigger" "recipes" {
   provider = google-beta
   filename = "recipes/cloudbuild.yaml"
   service_account = var.service_account
-  ignored_files   = []
+  ignored_files   = ["recipes/base.dockerfile", "recipes/base.dockerfilebuilder"]
     included_files  = [
         "recipes/**",
     ]
