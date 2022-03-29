@@ -4,8 +4,8 @@ steps:
   args: ['echo', '$PROJECT_ID']  
 - name: snyk/snyk-cli:npm
   args:
-      - '-c'
-      - |-
+     - '-c'
+     - |-
         snyk config set api=$$SNYK_T
         snyk iac test main.tf
   secretEnv: ['SNYK_T']
