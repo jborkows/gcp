@@ -2,7 +2,7 @@ steps:
 - name: 'bash'
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
-- name: snyk/snyk-cli
+- name: gcr.io/$PROJECT_ID/snykbuild
   args: 
      - '-c'
      - |-
