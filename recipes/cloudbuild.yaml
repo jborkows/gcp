@@ -6,7 +6,7 @@ steps:
    args: ["push", "gcr.io/$PROJECT_ID/recipes:latest"]
    dir: 'recipes'  
  - name: gcr.io/$PROJECT_ID/snykbuild:0.1
-   args: ['sh', '-c', "snyk test --json --severity-threshold=high  > /workspace/report_recipes$$(date '+%d-%m-%Y').json"]
+   args: ['sh', '-c', "snyk test --json --severity-threshold=high  > /workspace/report_recipes$$(date '+%d-%m-%Y').json || true"]
    dir: 'recipes'      
    secretEnv: ['SNYK_TOKEN'] 
  - name: 'gcr.io/cloud-builders/gsutil'
