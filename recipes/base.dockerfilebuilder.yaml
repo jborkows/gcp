@@ -4,7 +4,7 @@ steps:
    args:
       - -c
       - |-
-        docker build --tag gcr.io/$PROJECT_ID/`cat base_version.txt`  -f base.dockerfile .
+        docker build --tag gcr.io/$PROJECT_ID/recipes-base:`cat base_version.txt`  -f base.dockerfile .
    dir: 'recipes'
  - name: 'gcr.io/cloud-builders/docker'
    entrypoint: bash
