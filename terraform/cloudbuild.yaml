@@ -2,7 +2,7 @@ steps:
 - name: 'bash'
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
-- name: snyk/snyk-cli:1.864.0-docker
+- name: snyk/snyk-cli
   args: 
      - '-c'
      - |-
