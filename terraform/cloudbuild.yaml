@@ -11,7 +11,7 @@ steps:
   dir: 'terraform'      
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   # args: ["bash", "-c","infracost configure set api_key $$INFRACOST_TOKEN && infracost breakdown --path . 2>&1 /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
-  args: ["infracost","configure", "set","api_key","$$INFRACOST_TOKEN" && infracost breakdown --path . 2>&1 /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
+  args: ["infracost","configure", "set","api_key","$$INFRACOST_TOKEN"]
   dir: 'terraform'  
   secretEnv: ['INFRACOST_TOKEN']  
 - name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
