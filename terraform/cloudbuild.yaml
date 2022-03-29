@@ -9,21 +9,21 @@ steps:
 - name:  gcr.io/$PROJECT_ID/tfsec:0.1
   args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
   dir: 'terraform'      
-- name: gcr.io/$PROJECT_ID/infracostbuild:$__INFRACOST_VERSION
+- name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["infracost", "configure","set","api_key",$INFRACOST_TOKEN]
   secretEnv: ['INFRACOST_TOKEN']  
-- name: gcr.io/$PROJECT_ID/infracostbuild:$__INFRACOST_VERSION
+- name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["sh", "-c","infracost breakdown --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
-- name: gcr.io/$PROJECT_ID/infracostbuild:$__INFRACOST_VERSION
+- name: gcr.io/$PROJECT_ID/infracostbuild:$_INFRACOST_VERSION
   args: ["sh", "-c","infracost diff --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]  
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
 - id: "init"
-  name: 'gcr.io/$PROJECT_ID/terraformbuild:$__TERRAFORM_VERSION'
+  name: 'gcr.io/$PROJECT_ID/terraformbuild:$_TERRAFORM_VERSION'
   args: ['init']
   dir: 'terraform'
 - id: "plan"
-  name: 'gcr.io/$PROJECT_ID/terraformbuild:$__TERRAFORM_VERSION'
+  name: 'gcr.io/$PROJECT_ID/terraformbuild:$_TERRAFORM_VERSION'
   args: ['apply','-var=project_id=$PROJECT_ID','-auto-approve']
   dir: 'terraform'
 options:
@@ -35,6 +35,6 @@ availableSecrets:
   - versionName: projects/$PROJECT_ID/secrets/infracost-token/versions/1
     env: 'INFRACOST_TOKEN'  
 substitutions: 
-    __INFRACOST_VERSION: "0.1"
-    __TERRAFORM_VERSION: "0.1"
+    _INFRACOST_VERSION: "0.1"
+    _TERRAFORM_VERSION: "0.1"
      
