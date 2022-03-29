@@ -3,10 +3,7 @@ steps:
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
 - name: gcr.io/$PROJECT_ID/snykbuild:0.1
-  args: 
-     - '-c'
-     - |-
-        SNYK_TOKEN=$$SNYK_T snyk iac test main.tf
+  args: ['SNYK_TOKEN=$$SNYK_T', 'snyk', 'iac', 'test', 'main.tf']
   dir: 'terraform'      
   secretEnv: ['SNYK_T']
 - id: "init"
