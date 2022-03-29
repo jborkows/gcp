@@ -33,7 +33,7 @@
       "args": [
         "sh",
         "-c",
-        "snyk test --json --severity-threshold=high  >/workspace/report_react_snyk$$(date '+%d-%m-%Y').json"
+        "snyk test --json --severity-threshold=high  >/workspace/report_react_snyk$$(date '+%d-%m-%Y').json || true"
       ],
       "dir": "firebase",
       "secretEnv": [
