@@ -72,6 +72,6 @@
     ]
   },
   "substitutions": {
-    "_REACT_BASE_VERSION": "1.8"
+    "_REACT_BASE_VERSION": "1.9"
   }
 }

@@ -9,6 +9,10 @@ steps:
 - name:  gcr.io/$PROJECT_ID/tfsec:0.1
   args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
   dir: 'terraform'      
+- name: infracost/infracost:ci-0.9.20
+  args: ["sh", "-c","infracost breakdown --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]
+- name: infracost/infracost:ci-0.9.20
+  args: ["sh", "-c","infracost diff --path . > /workspace/report_infracost_cost_breakdown$$(date '+%d-%m-%Y').txt"]  
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
 - id: "init"
