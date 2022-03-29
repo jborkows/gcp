@@ -2,7 +2,7 @@ steps:
 - name: 'bash'
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
-- name: gcr.io/$PROJECT_ID/snykbuild
+- name: gcr.io/$PROJECT_ID/snykbuild:0.1
   args: 
      - '-c'
      - |-
