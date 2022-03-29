@@ -29,7 +29,8 @@ COPY go.* ./
 COPY . ./
 ENV GOMODCACHE=/cache
 # Build the binary.
-RUN go mod download && go build -v -o server
+RUN go mod download 
+RUN go build -v -o server
 
 # Use the official Debian slim image for a lean production container.
 # https://hub.docker.com/_/debian
