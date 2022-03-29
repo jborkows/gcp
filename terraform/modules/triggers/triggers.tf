@@ -81,7 +81,7 @@ resource "google_cloudbuild_trigger" "recipes" {
   provider = google-beta
   filename = "recipes/cloudbuild.yaml"
   service_account = var.service_account
-  ignored_files   = ["recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml", "go.mod", "go.sum"]
+  ignored_files   = ["recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml", "recipes/go.mod", "recipes/go.sum", "recipes/base_version.txt"]
     included_files  = [
         "recipes/**",
     ]
@@ -101,11 +101,11 @@ resource "google_cloudbuild_trigger" "recipes_base" {
   project = var.project_id
   description = "dish recipes <- base image"
   provider = google-beta
-  filename = "recipes/cloudbuild.yaml"
+  filename = "recipes/base.dockerfilebuilder.yaml"
   service_account = var.service_account
   ignored_files   = []
     included_files  = [
-        "recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml", "go.mod", "go.sum"
+        "recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml", "recipes/go.mod", "recipes/go.sum", "recipes/base_version.txt"
     ]
    github {
         name  = var.repository_name
