@@ -81,7 +81,7 @@ resource "google_cloudbuild_trigger" "recipes" {
   provider = google-beta
   filename = "recipes/cloudbuild.yaml"
   service_account = var.service_account
-  ignored_files   = []
+  ignored_files   = ["recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml"]
     included_files  = [
         "recipes/**",
     ]
@@ -96,4 +96,25 @@ resource "google_cloudbuild_trigger" "recipes" {
     }
 }
 
+resource "google_cloudbuild_trigger" "recipes_base" {
+  name = "recipes-base"
+  project = var.project_id
+  description = "dish recipes <- base image"
+  provider = google-beta
+  filename = "recipes/cloudbuild.yaml"
+  service_account = var.service_account
+  ignored_files   = []
+    included_files  = [
+        "recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml"
+    ]
+   github {
+        name  = var.repository_name
+        owner = var.owner
+
+        push {
+            branch       = "^main$"
+            invert_regex = false
+        }
+    }
+}
 
