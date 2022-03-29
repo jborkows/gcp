@@ -11,7 +11,7 @@ steps:
    args:
       - -c
       - |-
-        docker push gcr.io/$PROJECT_ID/`cat base_version.txt`
+        docker push gcr.io/$PROJECT_ID/recipes-base:`cat base_version.txt`
    dir: 'recipes'  
 options:
   logging: CLOUD_LOGGING_ONLY
