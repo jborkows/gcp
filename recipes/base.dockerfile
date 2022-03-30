@@ -9,6 +9,7 @@ WORKDIR /app
 COPY go.* ./
 COPY . ./
 RUN go mod vendor \
-    && mv vendor /cache \
+    && mv vendor /cache/vendor \
+    && mv go* /cache \
     && rm -rf * \
-    && mv /cache vendor
+    && mv /cache .
