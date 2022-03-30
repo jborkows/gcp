@@ -23,12 +23,14 @@ ARG BASE_IMAGE_VERSION
 ARG BASE_IMAGE_NAME
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_VERSION} as builder
 
+RUN ls -lR
 COPY go.* ./
 
 # Copy local code to the container image.
 COPY . ./
 # Build the binary.
-RUN go build -mod vendor -v -o server
+RUN ls -lR
+RUN go build -mod=vendor -v -o server
 
 # Use the official Debian slim image for a lean production container.
 # https://hub.docker.com/_/debian
