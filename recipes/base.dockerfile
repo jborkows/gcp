@@ -13,4 +13,4 @@ RUN mkdir -p /cache/vendor \
     && mv vendor /cache/vendor \
     && mv go* /cache \
     && rm -rf * \
-    && mv /cache .
+    && mv /cache/* .
