@@ -10,7 +10,7 @@ COPY go.* ./
 COPY . ./
 RUN mkdir -p /cache/vendor \
     && go mod vendor \
-    && mv vendor /cache/vendor \
+    && mv vendor/* /cache/vendor \
     && mv go* /cache \
     && rm -rf * \
     && mv /cache/* .
