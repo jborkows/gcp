@@ -95,26 +95,3 @@ resource "google_cloudbuild_trigger" "recipes" {
         }
     }
 }
-
-resource "google_cloudbuild_trigger" "recipes_base" {
-  name = "recipes-base"
-  project = var.project_id
-  description = "dish recipes <- base image"
-  provider = google-beta
-  filename = "recipes/base.dockerfilebuilder.yaml"
-  service_account = var.service_account
-  ignored_files   = []
-    included_files  = [
-        "recipes/base.dockerfile", "recipes/base.dockerfilebuilder.yaml", "recipes/go.mod", "recipes/go.sum", "recipes/base_version.txt"
-    ]
-   github {
-        name  = var.repository_name
-        owner = var.owner
-
-        push {
-            branch       = "^main$"
-            invert_regex = false
-        }
-    }
-}
-
