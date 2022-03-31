@@ -121,10 +121,11 @@ resource "google_cloudbuild_trigger" "platuml" {
   build {
     step {
       name       = "gcr.io/${var.project_id}/plantuml:${var.plantuml.version}"
-      args       = ["*.diagram"]
+      args       = ["*.diagram", "-output", "/workspace"]
       timeout    = "120s"
       dir        = "umls" 
     }
+  
     step {
       name       = "gcr.io/cloud-builders/gsutil"
       args       = ["cp", "/workspace/*.png", var.plantuml.bucket_name]
