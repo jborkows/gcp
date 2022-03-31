@@ -97,6 +97,15 @@ resource "google_storage_bucket" "builder" {
   }
   force_destroy = true
 
+  lifecycle_rule {
+    condition {
+      age = 14
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
 }
 
 
