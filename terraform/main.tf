@@ -130,7 +130,7 @@ module "triggers" {
   service_account = data.google_service_account.gcp_account.id
   plantuml = {
     bucket_name = google_storage_bucket.documentation.url
-    version = "0.1"
+    version = var.plant_uml_version
   } 
   cloudbuildbucket=google_storage_bucket.builder.url
   depends_on = [google_storage_bucket.documentation, google_storage_bucket.builder]

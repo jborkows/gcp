@@ -25,3 +25,8 @@ variable "firebase_config" {
     location = "europe-central2"
   }
 }
+
+variable "plant_uml_version" {
+  default = "0.2"
+  type = string
+}
