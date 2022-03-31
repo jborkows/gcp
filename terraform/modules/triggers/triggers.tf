@@ -121,7 +121,7 @@ resource "google_cloudbuild_trigger" "platuml" {
   build {
     step {
       name       = "gcr.io/${var.project_id}/plantuml:${var.plantuml.version}"
-      args       = ["*.diagram", "-output", "/workspace"]
+      args       = ["*.puml", "-output", "/workspace"]
       timeout    = "120s"
       dir        = "umls" 
     }
