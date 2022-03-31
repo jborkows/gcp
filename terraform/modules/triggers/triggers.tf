@@ -99,7 +99,7 @@ resource "google_cloudbuild_trigger" "recipes" {
 
 
 resource "google_cloudbuild_trigger" "platuml" {
-  name        = "plant_umls"
+  name        = "plantumls"
   project     = var.project_id
   description = "diagrams for project"
   provider    = google-beta
@@ -133,8 +133,10 @@ resource "google_cloudbuild_trigger" "platuml" {
     }
 
     options {
-        logging                 = "CLOUD_LOGGING_ONLY" 
+        logging                 = "GCS_ONLY" 
+        
     }
+    logs_bucket             = var.cloudbuildbucket
   }
 }
 

@@ -87,6 +87,19 @@ resource "google_storage_bucket" "documentation" {
 }
 
 
+resource "google_storage_bucket" "builder" {
+  name          = "${var.project_id}_builder_logs"
+  location      = var.region
+  uniform_bucket_level_access = true
+  storage_class = var.storage_class
+  versioning {
+    enabled     = false
+  }
+  force_destroy = true
+
+}
+
+
 module "firebase" {
   source = "./modules/firebase"
   project_id = var.project_id
@@ -110,7 +123,8 @@ module "triggers" {
     bucket_name = google_storage_bucket.documentation.url
     version = "0.1"
   } 
-  depends_on = [google_storage_bucket.documentation]
+  cloudbuildbucket=google_storage_bucket.builder.url
+  depends_on = [google_storage_bucket.documentation, google_storage_bucket.builder]
 }
 
 

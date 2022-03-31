@@ -19,3 +19,7 @@ variable "plantuml" {
     type = object({bucket_name = string, version=string})
 }
 
+
+variable "cloudbuildbucket" {
+    type = string
+}
