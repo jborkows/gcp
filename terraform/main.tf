@@ -74,6 +74,19 @@ resource "google_storage_bucket" "bucket" {
 
 }
 
+resource "google_storage_bucket" "documentation" {
+  name          = "${var.project_id}documentation"
+  location      = var.region
+  uniform_bucket_level_access = true
+  storage_class = var.storage_class
+  versioning {
+    enabled     = false
+  }
+  force_destroy = true
+
+}
+
+
 module "firebase" {
   source = "./modules/firebase"
   project_id = var.project_id
@@ -93,6 +106,11 @@ module "triggers" {
   repository_name="gcp"
   project_id = var.project_id
   service_account = data.google_service_account.gcp_account.id
+  plantuml = {
+    bucket_name = google_storage_bucket.documentation.url
+    version = "0.1"
+  } 
+  depends_on = [google_storage_bucket.documentation]
 }
 
 

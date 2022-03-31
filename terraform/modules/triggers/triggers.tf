@@ -95,3 +95,46 @@ resource "google_cloudbuild_trigger" "recipes" {
         }
     }
 }
+
+
+
+resource "google_cloudbuild_trigger" "platuml" {
+  name        = "plant_umls"
+  project     = var.project_id
+  description = "diagrams for project"
+  provider    = google-beta
+
+  service_account = var.service_account
+
+  included_files = [
+    "platuml/**",
+  ]
+  github {
+    name  = var.repository_name
+    owner = var.owner
+
+    push {
+      branch       = "^main$"
+      invert_regex = false
+    }
+  }
+  build {
+    step {
+      name       = "gcr.io/${var.project_id}/plantuml:${var.plantuml.version}"
+      args       = ["*.diagrams"]
+      timeout    = "120s"
+      dir        = "umls" 
+    }
+    step {
+      name       = "gcr.io/cloud-builders/gsutil"
+      args       = ["cp", "/workspace/*.png", var.plantuml.bucket_name]
+      timeout    = "120s"
+      dir        = "umls" 
+    }
+
+    options {
+        logging                 = "CLOUD_LOGGING_ONLY" 
+    }
+  }
+}
+

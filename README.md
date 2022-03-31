@@ -54,3 +54,10 @@ gcloud iam roles update firebaseAuthGet --project coastal-idea-336409 --add-perm
  
  gcloud projects list -> extract project_number
  gcloud projects add-iam-policy-binding coastal-idea-336409 --member=serviceAccount:service-1032380584635@gcp-sa-pubsub.iam.gserviceaccount.com --role=roles/firebaseAuthGet
+
+  - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: bash
+   args:
+      - -c
+      - |-
+        docker build --tag gcr.io/$PROJECT_ID/recipes-base:`cat base_version.txt`  -f base.dockerfile .

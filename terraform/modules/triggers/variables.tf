@@ -14,3 +14,8 @@ variable "project_id" {
 variable "service_account" {
     type = string
 }
+
+variable "plantuml" {
+    type = object({bucket_name = string, version=string})
+}
+
