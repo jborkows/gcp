@@ -1,4 +1,4 @@
-@startuml
+@startuml Basic
  Alice -> Bob: test2
  @enduml
  
