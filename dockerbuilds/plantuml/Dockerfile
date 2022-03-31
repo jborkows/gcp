@@ -7,6 +7,7 @@ RUN apk --no-cache add \
     libstdc++ \
     tar \
     bash \
+    graphviz \
     fontconfig \
     ttf-dejavu \
     # && adduser -D -s /bin/bash  worker \

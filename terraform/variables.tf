@@ -27,6 +27,6 @@ variable "firebase_config" {
 }
 
 variable "plant_uml_version" {
-  default = "0.2"
+  default = "0.1"
   type = string
 }
