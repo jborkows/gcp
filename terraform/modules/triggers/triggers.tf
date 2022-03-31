@@ -107,7 +107,7 @@ resource "google_cloudbuild_trigger" "platuml" {
   service_account = var.service_account
 
   included_files = [
-    "platuml/**",
+    "umls/**",
   ]
   github {
     name  = var.repository_name
