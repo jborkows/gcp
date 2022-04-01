@@ -26,3 +26,9 @@ variable "repository_info" {
 variable "cloudbuildbucket" {
   type = string
 }
+
+variable "terraform_trigger_name" {
+    type = string
+    default = "terraform"
+  
+}
