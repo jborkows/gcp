@@ -2,21 +2,21 @@ steps:
 - name: 'bash'
   id: 'echo'
   args: ['echo', '$PROJECT_ID']  
-- name: gcr.io/$PROJECT_ID/snykbuild:0.1
+- name: ${_MYREPO}/snykbuild:0.1
   args: ['sh', '-c', "snyk iac test --json --severity-threshold=high  > /workspace/report$$(date '+%d-%m-%Y').json"]
   dir: 'terraform'      
   secretEnv: ['SNYK_TOKEN']
-- name:  gcr.io/$PROJECT_ID/tfsec:0.1
+- name:  ${_MYREPO}/tfsec:0.1
   args: ['sh', '-c', "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
   dir: 'terraform'      
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']  
 - id: "init"
-  name: 'gcr.io/$PROJECT_ID/terraformbuild:$_TERRAFORM_VERSION'
+  name: '${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION'
   args: ['init']
   dir: 'terraform'
 - id: "plan"
-  name: 'gcr.io/$PROJECT_ID/terraformbuild:$_TERRAFORM_VERSION'
+  name: '${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION'
   args: ['apply','-var=project_id=$PROJECT_ID','-auto-approve']
   dir: 'terraform'
 options:
