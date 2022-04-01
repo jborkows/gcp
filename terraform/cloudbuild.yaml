@@ -1,7 +1,4 @@
 steps:
-- name: 'bash'
-  id: 'echo'
-  args: ['echo', '$PROJECT_ID']  
 - name: ${_MYREPO}/snykbuild:0.1
   args: ['sh', '-c', "snyk iac test --json --severity-threshold=high  > /workspace/report$$(date '+%d-%m-%Y').json"]
   dir: 'terraform'      

@@ -120,48 +120,98 @@ resource "google_cloudbuild_trigger" "platuml" {
   }
   build {
     step {
-      name       = "${var.repository_info.image_prefix}/plantuml:${var.plantuml.version}"
-      args       = ["*.puml", "-output", "/workspace"]
-      timeout    = "120s"
-      dir        = "umls" 
+      name    = "${var.repository_info.image_prefix}/plantuml:${var.plantuml.version}"
+      args    = ["*.puml", "-output", "/workspace"]
+      timeout = "120s"
+      dir     = "umls"
     }
-  
+
     step {
-      name       = "gcr.io/cloud-builders/gsutil"
-      args       = ["cp", "/workspace/*.png", var.plantuml.bucket_name]
-      timeout    = "120s"
-      dir        = "umls" 
+      name    = "gcr.io/cloud-builders/gsutil"
+      args    = ["cp", "/workspace/*.png", var.plantuml.bucket_name]
+      timeout = "120s"
+      dir     = "umls"
     }
 
     options {
-        logging                 = "GCS_ONLY" 
-        
+      logging = "GCS_ONLY"
+
     }
-    logs_bucket             = var.cloudbuildbucket
+    logs_bucket = var.cloudbuildbucket
   }
 }
 
 resource "google_cloudbuild_trigger" "terraform" {
-  name = "terraform"
-  project = var.project_id
+  name     = "terraform"
+  project  = var.project_id
   provider = google-beta
-  filename = "terraform/cloudbuild.yaml"
+  # filename        = "terraform/cloudbuild.yaml"
   service_account = var.service_account
   ignored_files   = []
-    included_files  = [
-        "terraform/**",
-    ]
-   github {
-        name  = var.repository_name
-        owner = var.owner
+  included_files = [
+    "terraform/**",
+  ]
+  github {
+    name  = var.repository_name
+    owner = var.owner
 
-        push {
-            branch       = "^main$"
-            invert_regex = false
-        }
+    push {
+      branch       = "^main$"
+      invert_regex = false
+    }
+  }
+
+  build {
+
+    step {
+      name       = "$${_MYREPO}/snykbuild:0.1"
+      args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_terraform$$(date '+%d-%m-%Y').json || true"]
+      dir        = "terraform"
+      secret_env = ["SNYK_TOKEN"]
+    }
+    step {
+      name = "$${_MYREPO}/tfsec:0.1"
+      args = ["sh", "-c", "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
+      dir  = "terraform"
     }
 
+    step {
+      name    = "gcr.io/cloud-builders/gsutil"
+      args    = ["cp", "/workspace/*.png", var.plantuml.bucket_name]
+      timeout = "100s"
+      dir     = "recipes"
+    }
+
+    step {
+      id      = "init"
+      name    = "$${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION"
+      args    = ["init"]
+      timeout = "120s"
+      dir     = "terraform"
+    }
+    step {
+      id      = "apply changes"
+      name    = "$${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION"
+      args    = ["apply", "-var=project_id=$PROJECT_ID", "-auto-approve"]
+      dir     = "terraform"
+    }
+
+
+    available_secrets {
+      secret_manager {
+        env          = "SNYK_TOKEN"
+        version_name = "projects/$PROJECT_ID/secrets/snyk-token/versions/1"
+      }
+    }
+
+    options {
+      logging = "GCS_ONLY"
+
+    }
+    logs_bucket = var.cloudbuildbucket
     substitutions = {
-    _MY_REPO       = "${var.repository_info.image_prefix}"
+      _MY_REPO = "${var.repository_info.image_prefix}"
+      _TERRAFORM_VERSION : "0.1"
+    }
   }
 }
