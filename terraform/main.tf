@@ -46,10 +46,25 @@ data "google_service_account" "gcp_account" {
   project = var.project_id
 }
 
+resource "google_container_registry" "registry" {
+  project  = var.project_id
+  location = "EU"
+}
+
 data "google_container_registry_image" "recipes" {
   name = "recipes"
   tag = "latest"
 }
+
+resource "google_artifact_registry_repository" "my-repo" {
+  provider = google-beta
+
+  location = var.region
+  repository_id = "my-repository"
+  description = "example docker repository"
+  format = "DOCKER"
+}
+
 
 # WORKAROUND 
 data "external" "recipes_digest" {
@@ -133,7 +148,10 @@ module "triggers" {
     version = var.plant_uml_version
   } 
   cloudbuildbucket=google_storage_bucket.builder.url
-  depends_on = [google_storage_bucket.documentation, google_storage_bucket.builder]
+  repository_info = {
+    image_prefix = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.my-repo.name}"
+  }
+  depends_on = [google_storage_bucket.documentation, google_storage_bucket.builder, google_artifact_registry_repository.my-repo]
 }
 
 
@@ -156,15 +174,15 @@ resource "google_service_account_key" "firebase_admin_key" {
   service_account_id = data.google_service_account.firebase_admin.name
 }
 
-module "recipes"{
-  source = "./modules/recipes"
-   project_id = var.project_id
-   service_account="recipes-worker"
-   region=var.region
-   image=data.external.recipes_digest.result.image
-  #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
-  #  image="gcr.io/coastal-idea-336409/recipes:latest"
-  firebase_config =  base64decode(google_service_account_key.firebase_admin_key.private_key)
-}
+# module "recipes"{
+#   source = "./modules/recipes"
+#    project_id = var.project_id
+#    service_account="recipes-worker"
+#    region=var.region
+#    image=data.external.recipes_digest.result.image
+#   #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
+#   #  image="gcr.io/coastal-idea-336409/recipes:latest"
+#   firebase_config =  base64decode(google_service_account_key.firebase_admin_key.private_key)
+# }
 
 

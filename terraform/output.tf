@@ -39,13 +39,13 @@ output "firebaseConfig"{
 }
 
 
-output "recipesImage" {
-  value = data.external.recipes_digest.result.image
-}
+# output "recipesImage" {
+#   value = data.external.recipes_digest.result.image
+# }
 
-output "recipesPage" {
-  value = module.recipes.service_url
-}
+# output "recipesPage" {
+#   value = module.recipes.service_url
+# }
 
 output "firebaseSdkServiceAccount" {
   value = data.external.firebase_admin_sdk_account.result.account

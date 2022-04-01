@@ -61,3 +61,7 @@ gcloud iam roles update firebaseAuthGet --project coastal-idea-336409 --add-perm
       - -c
       - |-
         docker build --tag gcr.io/$PROJECT_ID/recipes-base:`cat base_version.txt`  -f base.dockerfile .
+
+//ubuntu login
+gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin europe-central2-docker.pkg.dev     
+dockerbuilds/deploy_all.sh <- initializes    
