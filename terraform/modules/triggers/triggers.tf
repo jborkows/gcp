@@ -177,9 +177,9 @@ resource "google_cloudbuild_trigger" "terraform" {
 
     step {
       name    = "gcr.io/cloud-builders/gsutil"
-      args    = ["cp", "/workspace/*.png", var.plantuml.bucket_name]
+      args    = ["cp", "/workspace/report*", var.plantuml.bucket_name]
       timeout = "100s"
-      dir     = "recipes"
+      dir     = "terraform"
     }
 
     step {
