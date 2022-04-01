@@ -186,7 +186,7 @@ resource "google_cloudbuild_trigger" "terraform" {
       id      = "init"
       name    = "$${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION"
       args    = ["init"]
-      timeout = "120s"
+      timeout = "100s"
       dir     = "terraform"
     }
     step {
