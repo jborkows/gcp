@@ -260,7 +260,7 @@ resource "google_cloudbuild_trigger" "recipes" {
     }
     step {
       name    = "gcr.io/cloud-builders/docker"
-      args    = ["push", "$${_MYREPO}/recipes:latest", "."]
+      args    = ["push", "$${_MYREPO}/recipes:latest"]
       dir     = "recipes"
     }
 

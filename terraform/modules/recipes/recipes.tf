@@ -9,7 +9,7 @@ resource "google_project_iam_binding" "service_permissions" {
     "run.invoker"
   ])
 
-  project = var.project_id
+  project    = var.project_id
   role       = "roles/${each.key}"
   members    = [local.recipes_worker_sa]
   depends_on = [google_service_account.recipes_worker]
@@ -28,11 +28,11 @@ resource "google_cloud_run_service" "recipe_svc" {
       containers {
         image = var.image
         env {
-          name = "PROJECT_ID"
+          name  = "PROJECT_ID"
           value = var.project_id
         }
         env {
-          name ="FIREBASE_CONFIG"
+          name  = "FIREBASE_CONFIG"
           value = var.firebase_config
         }
       }
@@ -44,15 +44,14 @@ resource "google_cloud_run_service" "recipe_svc" {
   }
 
 
- metadata {
-      annotations = {
-        "autoscaling.knative.dev/maxScale"      = "2"
-        "run.googleapis.com/client-name"        = "terraform"
-        "run.googleapis.com/ingress"        = "all"
-        # "run.googleapis.com/ingress"        = "internal"
-      }
+  metadata {
+    annotations = {
+      "autoscaling.knative.dev/maxScale" = "2"
+      "run.googleapis.com/client-name"   = "terraform"
+      "run.googleapis.com/ingress"       = "all"
+      # "run.googleapis.com/ingress"        = "internal"
     }
-
+  }
 }
 
 # Set service public
@@ -68,25 +67,25 @@ resource "google_cloud_run_service" "recipe_svc" {
 
 resource "google_cloud_run_service_iam_policy" "policy" {
   location = google_cloud_run_service.recipe_svc.location
-  project = google_cloud_run_service.recipe_svc.project
-  service = google_cloud_run_service.recipe_svc.name
+  project  = google_cloud_run_service.recipe_svc.project
+  service  = google_cloud_run_service.recipe_svc.name
   policy_data = jsonencode(
-            {
-               bindings = [
-                   {
-                       members = [
-                          #  "allAuthenticatedUsers",
-                          "allUsers"
-                        ]
-                       role    = "roles/run.invoker"
-                    }
-                ]
-            }
-        )
-    depends_on = [
-      # google_cloud_run_service.recipe_svc,
-      google_service_account.recipes_worker
-    ]
+    {
+      bindings = [
+        {
+          members = [
+            #  "allAuthenticatedUsers",
+            "allUsers"
+          ]
+          role = "roles/run.invoker"
+        }
+      ]
+    }
+  )
+  depends_on = [
+    google_cloud_run_service.recipe_svc,
+    google_service_account.recipes_worker
+  ]
 }
 
 # resource "google_cloud_run_service_iam_binding" "binding" {
@@ -111,6 +110,6 @@ resource "google_cloud_run_service_iam_policy" "policy" {
 # }
 
 locals {
-  deployment_name = "recipe"
-  recipes_worker_sa  = "serviceAccount:${google_service_account.recipes_worker.email}"
+  deployment_name   = "recipe"
+  recipes_worker_sa = "serviceAccount:${google_service_account.recipes_worker.email}"
 }

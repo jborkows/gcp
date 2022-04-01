@@ -68,7 +68,7 @@ resource "google_artifact_registry_repository" "my-repo" {
 
 # WORKAROUND 
 data "external" "recipes_digest" {
-  program = ["sh", "${path.module}/scripts/get_latest_tag.sh", var.project_id, "recipes"]
+  program = ["sh", "${path.module}/scripts/get_latest_tag.sh", var.project_id, "recipes", local.repository_full]
 }
 # END WORKAROUND
 
@@ -149,7 +149,7 @@ module "triggers" {
   } 
   cloudbuildbucket=google_storage_bucket.builder.url
   repository_info = {
-    image_prefix = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.my-repo.name}"
+    image_prefix = "${var.region}-docker.pkg.dev/${var.project_id}/${local.repository_name}"
   }
   depends_on = [google_storage_bucket.documentation, google_storage_bucket.builder, google_artifact_registry_repository.my-repo]
 }
@@ -174,15 +174,19 @@ resource "google_service_account_key" "firebase_admin_key" {
   service_account_id = data.google_service_account.firebase_admin.name
 }
 
-# module "recipes"{
-#   source = "./modules/recipes"
-#    project_id = var.project_id
-#    service_account="recipes-worker"
-#    region=var.region
-#    image=data.external.recipes_digest.result.image
-#   #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
-#   #  image="gcr.io/coastal-idea-336409/recipes:latest"
-#   firebase_config =  base64decode(google_service_account_key.firebase_admin_key.private_key)
-# }
+module "recipes"{
+  source = "./modules/recipes"
+   project_id = var.project_id
+   service_account="recipes-worker"
+   region=var.region
+   image=data.external.recipes_digest.result.image
+  #  image="gcr.io/coastal-idea-336409/recipes@sha256:9cde27f716e5ea54eca1903f2747167dd439c91f4f3be1740c463637873d3e55"
+  #  image="gcr.io/coastal-idea-336409/recipes:latest"
+  firebase_config =  base64decode(google_service_account_key.firebase_admin_key.private_key)
+}
 
 
+locals {
+  repository_name = google_artifact_registry_repository.my-repo.name
+  repository_full = "${var.region}-docker.pkg.dev/${var.project_id}/${local.repository_name}"
+}
