@@ -78,7 +78,7 @@ data "external" "executor" {
 
 # Create a Google Cloud Storage Bucket
 resource "google_storage_bucket" "bucket" {
-  name          = "${var.project_id}_example"
+  name          = "${var.project_id}_reports"
   location      = var.region
   uniform_bucket_level_access = true
   storage_class = var.storage_class
