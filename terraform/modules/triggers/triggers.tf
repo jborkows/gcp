@@ -210,7 +210,7 @@ resource "google_cloudbuild_trigger" "terraform" {
     }
     logs_bucket = var.cloudbuildbucket
     substitutions = {
-      _MY_REPO = "${var.repository_info.image_prefix}"
+      _MYREPO = "${var.repository_info.image_prefix}"
       _TERRAFORM_VERSION : "0.1"
     }
   }
