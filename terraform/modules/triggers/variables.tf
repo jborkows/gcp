@@ -1,28 +1,28 @@
 variable "repository_name" {
-    type = string
+  type = string
 }
 
 variable "owner" {
-    type = string
+  type = string
 }
 
 variable "project_id" {
-    type = string
+  type = string
 }
 
 
 variable "service_account" {
-    type = string
+  type = string
 }
 
 variable "plantuml" {
-    type = object({bucket_name = string, version=string})
+  type = object({ bucket_name = string, version = string })
 }
 
 variable "repository_info" {
-  type = object({image_prefix = string})
+  type = object({ image_prefix = string })
 }
 
 variable "cloudbuildbucket" {
-    type = string
+  type = string
 }

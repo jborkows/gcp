@@ -8,7 +8,7 @@ script_dir=$(dirname "$0")
 pushd $script_dir
 export version=0.1
 export image_name=${REPOSITORY_LOCATION}/$PROJECT_ID/$REPOSITORY_NAME/snykbuild:${version}
-docker build -t $image_name .   -f snyk.dockerfile .
+docker build -t $image_name -f snyk.dockerfile .
 docker push $image_name
 popd
 
