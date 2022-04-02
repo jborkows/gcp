@@ -22,18 +22,21 @@ resource "google_cloudbuild_trigger" "terraform" {
   build {
 
     step {
+      id         = "snyk"
       name       = "$${_MYREPO}/snykbuild:0.1"
       args       = ["sh", "-c", "snyk iac test --json --severity-threshold=high  > /workspace/report_terraform$$(date '+%d-%m-%Y').json || true"]
       dir        = "terraform"
       secret_env = ["SNYK_TOKEN"]
     }
     step {
+      id   = "tfsec"
       name = "$${_MYREPO}/tfsec:0.1"
       args = ["sh", "-c", "tfsec .  > /workspace/report_tfsec$$(date '+%d-%m-%Y').txt || true"]
       dir  = "terraform"
     }
 
     step {
+      id      = "copy reports"
       name    = "gcr.io/cloud-builders/gsutil"
       args    = ["cp", "/workspace/report*", var.plantuml.bucket_name]
       timeout = "100s"
@@ -48,10 +51,10 @@ resource "google_cloudbuild_trigger" "terraform" {
       dir     = "terraform"
     }
     step {
-      id      = "apply changes"
-      name    = "$${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION"
-      args    = ["apply", "-var=project_id=$PROJECT_ID", "-auto-approve"]
-      dir     = "terraform"
+      id   = "apply changes"
+      name = "$${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION"
+      args = ["apply", "-var=project_id=$PROJECT_ID", "-auto-approve"]
+      dir  = "terraform"
     }
 
 

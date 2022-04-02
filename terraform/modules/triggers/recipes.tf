@@ -3,55 +3,58 @@ data "external" "recipes_number" {
 }
 
 resource "google_cloudbuild_trigger" "recipes" {
-  name = "recipes"
-  project = var.project_id
+  name        = "recipes"
+  project     = var.project_id
   description = "dish recipes"
-  provider = google-beta
+  provider    = google-beta
   # filename = "recipes/cloudbuild.yaml"
   service_account = var.service_account
   ignored_files   = []
-    included_files  = [
-        "recipes/**",
-    ]
-   github {
-        name  = var.repository_name
-        owner = var.owner
+  included_files = [
+    "recipes/**",
+  ]
+  github {
+    name  = var.repository_name
+    owner = var.owner
 
-        push {
-            branch       = "^main$"
-            invert_regex = false
-        }
+    push {
+      branch       = "^main$"
+      invert_regex = false
     }
-
-    build {
+  }
+  build {
 
     step {
+      id         = "snyk"
       name       = "$${_MYREPO}/snykbuild:0.1"
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_recipes$$(date '+%d-%m-%Y').json || true"]
       dir        = "recipes"
       secret_env = ["SNYK_TOKEN"]
     }
     step {
-      id = "copy reports..."
+      id      = "copy reports..."
       name    = "gcr.io/cloud-builders/gsutil"
       args    = ["cp", "/workspace/report*", var.plantuml.bucket_name]
       timeout = "100s"
       dir     = "recipes"
     }
     step {
-      name    = "gcr.io/cloud-builders/docker"
-      args    = ["build", "-t", "$${_MYREPO}/recipes:latest",  "-t", "$${_MYREPO}/${var.recipes_image_name}:${data.external.recipes_number.result.tag}", "."]
-      dir     = "recipes"
+      id   = "build image"
+      name = "gcr.io/cloud-builders/docker"
+      args = ["build", "-t", "$${_MYREPO}/recipes:latest", "-t", "$${_MYREPO}/${var.recipes_image_name}:${data.external.recipes_number.result.tag}", "."]
+      dir  = "recipes"
     }
     step {
-      name    = "gcr.io/cloud-builders/docker"
-      args    = ["push", "$${_MYREPO}/${var.recipes_image_name}"]
-      dir     = "recipes"
+      id   = "push image"
+      name = "gcr.io/cloud-builders/docker"
+      args = ["push", "$${_MYREPO}/${var.recipes_image_name}"]
+      dir  = "recipes"
     }
 
     step {
-      name    = "gcr.io/google.com/cloudsdktool/cloud-sdk"
-      args    = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
+      id   = "trigger terraform"
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
+      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
     }
 
     available_secrets {

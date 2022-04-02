@@ -31,6 +31,7 @@ resource "google_cloudbuild_trigger" "frontend" {
 
 
     step {
+      id = "fetch data from base image"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["ln",
         "-s",
@@ -40,6 +41,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
+      id = "npm linter"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["sh",
         "-c",
@@ -49,6 +51,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
+      id = "snyk"
       name       = "$${_MYREPO}/snykbuild:0.1"
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_frontend$$(date '+%d-%m-%Y').json || true"]
       dir        = "firebase"
@@ -65,6 +68,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
+      id = "build react"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["npm",
         "run",
@@ -74,6 +78,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
+      id = "deploy to firebase"
       name = "$${_MYREPO}/firebase"
       args = [
         "deploy",
