@@ -28,3 +28,4 @@ GCLOUD_CCC=$(gcloud version --ongoing 2>&1)
 SNAP_DIR=$(which terraform )
 echo "{\"project\": \"${PROJECT}\", \"image\": \"${REPO}/${IMAGE}@${LATEST}\" }"
 
+REPO=europe-central2-docker.pkg.dev/coastal-idea-336409/my-repository

@@ -26,10 +26,11 @@ if [ -z "$PAIR" ]
 then
    echo "{\"tag\": \"1.00\"}";exit 0;
 fi
-re='^[0-9]+([.][0-9][0-9]?)$'
-if ! [[ $PAIR =~ $re ]] ; then
-   echo "{\"tag\": \"1.00\"}"
-else 
-   NEW_TAG=$(echo "scale=2; (100*$PAIR+1)/100"|bc)
-   echo "{\"tag\": \"$NEW_TAG\"}"
-fi
+#  the simplest regexp does not work!
+# re=[0-9][.][0-9][0-9]
+# PAIR=1
+# if ! [[ $PAIR =~ re ]] ; then
+#    echo "{\"tag\": \"1xx.00${PAIR}\"}";exit 0;  
+# fi
+ NEW_TAG=$(echo "scale=2; (100*$PAIR+1)/100"|bc)
+ echo "{\"tag\": \"$NEW_TAG\"}"

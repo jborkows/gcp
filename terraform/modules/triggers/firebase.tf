@@ -9,11 +9,11 @@ resource "google_cloudbuild_trigger" "frontend" {
   description     = "firebase frontend"
   provider        = google-beta
   service_account = var.service_account
-  ignored_files   = [
-      "firebase/Dockerfile",
-         "firebase/package.json", 
-         "firebase/package-lock.json", 
-        #  "firebase/cloudbuild-react.json"
+  ignored_files = [
+    "firebase/Dockerfile",
+    "firebase/package.json",
+    "firebase/package-lock.json",
+    #  "firebase/cloudbuild-react.json"
   ]
   included_files = [
     "firebase/**",
@@ -31,7 +31,7 @@ resource "google_cloudbuild_trigger" "frontend" {
 
 
     step {
-      id = "fetch data from base image"
+      id   = "fetch data from base image"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["ln",
         "-s",
@@ -41,7 +41,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
-      id = "npm linter"
+      id   = "npm linter"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["sh",
         "-c",
@@ -51,7 +51,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
-      id = "snyk"
+      id         = "snyk"
       name       = "$${_MYREPO}/snykbuild:0.1"
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_frontend$$(date '+%d-%m-%Y').json || true"]
       dir        = "firebase"
@@ -68,7 +68,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
-      id = "build react"
+      id   = "build react"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["npm",
         "run",
@@ -78,7 +78,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
-      id = "deploy to firebase"
+      id   = "deploy to firebase"
       name = "$${_MYREPO}/firebase"
       args = [
         "deploy",
@@ -114,6 +114,10 @@ data "external" "date" {
   program = ["sh", "${path.module}/../../scripts/date.sh"]
 }
 
+data "external" "react_base_number" {
+  program = ["sh", "${path.module}/../../scripts/new_numeric_tag.sh", var.project_id, var.recipes_image_name, var.repository_info.image_prefix]
+}
+
 resource "google_cloudbuild_trigger" "frontend-base" {
   name            = "frontend-base-docker"
   project         = var.project_id
@@ -123,9 +127,9 @@ resource "google_cloudbuild_trigger" "frontend-base" {
   ignored_files   = []
   included_files = [
     "firebase/Dockerfile",
-         "firebase/package.json", 
-         "firebase/package-lock.json", 
-        #  "firebase/cloudbuild-react.json"
+    "firebase/package.json",
+    "firebase/package-lock.json",
+    #  "firebase/cloudbuild-react.json"
   ]
   github {
     name  = var.repository_name
@@ -140,22 +144,25 @@ resource "google_cloudbuild_trigger" "frontend-base" {
 
 
     step {
+      id   = "build react base"
       name = "gcr.io/cloud-builders/docker"
-      args = [  "build", "-t", "$${_MYREPO}/${local.react_base_name}", "-t","$${_MYREPO}/${local.react_base_name}:${data.external.date.result.date}" , "."]
-      dir = "firebase"
+      args = ["build", "-t", "$${_MYREPO}/${local.react_base_name}", "-t", "$${_MYREPO}/${local.react_base_name}:${data.external.react_base_number.result.tag}", "."]
+      dir  = "firebase"
     }
 
     step {
+      id   = "push image"
       name = "gcr.io/cloud-builders/docker"
-      args = [  "push", "$${_MYREPO}/${local.react_base_name}"]
-      dir = "firebase"
+      args = ["push", "$${_MYREPO}/${local.react_base_name}"]
+      dir  = "firebase"
     }
 
-     step {
-      name    = "gcr.io/google.com/cloudsdktool/cloud-sdk"
-      args    = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
+    step {
+      id = "trigger terraform"
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
+      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
     }
-  
+
     options {
       logging = "GCS_ONLY"
 
@@ -169,6 +176,6 @@ resource "google_cloudbuild_trigger" "frontend-base" {
 }
 
 locals {
-  react_base_name="react-base"
-  frontend_trigger="frontend"
+  react_base_name  = "react-base"
+  frontend_trigger = "frontend"
 }
