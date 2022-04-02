@@ -152,10 +152,10 @@ resource "google_cloudbuild_trigger" "frontend-base" {
 
     step {
       name = "gcr.io/cloud-builders/docker"
-      args = [  "build", "-t", "gcr.io/$PROJECT_ID/react-base", "-t","gcr.io/$PROJECT_ID/react-base:${data.external.date.result.date}" , "."]
+      args = [  "build", "-t", "$${_MYREPO}/react-base", "-t","$${_MYREPO}/react-base:${data.external.date.result.date}" , "."]
       dir = "firebase"
     }
-
+   images =  ["$${_MYREPO}/react-base"]
     options {
       logging = "GCS_ONLY"
 
