@@ -20,10 +20,13 @@ REPO=$3
 # deep JSON is invalid for terraform, so serve flat value
 # LATEST=$(gcloud container images describe gcr.io/${PROJECT}/${IMAGE}:latest  --format="value(image_summary.fully_qualified_digest)" | tr -d '\n')
 # LATEST=$(gcloud artifacts docker images list $REPO --filter="package ~ $IMAGE" --format="value(version)" | tr -d '\n')
-LATEST=$(gcloud artifacts docker tags list $REPO --filter="tag:latest" --filter="tag ~ $IMAGE"  --format="value(tag)" | grep -v latest | tr -d '\n')
+LATEST_VERSION=$(gcloud artifacts docker tags list $REPO --filter=" tag ~ $IMAGE AND tag:latest" --format="value(version)"| tr -d '\n' )
+PAIR=$(gcloud artifacts docker tags list $REPO --filter=" version ~ $LATEST_VERSION" --format="value(tag)"| grep -v latest | tr -d '\n' )
+
+
 GCLOUD_CCC=$(gcloud version --ongoing 2>&1)
 
 # echo "{\"image\": \"${LATEST}\"}"
 # SNAP_DIR=$(ls /snap/bin --format=comma |  sed -e 's/"/\n\,"/g' )
 SNAP_DIR=$(which terraform )
-echo "{\"project\": \"${PROJECT}\", \"image\": \"${REPO}/${IMAGE}@${LATEST}\", \"tag\": \"${LATEST}\" }"
+echo "{\"project\": \"${PROJECT}\", \"image\": \"${REPO}/${IMAGE}@${PAIR}\", \"tag\": \"${PAIR}\" }"

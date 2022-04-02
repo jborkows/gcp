@@ -27,3 +27,4 @@ GCLOUD_CCC=$(gcloud version --ongoing 2>&1)
 # SNAP_DIR=$(ls /snap/bin --format=comma |  sed -e 's/"/\n\,"/g' )
 SNAP_DIR=$(which terraform )
 echo "{\"project\": \"${PROJECT}\", \"image\": \"${REPO}/${IMAGE}@${LATEST}\" }"
+
