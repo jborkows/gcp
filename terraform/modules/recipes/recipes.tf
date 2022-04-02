@@ -16,6 +16,10 @@ resource "google_project_iam_binding" "service_permissions" {
 }
 
 
+data "external" "recipes_image_tag" {
+  program = ["sh", "${path.module}/../../scripts/get_pair_for_lates.sh", var.project_id, var.recipes_image_name, var.repository_info.image_prefix]
+}
+
 # The Cloud Run service
 resource "google_cloud_run_service" "recipe_svc" {
   name                       = local.deployment_name
@@ -26,7 +30,7 @@ resource "google_cloud_run_service" "recipe_svc" {
     spec {
       service_account_name = google_service_account.recipes_worker.email
       containers {
-        image = var.image
+        image = "${var.repository_info.image_prefix}/${var.recipes_image_name}:${data.external.recipes_image_tag.result.tag}"
         env {
           name  = "PROJECT_ID"
           value = var.project_id

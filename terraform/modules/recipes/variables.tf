@@ -12,10 +12,14 @@ variable "region" {
     type = string
 }
 
-variable "image" {
+variable "recipes_image_name" {
     type = string 
 }
 
 variable "firebase_config" {
   
+}
+
+variable "repository_info" {
+  type = object({ image_prefix = string })
 }

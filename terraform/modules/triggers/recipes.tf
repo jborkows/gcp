@@ -1,3 +1,8 @@
+data "external" "recipes_date" {
+  program = ["sh", "${path.module}/../../scripts/date.sh"]
+}
+
+
 resource "google_cloudbuild_trigger" "recipes" {
   name = "recipes"
   project = var.project_id
@@ -36,12 +41,12 @@ resource "google_cloudbuild_trigger" "recipes" {
     }
     step {
       name    = "gcr.io/cloud-builders/docker"
-      args    = ["build", "-t", "$${_MYREPO}/recipes:latest", "."]
+      args    = ["build", "-t", "$${_MYREPO}/recipes:latest",  "-t", "$${_MYREPO}/recipes:${data.external.recipes_date.result.date}", "."]
       dir     = "recipes"
     }
     step {
       name    = "gcr.io/cloud-builders/docker"
-      args    = ["push", "$${_MYREPO}/recipes:latest"]
+      args    = ["push", "$${_MYREPO}/recipes"]
       dir     = "recipes"
     }
 

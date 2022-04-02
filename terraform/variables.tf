@@ -30,3 +30,9 @@ variable "plant_uml_version" {
   default = "0.1"
   type = string
 }
+
+
+variable "recipes_image_name" {
+  type=string
+  default="recipes"
+}

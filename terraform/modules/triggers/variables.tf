@@ -32,3 +32,7 @@ variable "terraform_trigger_name" {
     default = "terraform"
   
 }
+
+variable "recipes_image_name" {
+  type=string
+}

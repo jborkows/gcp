@@ -29,4 +29,8 @@ GCLOUD_CCC=$(gcloud version --ongoing 2>&1)
 # echo "{\"image\": \"${LATEST}\"}"
 # SNAP_DIR=$(ls /snap/bin --format=comma |  sed -e 's/"/\n\,"/g' )
 SNAP_DIR=$(which terraform )
+if [ -z "$PAIR" ]
+then
+      PAIR=latest
+fi
 echo "{\"project\": \"${PROJECT}\", \"image\": \"${REPO}/${IMAGE}@${PAIR}\", \"tag\": \"${PAIR}\" }"
