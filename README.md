@@ -65,3 +65,6 @@ gcloud iam roles update firebaseAuthGet --project coastal-idea-336409 --add-perm
 //ubuntu login
 gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin europe-central2-docker.pkg.dev     
 dockerbuilds/deploy_all.sh <- initializes    
+
+xx = $(gcloud artifacts docker tags list europe-central2-docker.pkg.dev/coastal-idea-336409/my-repository --filter="tag:latest" --filter="tag ~ react-base")
+gcloud artifacts docker tags list europe-central2-docker.pkg.dev/coastal-idea-336409/my-repository --filter="-tag:latest and version=$xx")
