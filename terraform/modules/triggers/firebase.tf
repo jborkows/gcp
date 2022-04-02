@@ -115,7 +115,7 @@ data "external" "date" {
 }
 
 data "external" "react_base_number" {
-  program = ["sh", "${path.module}/../../scripts/new_numeric_tag.sh", var.project_id, var.recipes_image_name, var.repository_info.image_prefix]
+  program = ["sh", "${path.module}/../../scripts/new_numeric_tag.sh", var.project_id, local.react_base_name, var.repository_info.image_prefix]
 }
 
 resource "google_cloudbuild_trigger" "frontend-base" {
