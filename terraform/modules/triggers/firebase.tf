@@ -119,7 +119,8 @@ resource "google_cloudbuild_trigger" "frontend-base" {
   included_files = [
     "firebase/Dockerfile",
          "firebase/package.json", 
-         "firebase/cloudbuild-react.json"
+         "firebase/package-lock.json", 
+        #  "firebase/cloudbuild-react.json"
   ]
   github {
     name  = var.repository_name
