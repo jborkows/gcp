@@ -9,7 +9,12 @@ resource "google_cloudbuild_trigger" "frontend" {
   description     = "firebase frontend"
   provider        = google-beta
   service_account = var.service_account
-  ignored_files   = []
+  ignored_files   = [
+      "firebase/Dockerfile",
+         "firebase/package.json", 
+         "firebase/package-lock.json", 
+        #  "firebase/cloudbuild-react.json"
+  ]
   included_files = [
     "firebase/**",
   ]
