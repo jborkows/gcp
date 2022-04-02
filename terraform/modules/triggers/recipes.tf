@@ -1,7 +1,6 @@
-data "external" "recipes_date" {
-  program = ["sh", "${path.module}/../../scripts/date.sh"]
+data "external" "recipes_number" {
+  program = ["sh", "${path.module}/../../scripts/new_numeric_tag.sh", var.project_id, var.recipes_image_name, var.repository_info.image_prefix]
 }
-
 
 resource "google_cloudbuild_trigger" "recipes" {
   name = "recipes"
@@ -41,12 +40,12 @@ resource "google_cloudbuild_trigger" "recipes" {
     }
     step {
       name    = "gcr.io/cloud-builders/docker"
-      args    = ["build", "-t", "$${_MYREPO}/recipes:latest",  "-t", "$${_MYREPO}/recipes:${data.external.recipes_date.result.date}", "."]
+      args    = ["build", "-t", "$${_MYREPO}/recipes:latest",  "-t", "$${_MYREPO}/${var.recipes_image_name}:${data.external.recipes_number.result.tag}", "."]
       dir     = "recipes"
     }
     step {
       name    = "gcr.io/cloud-builders/docker"
-      args    = ["push", "$${_MYREPO}/recipes"]
+      args    = ["push", "$${_MYREPO}/${var.recipes_image_name}"]
       dir     = "recipes"
     }
 
