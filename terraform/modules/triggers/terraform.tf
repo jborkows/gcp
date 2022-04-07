@@ -1,6 +1,6 @@
 
 resource "google_cloudbuild_trigger" "terraform-build" {
-  name     = "terraform build"
+  name     = "terraform-build"
   project  = var.project_id
   description = "performs check of terraform and trigger terraform apply"
   provider = google-beta
