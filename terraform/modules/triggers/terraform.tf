@@ -74,6 +74,7 @@ resource "google_cloudbuild_trigger" "terraform" {
   name     = var.terraform_trigger_name
   project  = var.project_id
   provider = google-beta
+  description = "applies infrastructure structure"
   # filename        = "terraform/cloudbuild.yaml"
   service_account = var.service_account
   ignored_files   = []
@@ -104,14 +105,6 @@ resource "google_cloudbuild_trigger" "terraform" {
       name = "$${_MYREPO}/terraformbuild:$_TERRAFORM_VERSION"
       args = ["apply", "-var=project_id=$PROJECT_ID", "-auto-approve"]
       dir  = "terraform"
-    }
-
-
-    available_secrets {
-      secret_manager {
-        env          = "SNYK_TOKEN"
-        version_name = "projects/$PROJECT_ID/secrets/snyk-token/versions/1"
-      }
     }
 
     options {
