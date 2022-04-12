@@ -41,35 +41,11 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
-      name = "bash"
-      args = ["ls", "-l", "/my-app"]
-    }
-
-
-    step {
-      name = "bash"
-      args = ["ls", "-l", "node_modules"]
-    }
-
-  step {
-    id="whoami"
-      name = "bash"
-      args = ["whoami"]
-    }
-
-  step {
-    id="groups"
-      name = "bash"
-      args = ["groups"]
-    }
-
-    step {
       id   = "npm linter"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["sh",
         "-c",
-        "/my-app/node_modules",
-      "npm run lint >/workspace/report_react_lint$$(date'+%d-%m-%Y').txt || true"]
+       "npm run lint >/workspace/report_react_lint$$(date'+%d-%m-%Y').txt || true"]
       dir = "firebase"
     }
 
