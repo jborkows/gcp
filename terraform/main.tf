@@ -152,6 +152,7 @@ module "triggers" {
     image_prefix = "${local.repository_full}"
   }
   recipes_image_name = var.recipes_image_name
+  location = var.region
   depends_on         = [google_storage_bucket.documentation, google_storage_bucket.builder, google_artifact_registry_repository.my-repo]
 }
 

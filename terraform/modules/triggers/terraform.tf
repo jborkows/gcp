@@ -109,7 +109,7 @@ resource "google_cloudbuild_trigger" "terraform" {
 
     options {
       logging = "GCS_ONLY"
-
+      worker_pool = google_cloudbuild_worker_pool.my-pool.name
     }
     logs_bucket = var.cloudbuildbucket
     substitutions = {

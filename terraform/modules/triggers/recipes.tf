@@ -66,7 +66,7 @@ resource "google_cloudbuild_trigger" "recipes" {
 
     options {
       logging = "GCS_ONLY"
-
+  worker_pool = google_cloudbuild_worker_pool.my-pool.name
     }
     logs_bucket = var.cloudbuildbucket
     substitutions = {

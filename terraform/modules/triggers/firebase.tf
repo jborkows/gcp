@@ -99,6 +99,7 @@ resource "google_cloudbuild_trigger" "frontend" {
 
     options {
       logging = "GCS_ONLY"
+      worker_pool = google_cloudbuild_worker_pool.my-pool.name
 
     }
     logs_bucket = var.cloudbuildbucket
@@ -165,6 +166,7 @@ resource "google_cloudbuild_trigger" "frontend-base" {
 
     options {
       logging = "GCS_ONLY"
+      worker_pool = google_cloudbuild_worker_pool.my-pool.name
 
     }
     logs_bucket = var.cloudbuildbucket
