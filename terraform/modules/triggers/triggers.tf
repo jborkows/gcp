@@ -103,5 +103,3 @@ resource "google_cloudbuild_worker_pool" "my-pool"{
 }
 
 
-
-
