@@ -127,5 +127,5 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User ID: %v\n", user)
 
-	fmt.Fprintf(w, "Za za za za %s %s %s %s !\n", name, "verified", user.PhoneNumber, user.Email)
+	fmt.Fprintf(w, "Za xa xa za %s %s %s %s !\n", name, "verified", user.PhoneNumber, user.Email)
 }
