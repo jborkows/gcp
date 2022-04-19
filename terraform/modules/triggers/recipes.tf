@@ -38,12 +38,6 @@ resource "google_cloudbuild_trigger" "recipes-snyk" {
       timeout = "100s"
       dir     = "recipes"
     }
-  
-    step {
-      id   = "trigger recipes"
-      name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
-      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
-    }
 
     available_secrets {
       secret_manager {
@@ -72,8 +66,8 @@ resource "google_cloudbuild_trigger" "recipes" {
   # filename = "recipes/cloudbuild.yaml"
   service_account = var.service_account
   ignored_files   = []
-  included_files = [
-    "none/**",
+ included_files = [
+    "recipes/**",
   ]
   github {
     name  = var.repository_name

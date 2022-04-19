@@ -47,6 +47,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "-c",
        "npm run lint >/workspace/report_react_lint$$(date'+%d-%m-%Y').txt || true"]
       dir = "firebase"
+      wait_for = ["fetch data from base image"]
     }
 
     step {
@@ -55,6 +56,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_frontend$$(date '+%d-%m-%Y').json || true"]
       dir        = "firebase"
       secret_env = ["SNYK_TOKEN"]
+      wait_for = ["fetch data from base image"]
     }
 
 
@@ -64,6 +66,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       args    = ["cp", "/workspace/report*", var.reports_bucket]
       timeout = "100s"
       dir     = "firebase"
+      wait_for = ["snyk", "npm linter"]
     }
 
     step {
@@ -74,6 +77,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "build"
       ]
       dir = "firebase"
+      wait_for = ["fetch data from base image"]
     }
 
     step {
@@ -87,6 +91,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "hosting"
       ]
       dir = "firebase"
+      wait_for = ["build react"]
     }
 
     available_secrets {
