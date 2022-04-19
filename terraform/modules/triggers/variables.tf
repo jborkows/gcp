@@ -40,3 +40,7 @@ variable "terraform_trigger_name" {
 variable "recipes_image_name" {
   type=string
 }
+
+variable "reports_bucket" {
+  type=string
+}

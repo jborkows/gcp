@@ -148,6 +148,7 @@ module "triggers" {
     version     = var.plant_uml_version
   }
   cloudbuildbucket = google_storage_bucket.builder.url
+  reports_bucket = google_storage_bucket.bucket.url
   repository_info = {
     image_prefix = "${local.repository_full}"
   }

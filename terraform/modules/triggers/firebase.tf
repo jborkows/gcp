@@ -61,7 +61,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     step {
       id      = "copy reports..."
       name    = "gcr.io/cloud-builders/gsutil"
-      args    = ["cp", "/workspace/report*", var.plantuml.bucket_name]
+      args    = ["cp", "/workspace/report*", var.reports_bucket]
       timeout = "100s"
       dir     = "firebase"
     }
