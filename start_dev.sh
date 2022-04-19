@@ -4,8 +4,8 @@ RECIPES_PORT=8081
 RECIPES_DEBUG_PORT=2345
 
 pushd terraform
-FIREBASE_CONFIG=$(echo "base64decode(nonsensitive(google_service_account_key.firebase_admin_key.private_key))" | terraform console)
-PROJECT_ID=$(echo "data.google_project.project.project_id" | terraform console)
+FIREBASE_CONFIG=$(echo "base64decode(nonsensitive(google_service_account_key.firebase_admin_key.private_key))" | terraform console | sed 's/<<EOT//' |  sed 's/EOT//')
+PROJECT_ID=$(echo "data.google_project.project.project_id" | terraform console | tr -d "")
 popd
 
 pushd recipes

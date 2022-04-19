@@ -67,16 +67,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 	projectId := strings.ReplaceAll(os.Getenv("PROJECT_ID"),"\"","")
-	// log.Printf("PROJECT_ID %s\n", projectId)
+	log.Printf("PROJECT_ID %s\n", projectId)
 	// log.Printf("FIREBASE_CONFIG %s\n", os.Getenv("FIREBASE_CONFIG"))
 
-        removedPrefix := strings.ReplaceAll(os.Getenv("FIREBASE_CONFIG"), "<<EOT", "")
-        removedSuffix := strings.ReplaceAll(removedPrefix, "EOT", "")
+        // removedPrefix := strings.ReplaceAll(os.Getenv("FIREBASE_CONFIG"), "<<EOT", "")
+        // removedSuffix := strings.ReplaceAll(removedPrefix, "EOT", "")
         // log.Printf("FIREBASE_CONFIG (reworked) %s\n", removedSuffix)
 	config := &firebase.Config{ProjectID: projectId}
         
 
-	opt := option.WithCredentialsJSON([]byte(removedSuffix))
+	opt := option.WithCredentialsJSON([]byte(os.Getenv("FIREBASE_CONFIG")))
 	app, err := firebase.NewApp(ctx, config, opt)
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)
@@ -111,5 +111,5 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User ID: %v\n", user)
 
-	fmt.Fprintf(w, "X za %s %s %s %s !\n", name, "verified", user.PhoneNumber, user.Email)
+	fmt.Fprintf(w, "Zaa xa xa za %s %s %s %s !\n", name, "verified", user.PhoneNumber, user.Email)
 }
