@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"regexp"
+        "strings"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -34,8 +34,7 @@ func main() {
 	}
 }
 
-func getUser(ctx context.Context, app *firebase.App,uid string ) *auth.UserRecord {
-	
+func getUser(ctx context.Context, app *firebase.App, uid string) *auth.UserRecord {
 
 	// [START get_user_golang]
 	// Get an auth client from the firebase.App
@@ -53,19 +52,6 @@ func getUser(ctx context.Context, app *firebase.App,uid string ) *auth.UserRecor
 	return u
 }
 
-func exists(path string) bool {
-        _, err := os.Stat(path)
-        return !errors.Is(err, os.ErrNotExist)
-    }
-
-func writeConfig(path string){
-        f,err := os.Create(path)
-        if err != nil {
-                fmt.Println(err)
-        }
-        defer f.Close()
-        f.Write([]byte( os.Getenv("FIREBASE_CONFIG")))
-}
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	name := os.Getenv("NAME")
@@ -73,57 +59,55 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		name = "World"
 	}
 
-        envPath := "firebase.json"
-        fileExists := exists(envPath)
-        if(!fileExists){
-                log.Printf("Firebase config %v\n", os.Getenv("FIREBASE_CONFIG"))
-                writeConfig(envPath)
-        }
+	if reqHeadersBytes, err := json.Marshal(r.Header); err != nil {
+		log.Println("Could not Marshal Req Headers")
+	} else {
+		log.Println(string(reqHeadersBytes))
+	}
+
+	ctx := context.Background()
+	projectId := strings.ReplaceAll(os.Getenv("PROJECT_ID"),"\"","")
+	// log.Printf("PROJECT_ID %s\n", projectId)
+	// log.Printf("FIREBASE_CONFIG %s\n", os.Getenv("FIREBASE_CONFIG"))
+
+        removedPrefix := strings.ReplaceAll(os.Getenv("FIREBASE_CONFIG"), "<<EOT", "")
+        removedSuffix := strings.ReplaceAll(removedPrefix, "EOT", "")
+        // log.Printf("FIREBASE_CONFIG (reworked) %s\n", removedSuffix)
+	config := &firebase.Config{ProjectID: projectId}
         
 
-        if reqHeadersBytes, err := json.Marshal(r.Header); err != nil {
-                log.Println("Could not Marshal Req Headers")
-            } else {
-                log.Println(string(reqHeadersBytes))
-            }
+	opt := option.WithCredentialsJSON([]byte(removedSuffix))
+	app, err := firebase.NewApp(ctx, config, opt)
+	if err != nil {
+		log.Fatalf("error initializing app: %v\n", err)
+	}
+	client, err := app.Auth(ctx)
+	if err != nil {
+		log.Fatalf("error initializing client: %v\n", err)
+	}
+	reqToken := r.Header.Get("Authorization")
+	if reqToken == "" {
+		fmt.Fprintf(w, "Hello")
+		return
+	}
+	tokenExtractor := regexp.MustCompile(`[Bb]earer (?P<token>.+)`)
+	matches := tokenExtractor.FindStringSubmatch(reqToken)
+	if matches == nil {
+		log.Fatalf("Cannot extract bearer: %v\n", reqToken)
+	}
+	idTokenIndex := tokenExtractor.SubexpIndex("token")
+	idToken := matches[idTokenIndex]
+	log.Printf("Id token: %v\n", idToken)
+	token, err := client.VerifyIDToken(ctx, idToken)
 
-        ctx := context.Background()
-        projectId := os.Getenv("PROJECT_ID")
-        config := &firebase.Config{ProjectID: projectId}
+	if err != nil {
+		log.Fatalf("error verifying ID token: %v\n", err)
+	}
 
-        opt := option.WithCredentialsJSON([]byte( os.Getenv("FIREBASE_CONFIG")))
-        app, err := firebase.NewApp(ctx, config, opt)
-        if err != nil {
-                        log.Fatalf("error initializing app: %v\n", err)
-                }
-        client, err := app.Auth(ctx)
-        if err != nil {
-                log.Fatalf("error initializing client: %v\n", err)
-        }
-        reqToken := r.Header.Get("Authorization")
-        if(reqToken == ""){
-                fmt.Fprintf(w, "Hello")
-                return
-        }
-        tokenExtractor := regexp.MustCompile(`[Bb]earer (?P<token>.+)`)
-        matches := tokenExtractor.FindStringSubmatch(reqToken)
-        if matches == nil {
-                log.Fatalf("Cannot extract bearer: %v\n", reqToken)
-        }
-        idTokenIndex := tokenExtractor.SubexpIndex("token")
-        idToken := matches[idTokenIndex]
-        log.Printf("Id token: %v\n", idToken)
-        token, err := client.VerifyIDToken(ctx, idToken)
+	log.Printf("Verified ID token: %v\n", token)
 
-        if err != nil {
-                log.Fatalf("error verifying ID token: %v\n", err)
-        }
-        
-        log.Printf("Verified ID token: %v\n", token)
-       
-
-        //not working auth/insufficient-permission
-        user := getUser(context.Background(), app, token.UID)
+	//not working auth/insufficient-permission
+	user := getUser(context.Background(), app, token.UID)
 
 	log.Printf("User ID: %v\n", user)
 

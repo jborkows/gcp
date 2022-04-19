@@ -19,6 +19,8 @@ const uiConfig = {
 };
 
 
+
+
 const Foo = () => {
   const [text, setText] = useState("")
   useEffect(() => {
@@ -62,7 +64,7 @@ export const SignInScreen = () => {
   if (!isSignedIn) {
     return (
       <div>
-        <h1>My App</h1>
+        <h1>Home automation</h1>
         <p>Please sign-in:</p>
         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth.getAuth()} />
       </div>
@@ -70,7 +72,7 @@ export const SignInScreen = () => {
   }
   return (
     <div>
-      <h1>My App</h1>
+      <h1>Home automation</h1>
       <p>Welcome {auth.getAuth()?.currentUser?.displayName}! You are now signed-in!</p>
       <a onClick={() => auth.getAuth().signOut()}>Sign-out</a>
       {auth.getAuth() != null && <Foo />}
