@@ -69,10 +69,9 @@ interface LoggeInProps {
 
 export const LoggedIn = (props:LoggeInProps)=>{
   return <div className='LoginContainer'>
-  <h1>Home automation</h1>
+  <h1>Home automation.</h1>
   <p>Welcome {props.userData.username}! You are now signed-in!</p>
   <a onClick={() => auth.getAuth().signOut()} className="signout">Sign-out</a>
-  {/* {auth.getAuth() != null && <Foo />} */}
 </div>;
 }
 
