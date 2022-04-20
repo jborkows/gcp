@@ -170,7 +170,7 @@ resource "google_cloudbuild_trigger" "frontend-base" {
 
     options {
       logging = "GCS_ONLY"
-      worker_pool = google_cloudbuild_worker_pool.my-pool.id
+      # worker_pool = google_cloudbuild_worker_pool.my-pool.id
 
     }
     logs_bucket = var.cloudbuildbucket
