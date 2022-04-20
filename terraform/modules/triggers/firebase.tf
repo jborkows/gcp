@@ -163,9 +163,9 @@ resource "google_cloudbuild_trigger" "frontend-base" {
     }
 
     step {
-      id = "trigger terraform"
+      id = "trigger frontend"
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
-      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
+      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${locals.frontend_trigger}", "--branch", "$${BRANCH_NAME}"]
     }
 
     options {
