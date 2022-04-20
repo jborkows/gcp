@@ -88,7 +88,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "--project",
         "$${PROJECT_ID}",
         "--only",
-        "hosting"
+        "functions,hosting"
       ]
       dir = "firebase"
       wait_for = ["build react"]
