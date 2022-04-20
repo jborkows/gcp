@@ -165,12 +165,12 @@ resource "google_cloudbuild_trigger" "frontend-base" {
     step {
       id = "trigger frontend"
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
-      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${local.frontend_trigger}", "--branch", "$${BRANCH_NAME}"]
+      args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
     }
 
     options {
       logging = "GCS_ONLY"
-      # worker_pool = google_cloudbuild_worker_pool.my-pool.id
+      worker_pool = google_cloudbuild_worker_pool.my-pool.id
 
     }
     logs_bucket = var.cloudbuildbucket
