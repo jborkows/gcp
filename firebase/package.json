@@ -2,7 +2,7 @@
   "private": true,
   "main": "firebaseFunctions.js",
   "scripts": {
-    "dev": "next src/",
+    "dev":  "next src/",
     "build": "next build src/",
     "start": "next start src/",
     "serve": "npm run build && firebase emulators:start --only functions,hosting",
