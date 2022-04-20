@@ -1,13 +1,12 @@
 import React from 'react'
-import Header from './Header'
-import { SignInWrapper } from './SignInWrapper';
+import Header from '../header/Header'
 
 
 const App = ({ children }) => {
   
   return <main>
     <Header />
-    <SignInWrapper/>
+    {children}
   </main>
 }
 

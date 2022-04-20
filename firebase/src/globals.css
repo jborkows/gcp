@@ -1,0 +1,39 @@
+header {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 0.2rem;
+    justify-content: center;
+    align-items: center;
+}
+
+/* #firebaseui_container {
+    z-index: 10;
+    position: relative;
+} */
+
+.LoginContainer {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.siginoverlay {
+    z-index: 8;
+    background-color: rgba(129, 123, 123, 0.9);
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.signout {
+    cursor: pointer;
+    border-radius: 0.25rem;
+    border-color: gray;
+    border-style: solid;
+    padding: 0.2rem;
+    box-shadow: 0.1rem 0.1rem;
+    font-style: italic;
+}

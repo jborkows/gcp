@@ -13,6 +13,8 @@ running_app=$(lsof -ti :$RECIPES_PORT)
 echo $running_app
 [[ -n "$running_app" ]] && echo $running_app
 [[ -n "$running_app" ]] && kill $running_app
+running_app_debug=$(lsof -ti :$RECIPES_DEBUG_PORT)
+[[ -n "$running_app_debug" ]] && kill $running_app_debug
 # FIREBASE_CONFIG=$FIREBASE_CONFIG PROJECT_ID=$PROJECT_ID PORT=$RECIPES_PORT go run main.go &
 FIREBASE_CONFIG=$FIREBASE_CONFIG PROJECT_ID=$PROJECT_ID PORT=$RECIPES_PORT ~/go/bin/dlv debug main.go --headless --listen=:$RECIPES_DEBUG_PORT --api-version=2 --accept-multiclient --continue &
 popd

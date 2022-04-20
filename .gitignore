@@ -119,3 +119,4 @@ modules.xml
 **/.firebase
 *.firebaserc
 terraform/.infracost/
+__debug_bin

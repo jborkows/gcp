@@ -1,11 +1,15 @@
 import React from 'react'
-// import '../styles/globals.css'
-
+import '../globals.css'
+import { Provider } from 'react-redux'
+import { store } from '../app/store'
 
 const MyApp = ({ Component, pageProps }) => {
 
   // eslint-disable-next-line react/jsx-props-no-spreading
-  return <Component {...pageProps} />
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>)
 }
 
 export default MyApp
