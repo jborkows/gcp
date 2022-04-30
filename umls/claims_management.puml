@@ -1,0 +1,26 @@
+@startuml Custom claims management
+!include templates/C4_Container.puml
+!include sprites/gcpcommon.puml
+!include sprites/firebase.puml
+!include sprites/go.puml
+!include sprites/nextjs.puml
+!include sprites/kotlin.puml
+!include sprites/java.puml
+!include sprites/firestore.puml
+!include sprites/pubsub.puml
+
+title "Custom claims management"
+
+System(controller, "User interaction component")
+
+Container_Boundary(c1, "utility") {
+    Container(claims_management, "claims management", "go", "Manages users custom claims", $sprite="go,color=black")
+}
+
+System_Ext(firebaseAuth, "Firebase auth",  $sprite="firebase,color=orange")
+
+Rel_R(controller, claims_management, "command line", "Add/Remove/List custom claims")
+Rel_R(claims_management, firebaseAuth, "stores/reads claims")
+
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml Menu
+!include templates/C4_Container.puml
+!include sprites/gcpcommon.puml
+!include sprites/firebase.puml
+!include sprites/go.puml
+!include sprites/nextjs.puml
+!include sprites/kotlin.puml
+!include sprites/java.puml
+!include sprites/firestore.puml
+!include sprites/pubsub.puml
+
+title "Menu component"
+
+System(controller, "User interaction component")
+System(recipes, "Recipes")
+Container_Boundary(c1, "Menu") {
+    Container(menu_frontend, "Frontend service","go", $sprite="go,color=black")
+    Container(menu, "Menu for current day [web api, queue reactor, backed]", "go", $sprite="go,color=black")
+}
+System_Ext(firebaseAuth, "Firebase auth",  $sprite="firebase,color=orange")
+SystemQueue_Ext(pubsub, "Pub sub", $sprite="CloudPubSub,scale=0.5,color=blue")
+SystemDb_Ext(firestore, "Firestore", $sprite="CloudFirestore,scale=0.5,color=blue")
+
+Rel_D(controller, menu_frontend, "https", "Gets menu for a day. Set menu for a period.")
+Rel_R(menu_frontend, firebaseAuth, verifies user)
+menu_frontend -> menu : "Pass verified action"
+Rel_L(menu, recipes, "Finds product/items belonging to recipe")
+
+Rel_D(menu,firestore, "Uses as backend")
+menu -[#FF00FF]-> pubsub: Menu decided for a day
+pubsub -[#00FAFF]-> menu: Some product were missing - needs buying
+pubsub -[#00FAFF]-> menu: Product item are available.
+
+
+@enduml

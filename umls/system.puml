@@ -1,0 +1,49 @@
+@startuml System
+!include templates/C4_Container.puml
+!include sprites/gcpcommon.puml
+!include sprites/firebase.puml
+!include sprites/go.puml
+!include sprites/nextjs.puml
+!include sprites/kotlin.puml
+!include sprites/java.puml
+!include sprites/firestore.puml
+!include sprites/pubsub.puml
+
+title "General system view"
+
+Person(admin, "Administrator")
+Person(user, "User")
+System_Boundary(c1, "Home automation") {
+    Container(webui, "firebase hosted application", "ts, js, nextjs", $sprite="nextjs-icon")
+    Container(claims_management, "claims management", "go", "Manages users custom claims", $sprite="go,color=black")
+    Container(menu, "Menu for current day", "go", $sprite="go,color=black")
+    Container(recipes, "Recipes", "kotlin, ktor", $sprite="kotlin,color=Purple")
+    Container(storage, "Storage", "quarkus, java,scala,kotlin", $sprite="java,color=red")
+}
+System_Ext(firebaseAuth, "Firebase auth",  $sprite="firebase,color=orange")
+SystemQueue_Ext(pubsub, "Pub sub", $sprite="CloudPubSub,scale=0.5,color=blue")
+SystemDb_Ext(firestore, "Firestore", $sprite="CloudFirestore,scale=0.5,color=blue")
+
+Rel_D(admin,claims_management, "command line")
+Rel_D(user, webui, "https")
+
+AddRelTag("auth", $textColor="orange", $lineColor="orange", $lineStyle = DashedLine())
+' TODO eliminate gcp from general system view
+Rel(recipes, firebaseAuth , "verifies authorization",$tags="auth")
+Rel(storage, firebaseAuth , "verifies authorization",$tags="auth")
+Rel(webui, firebaseAuth , "verifies authorization",$tags="auth")
+Rel_D(webui, menu , "Lists dishes in period. Helps organize menu for day/week.")
+
+menu -> recipes: "Finds product/items belonging to recipe"
+Rel_D(webui, recipes, "Gets list of recipes. Add possibility to add new ones.")
+Rel_D(webui, storage, "Checks availabilty of products/items. Removes/add inventories")
+recipes -> firestore: "Uses as backend"
+
+pubsub -[#00FAFF]-> storage: Reserves items/products
+storage -[#FF00FF]-> pubsub: Products could not have been reserved -> needs buying.
+storage -[#FF00FF]-> pubsub: Products was reserved.
+
+
+
+storage -> firestore: "Uses as backend"
+@enduml
