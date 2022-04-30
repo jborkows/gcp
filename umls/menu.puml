@@ -15,7 +15,7 @@ System(controller, "User interaction component")
 System(recipes, "Recipes")
 Container_Boundary(c1, "Menu") {
     Container(menu_frontend, "Frontend service","go", $sprite="go,color=black")
-    Container(menu, "Menu for current day [web api, queue reactor, backed]", "go", $sprite="go,color=black")
+    Container(menu, "Menu for current day", "go", $sprite="go,color=black")
 }
 System_Ext(firebaseAuth, "Firebase auth",  $sprite="firebase,color=orange")
 SystemQueue_Ext(pubsub, "Pub sub", $sprite="CloudPubSub,scale=0.5,color=blue")
