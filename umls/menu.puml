@@ -31,5 +31,4 @@ menu -[#FF00FF]-> pubsub: Menu decided for a day
 pubsub -[#00FAFF]-> menu: Some product were missing - needs buying
 pubsub -[#00FAFF]-> menu: Product item are available.
 
-
 @enduml
