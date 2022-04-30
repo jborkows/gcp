@@ -42,6 +42,10 @@ output "recipesImage" {
   value = data.external.recipes_digest.result.image
 }
 
+output "userClaimsEnvName" {
+  value = var.user_claims_env_name
+}
+
 output "recipesPage" {
   value = module.recipes.service_url
 }

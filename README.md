@@ -68,3 +68,7 @@ dockerbuilds/deploy_all.sh <- initializes
 
 xx = $(gcloud artifacts docker tags list europe-central2-docker.pkg.dev/coastal-idea-336409/my-repository --filter="tag:latest" --filter="tag ~ react-base")
 gcloud artifacts docker tags list europe-central2-docker.pkg.dev/coastal-idea-336409/my-repository --filter="-tag:latest and version=$xx")
+
+if issues with vscode for splitting go into files ->
+1. settings find gopls
+2. add "experimentalWorkspaceModule": true, 

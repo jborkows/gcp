@@ -18,6 +18,11 @@ variable "storage_class" {
   type = string
 }
 
+variable "user_claims_env_name" {
+  default = "UserRoles"
+  type = string
+}
+
 variable "firebase_config" {
   type = object({bucket_name = string, location=string})
   default = {
