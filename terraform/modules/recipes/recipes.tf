@@ -28,8 +28,13 @@ resource "google_cloud_run_service" "recipe_svc" {
 
   template {
     spec {
-      service_account_name = google_service_account.recipes_worker.email
+      service_account_name  = google_service_account.recipes_worker.email
       container_concurrency = 3
+      metadata {
+        annotations = {
+          "autoscaling.knative.dev/maxScale" = "3"
+        }
+      }
       containers {
         image = "${var.repository_info.image_prefix}/${var.recipes_image_name}:${data.external.recipes_image_tag.result.tag}"
         env {
