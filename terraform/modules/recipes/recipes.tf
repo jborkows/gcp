@@ -30,11 +30,6 @@ resource "google_cloud_run_service" "recipe_svc" {
     spec {
       service_account_name  = google_service_account.recipes_worker.email
       container_concurrency = 3
-      metadata {
-        annotations = {
-          "autoscaling.knative.dev/maxScale" = "3"
-        }
-      }
       containers {
         image = "${var.repository_info.image_prefix}/${var.recipes_image_name}:${data.external.recipes_image_tag.result.tag}"
         env {
@@ -47,21 +42,28 @@ resource "google_cloud_run_service" "recipe_svc" {
         }
       }
     }
+    metadata {
+      annotations = {
+        "autoscaling.knative.dev/maxScale" = "2"
+        "run.googleapis.com/client-name"   = "terraform"
+        "run.googleapis.com/ingress"       = "all"
+        # "run.googleapis.com/ingress"        = "internal"
+      }
+    }
+
   }
   traffic {
     percent         = 100
     latest_revision = true
   }
 
-
-  metadata {
-    annotations = {
-      "autoscaling.knative.dev/maxScale" = "2"
-      "run.googleapis.com/client-name"   = "terraform"
-      "run.googleapis.com/ingress"       = "all"
-      # "run.googleapis.com/ingress"        = "internal"
-    }
+  lifecycle {
+    ignore_changes = [
+      metadata.0.annotations,
+    ]
   }
+
+
 }
 
 # Set service public
