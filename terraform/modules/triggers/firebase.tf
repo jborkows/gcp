@@ -70,6 +70,15 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
+      id   = "npm version"
+      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      args = ["npm",
+        "-version"
+      ]
+      dir = "firebase"
+      wait_for = ["fetch data from base image"]
+    }
+    step {
       id   = "build react"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["npm",
@@ -77,7 +86,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "build"
       ]
       dir = "firebase"
-      wait_for = ["fetch data from base image"]
+      wait_for = ["npm version"]
     }
 
     step {
@@ -163,7 +172,7 @@ resource "google_cloudbuild_trigger" "frontend-base" {
     }
 
     step {
-      id = "trigger frontend"
+      id = "trigger terraform"
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
       args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
     }
