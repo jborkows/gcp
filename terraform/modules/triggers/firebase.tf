@@ -45,7 +45,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["sh",
         "-c",
-       "npm run lint >/workspace/report_react_lint$$(date' +%d-%m-%Y').txt || true"]
+       "npm run lint >/workspace/report_react_lint$$(date'' +%d-%m-%Y'').txt || true"]
       dir = "firebase"
       wait_for = ["fetch data from base image"]
     }
