@@ -77,3 +77,6 @@ The crucial files for the setup:
 - [this medium article](https://medium.com/@jthegedus/next-js-on-cloud-functions-for-firebase-with-firebase-hosting-7911465298f2)
 - [Crash Course: Node.js apps on Firebase Hosting](https://youtu.be/LOeioOKUKI8)
 - [Official documentation](https://firebase.google.com/docs/cli).
+
+
+firebase setup:emulators:firestore

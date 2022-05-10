@@ -1,10 +1,10 @@
 import React from 'react'
-import App from '../components/App'
+import MyApp from '../components/MyApp'
 
 
 export default function Home() {
   return (
-    <App>   
-    </App>
+    <MyApp>   
+    </MyApp>
   )
 }

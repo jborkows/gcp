@@ -1,12 +1,12 @@
 import React from 'react'
 import { SignInWrapper } from '../authentication/SignInWrapper'
-import App from '../components/App'
+import MyApp from '../components/MyApp'
 
 
 export default function Login() {
   return (
-    <App>   
+    <MyApp>   
         <SignInWrapper/>
-    </App>
+    </MyApp>
   )
 }

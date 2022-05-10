@@ -6,10 +6,12 @@
     "build": "next build src/",
     "start": "next start src/",
     "serve": "npm run build && firebase emulators:start --only functions,hosting",
+    "serve-all": "npm run build && FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit",
     "shell": "npm run build && firebase functions:shell",
     "deploy": "firebase deploy --only functions,hosting",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx ."
+
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",

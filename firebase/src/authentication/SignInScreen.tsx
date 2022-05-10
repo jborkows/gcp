@@ -5,17 +5,13 @@ import { logged, unlogged, UserData} from "./auth-slice"
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { useAuthentication } from './hooks';
-
+import {providers} from "../devoptions"
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
   signInFlow: 'popup',
   // We will display Google and Facebook as auth providers.
-  signInOptions: [
-    auth.GoogleAuthProvider.PROVIDER_ID
-    //   firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    //   firebase.auth.FacebookAuthProvider.PROVIDER_ID
-  ],
+  signInOptions: providers,
   callbacks: {
     // Avoid redirects after sign-in.
     signInSuccessWithAuthResult: () => false,
