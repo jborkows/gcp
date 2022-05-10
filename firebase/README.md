@@ -80,3 +80,4 @@ The crucial files for the setup:
 
 
 firebase setup:emulators:firestore
+FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit

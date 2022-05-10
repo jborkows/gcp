@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next src/",
     "build": "next build src/",
-    "start": "concurrently --kill-others \"npm run dev\"  \"FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit\"",
+    "start": "concurrently --kill-others \"npm run dev\"  \"FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir \"",
     "serve": "npm run build && firebase emulators:start --only functions,hosting",
     "serve-all": "npm run build && FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit",
     "shell": "npm run build && firebase functions:shell",
