@@ -25,5 +25,5 @@ if (process.env.NEXT_PUBLIC_MODE === "production") {
 }
 
 export const postAction = postActionA
-
+console.log("Will use providers " + JSON.stringify(providers))
 export const providers = providersA
