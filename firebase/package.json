@@ -2,16 +2,15 @@
   "private": true,
   "main": "firebaseFunctions.js",
   "scripts": {
-    "dev":  "next src/",
+    "dev": "next src/",
     "build": "next build src/",
-    "start": "next start src/",
+    "start": "concurrently --kill-others \"npm run dev\"  \"FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit\"",
     "serve": "npm run build && firebase emulators:start --only functions,hosting",
     "serve-all": "npm run build && FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit",
     "shell": "npm run build && firebase functions:shell",
     "deploy": "firebase deploy --only functions,hosting",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx ."
-
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
@@ -32,6 +31,7 @@
     "@types/react": "^17.0.43",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
+    "concurrently": "^7.1.0",
     "eslint": "^8.12.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
