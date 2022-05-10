@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import * as auth from "firebase/auth";
-import { logged, unlogged, UserData} from "./auth-slice"
+import { logged, unlogged, UserData } from "./auth-slice"
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { useAuthentication } from './hooks';
-import {providers} from "../devoptions"
+import { providers } from "../devoptions"
+
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
   signInFlow: 'popup',
   // We will display Google and Facebook as auth providers.
-  signInOptions: providers,
+  signInOptions: providers,// <-- not working in this way or there are some issues with page cache ;(
+  // signInOptions: [
+  //   auth.GoogleAuthProvider.PROVIDER_ID,
+  //   auth.EmailAuthProvider.PROVIDER_ID
+  // ],
   callbacks: {
     // Avoid redirects after sign-in.
     signInSuccessWithAuthResult: () => false,
@@ -53,39 +58,39 @@ const Foo = () => {
 export const NeedsLogin = () => {
   return (
     <div className='LoginContainer'>
-      <h1>Home automation</h1>
+      <h1>Home automation.</h1>
       <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth.getAuth()} />
     </div>
   );
 }
 
 interface LoggeInProps {
-  userData:UserData
+  userData: UserData
 }
 
-export const LoggedIn = (props:LoggeInProps)=>{
+export const LoggedIn = (props: LoggeInProps) => {
   return <div className='LoginContainer'>
-  <h1>Home automation.</h1>
-  <p>Welcome {props.userData.username}! You are now signed-in!</p>
-  <a onClick={() => auth.getAuth().signOut()} className="signout">Sign-out</a>
-</div>;
+    <h1>Home automation.</h1>
+    <p>Welcome {props.userData.username}! You are now signed-in!</p>
+    <a onClick={() => auth.getAuth().signOut()} className="signout">Sign-out</a>
+  </div>;
 }
 
-const useFirebaseAuth = ()=>{
+const useFirebaseAuth = () => {
   const dispatch = useAppDispatch()
   // Listen to the Firebase Auth state and set the local state.
   useEffect(() => {
     const unregisterAuthObserver = auth.getAuth().onAuthStateChanged(user => {
-      if(user){
+      if (user) {
         dispatch(logged({
           username: user.displayName,
           email: user.email,
           photoUrl: user.photoURL
         }))
-      }else{
+      } else {
         dispatch(unlogged())
       }
-      
+
     });
     return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
   }, []);
@@ -95,11 +100,11 @@ export const SignInScreen = () => {
   useFirebaseAuth()
   const authenticated = useAuthentication()
   if (!authenticated.authenticated) {
-    return <NeedsLogin/>;
+    return <NeedsLogin />;
   }
-  const userData  = authenticated.data
+  const userData = authenticated.data
   return (
-    <LoggedIn userData={userData}/>
+    <LoggedIn userData={userData} />
   );
 }
 
