@@ -13,6 +13,8 @@ resource "google_cloudbuild_trigger" "frontend" {
     "firebase/Dockerfile",
     "firebase/package.json",
     "firebase/package-lock.json",
+    "firebase/*Functions.js",
+    "firebase/functions/**",
     "firebase/dir/**"
     #  "firebase/cloudbuild-react.json"
   ]
@@ -98,7 +100,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "--project",
         "$${PROJECT_ID}",
         "--only",
-        "functions,hosting"
+        "hosting"
       ]
       dir = "firebase"
       wait_for = ["build react"]
@@ -124,6 +126,75 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
   }
 }
+
+
+resource "google_cloudbuild_trigger" "frontend-functions" {
+  name            = "frontend-functions"
+  project         = var.project_id
+  description     = "firebase functions"
+  provider        = google-beta
+  service_account = var.service_account
+  included_files = [
+     "firebase/functions/**",
+  ]
+  github {
+    name  = var.repository_name
+    owner = var.owner
+
+    push {
+      branch       = "^main$"
+      invert_regex = false
+    }
+  }
+  build {
+
+    step {
+      id   = "npm install"
+      name = "node"
+      entrypoint = "npm"
+      args = [
+        "install"
+      ]
+      dir = "firebase/functions" 
+    }
+
+    step {
+      id   = "npm test"
+      name = "node"
+      entrypoint = "npm"
+      args = [
+        "test"
+      ]
+      dir = "firebase/functions" 
+    }
+    step {
+      id   = "deploy to firebase"
+      name = "$${_MYREPO}/firebase"
+      args = [
+        "deploy",
+        "--project",
+        "$${PROJECT_ID}",
+        "--only",
+        "functions"
+      ]
+      dir = "firebase"
+      
+    }
+
+    options {
+      logging = "GCS_ONLY"
+      # worker_pool = google_cloudbuild_worker_pool.my-pool.id
+
+    }
+    logs_bucket = var.cloudbuildbucket
+    substitutions = {
+      _MYREPO = "${var.repository_info.image_prefix}"
+      _TERRAFORM_VERSION : "0.1"
+      _REACT_BASE_VERSION = "${data.external.base_react.result.tag}"
+    }
+  }
+}
+
 
 data "external" "date" {
   program = ["sh", "${path.module}/../../scripts/date.sh"]
