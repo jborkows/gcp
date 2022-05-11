@@ -9,6 +9,8 @@
     "serve-all": "npm run build && FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit",
     "shell": "npm run build && firebase functions:shell",
     "deploy": "firebase deploy --only functions,hosting",
+    "export": "npm run build && next export",
+    "deploy-static": "npm run export && firebase deploy --only functions,hosting",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx ."
   },

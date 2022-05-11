@@ -84,7 +84,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["npm",
         "run",
-        "build"
+        "export"
       ]
       dir = "firebase"
       wait_for = ["npm version"]

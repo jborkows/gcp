@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "out",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -13,20 +13,8 @@
           "serviceId": "recipe",
           "region": "europe-central2"
         }
-      },
-      {
-        "source": "**",
-        "function": "nextjsFunc"
       }
     ]
-  },
-  "functions": {
-    "source": ".",
-    "predeploy": [
-      "npm --prefix \"$PROJECT_DIR\" install",
-      "npm --prefix \"$PROJECT_DIR\" run build"
-    ],
-    "runtime": "nodejs16"
   },
   "firestore": {
     "rules": "firestore.rules",
