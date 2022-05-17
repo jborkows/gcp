@@ -120,3 +120,4 @@ modules.xml
 *.firebaserc
 terraform/.infracost/
 __debug_bin
+node_modules
