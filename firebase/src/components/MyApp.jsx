@@ -4,10 +4,9 @@ import Header from '../header/Header'
 
 const MyApp = ({ children }) => {
   
-  return <main>
-    <Header />
+  return <React.Fragment>
     {children}
-  </main>
+  </React.Fragment>
 }
 
 export default MyApp

@@ -4,9 +4,7 @@ import MyApp from '../components/MyApp'
 
 
 export default function Login() {
-  return (
-    <MyApp>   
+  return ( 
         <SignInWrapper/>
-    </MyApp>
   )
 }
