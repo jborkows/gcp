@@ -11,7 +11,7 @@ steps:
    secretEnv: ['SNYK_TOKEN'] 
  - name: 'gcr.io/cloud-builders/gsutil'
    args: ['cp', '/workspace/report*','gs://${PROJECT_ID}_example/']    
- - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+ - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
    args: ['gcloud', 'beta', 'builds', 'triggers', '--project=${PROJECT_ID}', 'run', 'terraform', '--branch', "${BRANCH_NAME}"]
 options:
   logging: CLOUD_LOGGING_ONLY

@@ -94,7 +94,7 @@ resource "google_cloudbuild_trigger" "recipes" {
 
     step {
       id   = "trigger terraform"
-      name = "gcr.io/google.com/cloudsdktool/cloud-sdk"
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
       args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
     }
 
