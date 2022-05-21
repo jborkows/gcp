@@ -14,7 +14,7 @@ html, body
 .pageLayout{
     display: grid;
     /* row-gap: 0.5rem; */
-    grid-template-rows: 4rem 1fr auto;
+    grid-template-rows: 4rem 1fr 5rem;
     width: 100vw;
     height: 100vh;
     position: fixed;
