@@ -1,5 +1,5 @@
 FROM node:18.1.0-alpine
-RUN apk add openjdk11
+# RUN apk add openjdk11
 WORKDIR /my-app
 COPY package.json /my-app/
 COPY package-lock.json /my-app/

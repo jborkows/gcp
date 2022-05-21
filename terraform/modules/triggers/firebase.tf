@@ -74,20 +74,18 @@ resource "google_cloudbuild_trigger" "frontend" {
 
     step {
       id   = "npm version"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["npm",
-        "-version"
-      ]
+      name = "$${_MYREPO}/firebase"
+      entrypoint = "npm"
+      args = ["ci"]
       dir = "firebase"
       wait_for = ["fetch data from base image"]
     }
 
      step {
       id   = "npm test"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["npm",
-        "test"
-      ]
+      entrypoint = "npm"
+      name = "$${_MYREPO}/firebase"
+      args = ["test", "--", "--project", var.project_id]
       dir = "firebase"
       wait_for = ["npm version"]
     }
@@ -105,12 +103,13 @@ resource "google_cloudbuild_trigger" "frontend" {
     step {
       id   = "deploy to firebase"
       name = "$${_MYREPO}/firebase"
+      entrypoint = ["npm"]
       args = [
-        "deploy",
-        "--project",
-        "$${PROJECT_ID}",
-        "--only",
-        "hosting"
+        "run",
+        "deploy-static",
+        "--",
+         "--project",
+         var.project_id
       ]
       dir = "firebase"
       wait_for = ["build react"]
