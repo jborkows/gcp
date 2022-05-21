@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export type ScreenSize = "SMALL" | "MEDIUM" | "BIG" | "NONE"
+export type ScreenSize = "SMALL" | "BIG" 
 
 function useMediaQuery(query: string): boolean {
 
@@ -34,16 +34,11 @@ function useMediaQuery(query: string): boolean {
 
 export const screeSize = (): ScreenSize => {
     const smallScreen = useMediaQuery("(max-width:60rem)")
-    const mediumScreen = useMediaQuery("(min-width:60rem)")
-    const bigScreen = useMediaQuery("(min-width:90rem)")
-    if (bigScreen) {
-        return "BIG"
-    } else if (mediumScreen) {
-        return "MEDIUM"
-    } else if (smallScreen) {
+
+    if (smallScreen) {
         return "SMALL"
     } else {
-        return "NONE";
+        return "BIG"
     }
 }
 

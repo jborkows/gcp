@@ -18,9 +18,15 @@
 }
 
 .login {
-    border-radius: 0.5rem;
-    border-color: gray;
-    border-style: solid;
+    /* border-radius: 0.5rem; */
+    /* border-color: gray; */
+    /* border-style: solid; */
     padding: 0.2rem;
-    box-shadow: 0.1rem 0.1rem;
+    /* box-shadow: 0.1rem 0.1rem; */
+    cursor: pointer;
 }
+
+.login:hover {
+    color: rgba(126, 160, 100,0.8);
+}
+

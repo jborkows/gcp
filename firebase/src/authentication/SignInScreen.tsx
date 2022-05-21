@@ -56,8 +56,10 @@ const Foo = () => {
 }
 
 export const NeedsLogin = () => {
+  const {authenticated} = useAuthentication()
+  const className = 'LoginContainer ' + !authenticated && 'siginoverlay'
   return (
-    <div className='LoginContainer'>
+    <div className={className}>
       <h1>Home automation.</h1>
       <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth.getAuth()} />
     </div>
