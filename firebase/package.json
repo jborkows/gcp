@@ -10,7 +10,7 @@
     "shell": "npm run build && firebase functions:shell",
     "deploy": "firebase deploy --only functions,hosting",
     "export": "npm run build && next export",
-    "deploy-static": "npm run export && firebase deploy --only functions,hosting",
+    "deploy-static": "npm run export && firebase deploy --only hosting",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx ."
   },

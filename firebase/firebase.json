@@ -13,6 +13,10 @@
           "serviceId": "recipe",
           "region": "europe-central2"
         }
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   },
