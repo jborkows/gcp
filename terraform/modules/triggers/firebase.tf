@@ -81,6 +81,16 @@ resource "google_cloudbuild_trigger" "frontend" {
       dir = "firebase"
       wait_for = ["fetch data from base image"]
     }
+
+     step {
+      id   = "npm test"
+      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      args = ["npm",
+        "test"
+      ]
+      dir = "firebase"
+      wait_for = ["npm version"]
+    }
     step {
       id   = "build react"
       name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
@@ -89,7 +99,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "export"
       ]
       dir = "firebase"
-      wait_for = ["npm version"]
+      wait_for = ["npm test"]
     }
 
     step {
