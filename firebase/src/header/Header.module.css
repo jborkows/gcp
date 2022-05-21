@@ -1,0 +1,141 @@
+.menuItem {
+  color: black;
+  text-decoration: none;
+}
+
+.active {
+  color: blue;
+}
+
+/* 
+header {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.2rem;
+  justify-content: center;
+  align-items: center;
+} */
+
+.smallScreenHeader {
+  background-color: black;
+  color: white;
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.2rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.2rem 0.5rem;
+  font-size: 2rem;
+}
+
+.anyScreenHeader {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: hsl(124, 20%, 56%);
+  height: 100%;
+}
+
+.anyScreenHeader * {
+  /* padding-left: 0.5rem; */
+  padding-right: 0.5rem;
+  flex: 1 1 1;
+  font-size: 1.2rem;
+}
+
+
+
+.anyScreenHeaderMenuItems {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  /* gap: 0.5rem; */
+}
+
+.anyScreenHeaderMenuItems .menuItem{
+  /* border-style: solid; */
+  border-right: solid black;
+  flex: 1 1 1;
+  height: 100%;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  font-weight: bolder
+}
+
+.smallMenuOverlay {
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(15, 12, 12, 0.3);
+}
+
+.smallMenu {
+  z-index: 1004;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 1.5rem;
+  padding-top: 0.5rem;
+  font-size: 3rem;
+  top: 1.5rem;
+  left: 0;
+  width: 80vw;
+  height: auto;
+  background-color: black;
+  color: white;
+  position: absolute;
+  align-items: baseline;
+  animation: growRight 1s ;
+}
+
+@keyframes growRight {
+  0% {
+    transform: translateX(-10rem)
+  }
+  80% {
+    transform: translateX(0.2rem)
+  }
+  100% {
+    transform: translateX(0rem)
+  }
+}
+
+.smallMenu.hidding {
+  animation: growLeft 1.5s !important ;
+}
+
+@keyframes growLeft {
+  0% {
+    transform: translateX(0rem)
+  }
+  100% {
+    transform: translateX(-60rem)
+  }
+}
+
+.smallMenu .menuItem,
+.smallMenu p {
+  flex-basis: 50%;
+  flex-grow: 1;
+  text-align: left;
+}
+
+
+.smallMenu .menuItem.active {
+  text-decoration: underline;
+  color: white;
+}
+
+.smallMenu .menuItem {
+  color: white;
+}
+
+.smallMenu p {
+  cursor: pointer;
+}
