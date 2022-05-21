@@ -25,6 +25,7 @@ html, body
 
 main {
     /* margin-top: 5rem; */
+    margin-top: 2px;
     width: 100%;
 }
 
@@ -43,14 +44,15 @@ main {
 } */
 
 .LoginContainer {
-
     text-align: center;
-
+    z-index: 3;
+    margin: 0 auto;
+    position: relative;
 }
 
 .siginoverlay {
     margin: 0 auto;
-    z-index: 8;
+    z-index: 2;
     background-color: rgba(129, 123, 123, 0.9);
     position: fixed;
     height: 100%;
@@ -70,3 +72,12 @@ main {
     box-shadow: 0.1rem 0.1rem;
     font-style: italic;
 }
+
+:root {
+    --l:56%;
+    --color: 124, 20%;
+    --primary-big-menu: hsl(var(--color),var(--l));
+    --darker-big-menu-color: hsl(var(--color),calc(var(--l) - 10%));
+    --darkest-big-menu-color: hsl(var(--color),calc(var(--l) - 30%));
+    --darkest-x-big-menu-color: hsl(var(--color),calc(var(--l) - 40%));
+  }

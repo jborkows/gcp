@@ -6,6 +6,7 @@ import { logged, unlogged, UserData } from "./auth-slice"
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { useAuthentication } from './hooks';
 import { providers } from "../devoptions"
+import { useRouter } from 'next/router';
 
 
 const uiConfig = {
@@ -56,13 +57,20 @@ const Foo = () => {
 }
 
 export const NeedsLogin = () => {
-  const {authenticated} = useAuthentication()
-  const className = 'LoginContainer ' + !authenticated && 'siginoverlay'
+  const { authenticated } = useAuthentication()
+  const router = useRouter()
+  const abortLogin = () => router.back();
+
   return (
-    <div className={className}>
-      <h1>Home automation.</h1>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth.getAuth()} />
-    </div>
+    <React.Fragment>
+      {!authenticated && <div className='siginoverlay' onClick={() => abortLogin()} />}
+      <div className="LoginContainer">
+
+        <h1>Home automation.</h1>
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth.getAuth()} />
+      </div>
+    </React.Fragment>
+
   );
 }
 

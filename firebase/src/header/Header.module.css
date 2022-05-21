@@ -1,3 +1,5 @@
+
+
 .menuItem {
   color: black;
   text-decoration: none;
@@ -7,14 +9,6 @@
   color: blue;
 }
 
-/* 
-header {
-  display: flex;
-  gap: 0.5rem;
-  padding-top: 0.2rem;
-  justify-content: center;
-  align-items: center;
-} */
 
 .smallScreenHeader {
   background-color: black;
@@ -33,7 +27,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: hsl(124, 20%, 56%);
+  background-color: var(--primary-big-menu);
+  box-shadow: 1rem 0.5rem 0.5rem var(--primary-big-menu);
   height: 100%;
 }
 
@@ -50,19 +45,93 @@ header {
   display: flex;
   align-items: center;
   height: 100%;
+  text-shadow: 2px 2px #817f7f;
 
   /* gap: 0.5rem; */
 }
 
-.anyScreenHeaderMenuItems .menuItem{
+.anyScreenHeaderMenuItems .menuItem {
   /* border-style: solid; */
-  border-right: solid black;
-  flex: 1 1 1;
   height: 100%;
   padding: 0 2rem;
   display: flex;
   align-items: center;
   font-weight: bolder
+}
+
+.anyScreenHeaderMenuItems .menuItem:hover {
+  animation: shake 1s infinite;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.anyScreenHeaderMenuItemsHamburger {
+  margin-left: 1rem;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.anyScreenHeaderMenuItemsHamburgerIcon {
+  overflow: hidden;
+  transition-duration: 0.8s;
+  transform-origin: 50% 50%;
+  transition-property: transform;
+}
+
+
+.anyScreenHeaderMenuItemsHamburgerIcon:hover {
+  transform: rotate(360deg);
+}
+
+.anyScreenHeaderMenuItems .menuItem, .anyScreenHeaderMenuItemsHamburger {
+  border-right: solid black;
 }
 
 .smallMenuOverlay {
@@ -91,29 +160,32 @@ header {
   color: white;
   position: absolute;
   align-items: baseline;
-  animation: growRight 1s ;
+  animation: growRight 1s;
 }
 
 @keyframes growRight {
   0% {
     transform: translateX(-10rem)
   }
+
   80% {
     transform: translateX(0.2rem)
   }
+
   100% {
     transform: translateX(0rem)
   }
 }
 
 .smallMenu.hidding {
-  animation: growLeft 1.5s !important ;
+  animation: growLeft 1.5s !important;
 }
 
 @keyframes growLeft {
   0% {
     transform: translateX(0rem)
   }
+
   100% {
     transform: translateX(-60rem)
   }
@@ -134,8 +206,59 @@ header {
 
 .smallMenu .menuItem {
   color: white;
+  text-shadow: 2px 2px #ff0000;
 }
 
 .smallMenu p {
   cursor: pointer;
+}
+
+
+
+
+.bigMenuOverlay {
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(15, 12, 12, 0.3);
+}
+
+.bigMenu {
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 1.5rem;
+  padding-top: 0.5rem;
+  font-size: 1.5rem;
+  top: 4rem;
+  padding-bottom: 1rem;
+  /* left: -3rem; */
+  width: auto;
+  padding-right: 2rem;
+  height: auto;
+  background-color: var(--darkest-big-menu-color);
+  color: white;
+  position: absolute;
+  align-items: baseline;
+  animation: growRight 1s;
+  box-shadow: 1rem 0.5rem 0.5rem var(--darkest-x-big-menu-color);
+  border-radius: 0  0.4rem 0.4rem 0  ;
+}
+
+.bigMenu.hidding {
+  animation: growLeft 1.5s !important;
+}
+
+.bigMenu .menuItem.active {
+  text-decoration: underline;
+  color: white;
+}
+
+.bigMenu .menuItem {
+  color: white;
+  text-shadow: 2px 2px #ff0000;
 }

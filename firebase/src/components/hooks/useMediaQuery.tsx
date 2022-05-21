@@ -33,7 +33,7 @@ function useMediaQuery(query: string): boolean {
 }
 
 export const screeSize = (): ScreenSize => {
-    const smallScreen = useMediaQuery("(max-width:60rem)")
+    const smallScreen = useMediaQuery("(max-width:50rem)")
 
     if (smallScreen) {
         return "SMALL"

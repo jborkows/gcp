@@ -52,47 +52,79 @@ const SmallMenu = (props: SmallMenuProps) => {
   </div>
 }
 
-const Hamburger = () => {
+type HiddingState = "SHOWED"|"HIDDING"|"HIDDEN"
 
-  const [menuVisible, changeVisibility] = useState(false)
-  const [hiddingCss, setHidding] = useState("")
+interface HiddingMenuResponse {
+  showMenu: ()=>void,
+  hideMenu: ()=>void,
+  state: HiddingState
+}
 
-  const showMenu = () => {
-    setHidding("")
-    changeVisibility(true)
-  }
+const useHidddingMenu = ():HiddingMenuResponse => {
 
-  const disable = () => {
-    setHidding(styles.hidding);
-  }
+  const [state, setState] = useState<HiddingState>("HIDDEN")
+  const showMenu = () => setState("SHOWED")
+
+  const disable = () => setState("HIDDING")
 
   useEffect(() => {
-    if (!hiddingCss) {
+    if (state === "SHOWED" || state === "HIDDEN") {
       return
     }
     setTimeout(() => {
-      changeVisibility(false)
-    }, 1000)
-  }, [hiddingCss])
+      setState("HIDDEN")
+    }, 800)
+  }, [state])
+
+  return {
+    showMenu:showMenu,
+    hideMenu:disable,
+    state:state
+  }
+}
+
+const Hamburger = () => {
+  const {state, showMenu, hideMenu} = useHidddingMenu()
+  const hiddingCss = state === 'HIDDING'? styles.hidding :"";
 
   return (
     <header className={styles.smallScreenHeader}>
       <p onClick={() => showMenu()}><FontAwesomeIcon icon={faBars} /></p>
-      {menuVisible && <SmallMenu disable={() => disable()} hiddingClassName={hiddingCss} />}
+      {state !== 'HIDDEN' && <SmallMenu disable={() => hideMenu()} hiddingClassName={hiddingCss} />}
       <UserShortInfo />
     </header>
   )
 }
 
-const AnyScreen = () => (
-  <header className={styles.anyScreenHeader}>
-    <div className={styles.anyScreenHeaderMenuItems}>
+interface BigMenuProps {
+  disable: () => void,
+  hiddingClassName: string | null
+}
+
+const BigMenu = (props: SmallMenuProps) => {
+  return <div >
+    <div className={styles.bigMenuOverlay} onClick={() => props.disable()}></div>
+    <div className={styles.bigMenu + " " + (props.hiddingClassName || '')}>
       <MenuItemDisplayer />
     </div>
-    <UserShortInfo />
-  </header>
-)
+  </div>
+}
 
+const AnyScreen = () => {
+  const {state, showMenu, hideMenu} = useHidddingMenu()
+  const hiddingCss = state === 'HIDDING'? styles.hidding :"";
+  return <header>
+    {state !== 'HIDDEN' && <BigMenu disable={() => hideMenu()} hiddingClassName={hiddingCss} />}
+    <div  className={styles.anyScreenHeader}>
+    <div className={styles.anyScreenHeaderMenuItems}>
+      <p onClick={() => showMenu()} className={styles.anyScreenHeaderMenuItemsHamburger}><FontAwesomeIcon size='2x' icon={faBars} className={styles.anyScreenHeaderMenuItemsHamburgerIcon}/></p>
+      <MenuItemDisplayer />
+     
+    </div>
+    <UserShortInfo />
+    </div>
+  </header>
+}
 const Header = () => {
   const currentSize = screeSize()
 
