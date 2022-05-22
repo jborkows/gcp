@@ -240,7 +240,6 @@ resource "google_cloudbuild_trigger" "frontend-base" {
   }
   build {
 
-
     step {
       id   = "build react base"
       name = "gcr.io/cloud-builders/docker"
