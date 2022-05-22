@@ -1,5 +1,5 @@
-FROM node:18.1.0-alpine
-RUN apk add openjdk11
+ARG FIREBASE_BASE
+FROM ${FIREBASE_BASE}
 WORKDIR /my-app
 COPY package.json /my-app/
 COPY package-lock.json /my-app/
@@ -11,4 +11,5 @@ RUN firebase setup:emulators:database && \
     firebase setup:emulators:storage && \
     firebase setup:emulators:ui && \
     rm -rf /var/cache/apk/*
+RUN npm test
 # RUN npm ls --depth=0 | tail -n +2 | sed 's/+-- //g' | sed 's/`-- //g' | awk '!my-app' | xargs  -I {} echo {};
