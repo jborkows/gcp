@@ -79,15 +79,21 @@ interface LoggeInProps {
 }
 
 export const LoggedIn = (props: LoggeInProps) => {
+  const router = useRouter()
+  const signOut = async ()=>{
+    await auth.getAuth().signOut()
+    router.push("/")
+  }
   return <div className='LoginContainer'>
     <h1>Home automation.</h1>
     <p>Welcome {props.userData.username}! You are now signed-in!</p>
-    <a onClick={() => auth.getAuth().signOut()} className="signout">Sign-out</a>
+    <a onClick={() => signOut()} className="signout">Sign-out</a>
   </div>;
 }
 
 const useFirebaseAuth = () => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   // Listen to the Firebase Auth state and set the local state.
   useEffect(() => {
     const unregisterAuthObserver = auth.getAuth().onAuthStateChanged(user => {
