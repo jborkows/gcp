@@ -34,23 +34,22 @@ resource "google_cloudbuild_trigger" "frontend" {
 
 
     step {
-      id   = "fetch data from base image"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["ln",
-        "-s",
-        "/my-app/node_modules",
-      "node_modules"]
+      id   = "install dependencies"
+ name = "$${_MYREPO}/firebase"
+      entrypoint = "npm"
+      args = ["ci"]
       dir = "firebase"
     }
 
     step {
       id   = "npm linter"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["sh",
+      name = "$${_MYREPO}/firebase"
+      entrypoint = "sh"
+      args = [
         "-c",
        "npm run lint >/workspace/report_react_lint$$(date '+%d-%m-%Y').txt || true"]
       dir = "firebase"
-      wait_for = ["fetch data from base image"]
+      wait_for = ["install dependenciese"]
     }
 
     step {
@@ -59,7 +58,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_frontend$$(date '+%d-%m-%Y').json || true"]
       dir        = "firebase"
       secret_env = ["SNYK_TOKEN"]
-      wait_for = ["fetch data from base image"]
+      wait_for = ["install dependencies"]
     }
 
 
@@ -91,8 +90,9 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
     step {
       id   = "build react"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["npm",
+      name = "$${_MYREPO}/firebase"
+      entrypoint = "npm"
+      args = [
         "run",
         "export"
       ]
@@ -103,7 +103,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     step {
       id   = "deploy to firebase"
       name = "$${_MYREPO}/firebase"
-      entrypoint = ["npm"]
+      entrypoint = "npm"
       args = [
         "run",
         "deploy-static",
