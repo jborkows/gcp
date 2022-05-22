@@ -74,7 +74,7 @@ resource "google_cloudbuild_trigger" "frontend" {
 
     step {
       id   = "npm ci"
-      name = "$${_MYREPO}/firebase"
+      name =  "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       entrypoint = "npm"
       args = [
         "ci"
@@ -86,7 +86,7 @@ resource "google_cloudbuild_trigger" "frontend" {
      step {
       id   = "npm test"
       entrypoint = "npm"
-      name = "$${_MYREPO}/firebase"
+      name =  "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       args = ["test", "--", "--project", var.project_id]
       dir = "firebase"
       wait_for = ["npm ci"]
