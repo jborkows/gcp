@@ -77,7 +77,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       name =  "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       entrypoint = "npm"
       args = [
-        "ci"
+        "-version"
       ]
       dir = "firebase"
       wait_for = ["fetch data from base image"]
