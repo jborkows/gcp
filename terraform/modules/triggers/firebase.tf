@@ -34,22 +34,32 @@ resource "google_cloudbuild_trigger" "frontend" {
 
 
     step {
-      id   = "fetch data from base image"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["ln",
-        "-s",
-        "/my-app/node_modules",
-      "node_modules"]
+      id         = "fetch data from base image"
+      name       = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      entrypoint = "sh"
+      args = [
+        "-c",
+        "ln -s /my-app/node_modules node_modules"
+      ]
       dir = "firebase"
     }
 
+      step {
+      id         = "install"
+      name       = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      entrypoint = "npm"
+      args = ["ci"]
+      dir      = "firebase"
+      wait_for = ["fetch data from base image"]
+    }
+
     step {
-      id   = "npm linter"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["sh",
-        "-c",
-       "npm run lint >/workspace/report_react_lint$$(date '+%d-%m-%Y').txt || true"]
-      dir = "firebase"
+      id         = "npm linter"
+      name       = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      entrypoint = "sh"
+      args = ["-c",
+      "npm run lint >/workspace/report_react_lint$$(date '+%d-%m-%Y').txt || true"]
+      dir      = "firebase"
       wait_for = ["fetch data from base image"]
     }
 
@@ -59,61 +69,52 @@ resource "google_cloudbuild_trigger" "frontend" {
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_frontend$$(date '+%d-%m-%Y').json || true"]
       dir        = "firebase"
       secret_env = ["SNYK_TOKEN"]
-      wait_for = ["fetch data from base image"]
+      wait_for   = ["fetch data from base image"]
     }
 
 
     step {
-      id      = "copy reports..."
-      name    = "gcr.io/cloud-builders/gsutil"
-      args    = ["cp", "/workspace/report*", var.reports_bucket]
-      timeout = "100s"
-      dir     = "firebase"
+      id       = "copy reports..."
+      name     = "gcr.io/cloud-builders/gsutil"
+      args     = ["cp", "/workspace/report*", var.reports_bucket]
+      timeout  = "100s"
+      dir      = "firebase"
       wait_for = ["snyk", "npm linter"]
     }
 
+
     step {
-      id   = "npm ci"
-      name =  "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      id         = "npm test"
+      entrypoint = "npm"
+      name       = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      args       = ["test", "--", "--project", var.project_id]
+      dir        = "firebase"
+      wait_for   = []
+    }
+    step {
+      id         = "build react"
+      name       = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       entrypoint = "npm"
       args = [
-        "-version"
-      ]
-      dir = "firebase"
-      wait_for = ["fetch data from base image"]
-    }
-
-     step {
-      id   = "npm test"
-      entrypoint = "npm"
-      name =  "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["test", "--", "--project", var.project_id]
-      dir = "firebase"
-      wait_for = ["npm ci"]
-    }
-    step {
-      id   = "build react"
-      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
-      args = ["npm",
         "run",
         "export"
       ]
-      dir = "firebase"
+      dir      = "firebase"
       wait_for = ["npm test"]
     }
 
-   step {
-      id   = "deploy to firebase"
-      name = "$${_MYREPO}/firebase"
+    step {
+      id         = "deploy to firebase"
+      name       = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
       entrypoint = "npm"
       args = [
         "run",
         "deploy-static",
         "--",
-         "--project",
-         var.project_id
+        "--project",
+        var.project_id
       ]
-      dir = "firebase"
+      dir      = "firebase"
       wait_for = ["build react"]
     }
 
@@ -125,7 +126,7 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     options {
-      logging = "GCS_ONLY"
+      logging     = "GCS_ONLY"
       worker_pool = google_cloudbuild_worker_pool.my-pool.id
 
     }
@@ -146,7 +147,7 @@ resource "google_cloudbuild_trigger" "frontend-functions" {
   provider        = google-beta
   service_account = var.service_account
   included_files = [
-     "firebase/functions/**",
+    "firebase/functions/**",
   ]
   github {
     name  = var.repository_name
@@ -160,23 +161,23 @@ resource "google_cloudbuild_trigger" "frontend-functions" {
   build {
 
     step {
-      id   = "npm install"
-      name = "node"
+      id         = "npm install"
+      name       = "node"
       entrypoint = "npm"
       args = [
         "install"
       ]
-      dir = "firebase/functions" 
+      dir = "firebase/functions"
     }
 
     step {
-      id   = "npm test"
-      name = "node"
+      id         = "npm test"
+      name       = "node"
       entrypoint = "npm"
       args = [
         "test"
       ]
-      dir = "firebase/functions" 
+      dir = "firebase/functions"
     }
     step {
       id   = "deploy to firebase"
@@ -189,7 +190,7 @@ resource "google_cloudbuild_trigger" "frontend-functions" {
         "functions"
       ]
       dir = "firebase"
-      
+
     }
 
     options {
@@ -243,8 +244,11 @@ resource "google_cloudbuild_trigger" "frontend-base" {
     step {
       id   = "build react base"
       name = "gcr.io/cloud-builders/docker"
-      args = ["build", "-t", "$${_MYREPO}/${local.react_base_name}", "-t", "$${_MYREPO}/${local.react_base_name}:${data.external.react_base_number.result.tag}", "."]
-      dir  = "firebase"
+      args = ["build", "-t", "$${_MYREPO}/${local.react_base_name}", "-t", "$${_MYREPO}/${local.react_base_name}:${data.external.react_base_number.result.tag}",
+        "--build-arg", "FIREBASE_BASE=$${_MYREPO}/firebase",
+        "."
+      ]
+      dir = "firebase"
     }
 
     step {
@@ -255,13 +259,13 @@ resource "google_cloudbuild_trigger" "frontend-base" {
     }
 
     step {
-      id = "trigger terraform"
+      id   = "trigger terraform"
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
       args = ["gcloud", "beta", "builds", "triggers", "--project=$${PROJECT_ID}", "run", "${var.terraform_trigger_name}", "--branch", "$${BRANCH_NAME}"]
     }
 
     options {
-      logging = "GCS_ONLY"
+      logging     = "GCS_ONLY"
       worker_pool = google_cloudbuild_worker_pool.my-pool.id
 
     }
