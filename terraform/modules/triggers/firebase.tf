@@ -34,22 +34,23 @@ resource "google_cloudbuild_trigger" "frontend" {
 
 
     step {
-      id   = "install dependencies"
- name = "$${_MYREPO}/firebase"
-      entrypoint = "npm"
-      args = ["ci"]
+      id   = "fetch data from base image"
+      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      args = ["ln",
+        "-s",
+        "/my-app/node_modules",
+      "node_modules"]
       dir = "firebase"
     }
 
     step {
       id   = "npm linter"
-      name = "$${_MYREPO}/firebase"
-      entrypoint = "sh"
-      args = [
+      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      args = ["sh",
         "-c",
        "npm run lint >/workspace/report_react_lint$$(date '+%d-%m-%Y').txt || true"]
       dir = "firebase"
-      wait_for = ["install dependencies"]
+      wait_for = ["fetch data from base image"]
     }
 
     step {
@@ -58,7 +59,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       args       = ["sh", "-c", "snyk test --json --severity-threshold=high  > /workspace/report_frontend$$(date '+%d-%m-%Y').json || true"]
       dir        = "firebase"
       secret_env = ["SNYK_TOKEN"]
-      wait_for = ["install dependencies"]
+      wait_for = ["fetch data from base image"]
     }
 
 
@@ -72,10 +73,12 @@ resource "google_cloudbuild_trigger" "frontend" {
     }
 
     step {
-      id   = "npm version"
+      id   = "npm ci"
       name = "$${_MYREPO}/firebase"
       entrypoint = "npm"
-      args = ["ci"]
+      args = [
+        "ci"
+      ]
       dir = "firebase"
       wait_for = ["fetch data from base image"]
     }
@@ -86,13 +89,12 @@ resource "google_cloudbuild_trigger" "frontend" {
       name = "$${_MYREPO}/firebase"
       args = ["test", "--", "--project", var.project_id]
       dir = "firebase"
-      wait_for = ["npm version"]
+      wait_for = ["npm ci"]
     }
     step {
       id   = "build react"
-      name = "$${_MYREPO}/firebase"
-      entrypoint = "npm"
-      args = [
+      name = "$${_MYREPO}/react-base:$_REACT_BASE_VERSION"
+      args = ["npm",
         "run",
         "export"
       ]
@@ -100,7 +102,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       wait_for = ["npm test"]
     }
 
-    step {
+   step {
       id   = "deploy to firebase"
       name = "$${_MYREPO}/firebase"
       entrypoint = "npm"
