@@ -49,7 +49,7 @@ resource "google_cloudbuild_trigger" "frontend" {
         "-c",
        "npm run lint >/workspace/report_react_lint$$(date '+%d-%m-%Y').txt || true"]
       dir = "firebase"
-      wait_for = ["install dependenciese"]
+      wait_for = ["install dependencies"]
     }
 
     step {

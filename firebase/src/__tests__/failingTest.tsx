@@ -7,5 +7,4 @@ test("expect failed", () => {
 
   test("expect failed 2", () => {
     expect(helloSSSSS()).toBe('hello')
-
   });  
