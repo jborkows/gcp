@@ -8,18 +8,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styles from './Header.module.css'
 import { useAuthentication } from '../authentication/hooks'
+import { MenuItem, menuItems } from '../components/routing'
 
 
-type MenuItem = {
-  url: string,
-  title: string,
-  needsAuth: boolean
-}
-
-const menuItems: Array<MenuItem> = [
-  { url: "", title: "Strona główna", needsAuth: false },
-  { url: "periodicTasks", title: "Zadania", needsAuth: true }
-]
 
 const MenuItemDisplayer = () => {
   const router = useRouter()

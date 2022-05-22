@@ -8,7 +8,7 @@ export interface UserData {
 }
 
 // Define a type for the slice state
-interface AuthenticationState {
+export interface AuthenticationState {
   authenticated: boolean
   data: UserData
 }

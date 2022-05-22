@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { canDisplay } from './routing';
 
 interface Props {
   children: React.ReactNode;
@@ -6,7 +7,7 @@ interface Props {
 
 const ClientOnly: React.FC<Props> = ({ children, ...delegated }) => {
   const [hasMounted, setHasMounted] = useState(false);
-
+  canDisplay()
   useEffect(() => {
     setHasMounted(true);
   }, []);
