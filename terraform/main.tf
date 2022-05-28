@@ -154,6 +154,7 @@ module "triggers" {
   }
   recipes_image_name = var.recipes_image_name
   location = var.region
+  user_claims_env_name = var.user_claims_env_name
   depends_on         = [google_storage_bucket.documentation, google_storage_bucket.builder, google_artifact_registry_repository.my-repo]
 }
 

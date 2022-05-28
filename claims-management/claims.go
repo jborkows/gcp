@@ -15,7 +15,7 @@ import (
 )
 
 func AvailableClaims() Claims {
-	return Claims{Claim("admin"), Claim("reader"), Claim("writer")}
+	return Claims{Claim("admin"), Claim("reader"), Claim("writer"), Claim("")}
 }
 
 var firebaseConfig string
@@ -95,7 +95,7 @@ type OperationDto struct {
 
 func (claims Claims) contains(claim Claim) bool {
 	for _, a := range claims {
-		if a == claim {
+		if  strings.Contains(string(a),string(claim)) {
 			return true
 		}
 	}

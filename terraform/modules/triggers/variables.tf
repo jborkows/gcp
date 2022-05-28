@@ -44,3 +44,7 @@ variable "recipes_image_name" {
 variable "reports_bucket" {
   type=string
 }
+
+variable "user_claims_env_name" {
+  type = string
+}

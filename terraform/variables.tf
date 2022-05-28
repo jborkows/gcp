@@ -19,7 +19,7 @@ variable "storage_class" {
 }
 
 variable "user_claims_env_name" {
-  default = "UserRoles"
+  default = "userRoles"
   type = string
 }
 

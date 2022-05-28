@@ -7,17 +7,18 @@ import { screeSize } from '../components/hooks/useMediaQuery'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styles from './Header.module.css'
-import { useAuthentication } from '../authentication/hooks'
+import { useRoles } from '../authentication/hooks'
 import { MenuItem, menuItems } from '../components/routing'
-
 
 
 const MenuItemDisplayer = () => {
   const router = useRouter()
-  const authentication = useAuthentication()
+  const roles = useRoles()
+  const [items,_] = useState(menuItems)
   const activeStyle = (menuItem: MenuItem) => router.asPath === "/" + menuItem.url ? styles.active : ''
-  const display = menuItems
-    .filter(menuItem => !menuItem.needsAuth || authentication.authenticated)
+  const display = items
+    .filter(menuItem => menuItem.menuItemVisibility === "DISPLAYABLE")
+    .filter(menuItem => menuItem.isAllowed(roles))
     .map(menuItem =>
       <Link href={`/${menuItem.url}`} key={menuItem.url}>
         <a className={`${activeStyle(menuItem)} ${styles.menuItem}`}>{menuItem.title}</a>
@@ -38,20 +39,20 @@ const SmallMenu = (props: SmallMenuProps) => {
     <div className={styles.smallMenuOverlay} onClick={() => props.disable()}></div>
     <div className={styles.smallMenu + " " + (props.hiddingClassName || '')}>
       <MenuItemDisplayer />
-      <p onClick={() => props.disable()}><FontAwesomeIcon icon={faArrowLeft}/></p>
+      <p onClick={() => props.disable()}><FontAwesomeIcon icon={faArrowLeft} /></p>
     </div>
   </div>
 }
 
-type HiddingState = "SHOWED"|"HIDDING"|"HIDDEN"
+type HiddingState = "SHOWED" | "HIDDING" | "HIDDEN"
 
 interface HiddingMenuResponse {
-  showMenu: ()=>void,
-  hideMenu: ()=>void,
+  showMenu: () => void,
+  hideMenu: () => void,
   state: HiddingState
 }
 
-const useHidddingMenu = ():HiddingMenuResponse => {
+const useHidddingMenu = (): HiddingMenuResponse => {
 
   const [state, setState] = useState<HiddingState>("HIDDEN")
   const showMenu = () => setState("SHOWED")
@@ -68,15 +69,15 @@ const useHidddingMenu = ():HiddingMenuResponse => {
   }, [state])
 
   return {
-    showMenu:showMenu,
-    hideMenu:disable,
-    state:state
+    showMenu: showMenu,
+    hideMenu: disable,
+    state: state
   }
 }
 
 const Hamburger = () => {
-  const {state, showMenu, hideMenu} = useHidddingMenu()
-  const hiddingCss = state === 'HIDDING'? styles.hidding :"";
+  const { state, showMenu, hideMenu } = useHidddingMenu()
+  const hiddingCss = state === 'HIDDING' ? styles.hidding : "";
 
   return (
     <header className={styles.smallScreenHeader}>
@@ -102,17 +103,17 @@ const BigMenu = (props: SmallMenuProps) => {
 }
 
 const AnyScreen = () => {
-  const {state, showMenu, hideMenu} = useHidddingMenu()
-  const hiddingCss = state === 'HIDDING'? styles.hidding :"";
+  const { state, showMenu, hideMenu } = useHidddingMenu()
+  const hiddingCss = state === 'HIDDING' ? styles.hidding : "";
   return <header>
     {state !== 'HIDDEN' && <BigMenu disable={() => hideMenu()} hiddingClassName={hiddingCss} />}
-    <div  className={styles.anyScreenHeader}>
-    <div className={styles.anyScreenHeaderMenuItems}>
-      <p onClick={() => showMenu()} className={styles.anyScreenHeaderMenuItemsHamburger}><FontAwesomeIcon size='2x' icon={faBars} className={styles.anyScreenHeaderMenuItemsHamburgerIcon}/></p>
-      <MenuItemDisplayer />
-     
-    </div>
-    <UserShortInfo />
+    <div className={styles.anyScreenHeader}>
+      <div className={styles.anyScreenHeaderMenuItems}>
+        <p onClick={() => showMenu()} className={styles.anyScreenHeaderMenuItemsHamburger}><FontAwesomeIcon size='2x' icon={faBars} className={styles.anyScreenHeaderMenuItemsHamburgerIcon} /></p>
+        <MenuItemDisplayer />
+
+      </div>
+      <UserShortInfo />
     </div>
   </header>
 }

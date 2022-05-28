@@ -90,6 +90,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       args = ["test", "--", "--project", var.project_id]
       dir = "firebase"
       wait_for = ["npm ci"]
+      env = ["NEXT_PUBLIC_USER_PRIVS_CLAIM=${var.user_claims_env_name}"]
     }
     step {
       id   = "build react"
@@ -100,6 +101,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       ]
       dir = "firebase"
       wait_for = ["npm test"]
+      env = ["NEXT_PUBLIC_USER_PRIVS_CLAIM=${var.user_claims_env_name}"]
     }
 
    step {
@@ -115,6 +117,7 @@ resource "google_cloudbuild_trigger" "frontend" {
       ]
       dir = "firebase"
       wait_for = ["build react"]
+      env = ["NEXT_PUBLIC_USER_PRIVS_CLAIM=${var.user_claims_env_name}"]
     }
 
     available_secrets {

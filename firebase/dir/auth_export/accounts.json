@@ -35,7 +35,7 @@
             "passwordHash": "fakeHash:salt=fakeSaltnp1rvsnirxN3eKmsxUCb:password=xx1.xx@xx.xx",
             "salt": "fakeSaltnp1rvsnirxN3eKmsxUCb",
             "passwordUpdatedAt": 1652219617695,
-            "customAttributes": "{\"hi\":\"BBB\"}",
+            "customAttributes": "{\"userRoles\":[\"BBB\", \"admin\"]}",
             "providerUserInfo": [
                 {
                     "providerId": "password",
