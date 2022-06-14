@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import * as auth from "firebase/auth";
 import { logged, unlogged, UserData } from "./auth-slice"
 
@@ -7,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { useAuthentication } from './hooks';
 import { providers } from "../devoptions"
 import { useRouter } from 'next/router';
+import StyledFirebaseAuth from './StyledFirebaseAuth';
 
 
 const uiConfig = {
