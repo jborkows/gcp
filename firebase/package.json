@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next src/",
     "build": "next build src/",
-    "start": "concurrently --kill-others \"npm run dev\"  \"FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir \"",
+    "start": "concurrently --kill-others \"npm run dev\"  \"FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit \"",
     "serve": "npm run build && firebase emulators:start --only functions,hosting",
     "serve-all": "npm run build && FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' firebase emulators:start  --import=./dir --export-on-exit",
     "shell": "npm run build && firebase functions:shell",
@@ -13,12 +13,14 @@
     "deploy-static": "npm run export && firebase deploy --only hosting,firestore:rules",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx .",
-    "test": "firebase emulators:exec 'jest'"
+    "test": "firebase emulators:exec 'jest'",
+    "test-continous": "firebase emulators:exec 'jest --runInBand --watch'"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
+    "@js-temporal/polyfill": "^0.4.1",
     "@reduxjs/toolkit": "^1.8.1",
     "@types/react-redux": "^7.1.24",
     "axios": "^0.27.2",

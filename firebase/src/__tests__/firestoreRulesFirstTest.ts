@@ -12,7 +12,7 @@ describe("Testing security rules", () => {
     const projectId = "demo-project-1234"
     let testEnv: RulesTestEnvironment
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const src = path.resolve(__dirname, '..');
         const root = path.resolve(src, '..');
         const firestoreRules = path.resolve(root, "firestore.rules")
@@ -52,5 +52,8 @@ describe("Testing security rules", () => {
         testEnv.clearFirestore()
     });
 
+    afterAll(async ()=>{
+        await testEnv.cleanup()
+    })
 })
 

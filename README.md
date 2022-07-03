@@ -72,3 +72,6 @@ gcloud artifacts docker tags list europe-central2-docker.pkg.dev/coastal-idea-33
 if issues with vscode for splitting go into files ->
 1. settings find gopls
 2. add "experimentalWorkspaceModule": true, 
+
+
+npm completion + 

@@ -4,10 +4,19 @@ service cloud.firestore {
     match /notes/{document} {
       allow read,write: if isAppUser();
     }
+    match /PeriodicTask/{document} {
+      allow write: if (hasRole("writer") || hasRole("admin"))
+    }
     match /{document=**} {
       allow read, write: if false;
     }
   }
+
+  function hasRole(role){
+    let userRoles = request.auth.token.userRoles;
+    return role in userRoles
+  }
+
   function isAppUser(){
     return  request.auth.token.appUser == true;
   }
