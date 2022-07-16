@@ -1,1 +1,55 @@
-{"kind":"identitytoolkit#DownloadAccountResponse","users":[{"localId":"N8yPrbGxIqLihPMUhZVZIGo382lH","createdAt":"1652215558160","lastLoginAt":"1652217402238","displayName":"xx.xx@xx.xx","photoUrl":"","passwordHash":"fakeHash:salt=fakeSaltnp1rvsnirxN3eKmsxUCb:password=xx.xx@xx.xx","salt":"fakeSaltnp1rvsnirxN3eKmsxUCb","passwordUpdatedAt":1656700936373,"customAttributes":"{\"hi\":\"AAA\"}","providerUserInfo":[{"providerId":"password","email":"xx.xx@xx.xx","federatedId":"xx.xx@xx.xx","rawId":"xx.xx@xx.xx","displayName":"xx.xx@xx.xx","photoUrl":""}],"validSince":"1656700936","email":"xx.xx@xx.xx","emailVerified":false,"disabled":false},{"localId":"N8yPrbGxIqLihPMUhZVZIGo382lH1","createdAt":"1652215558160","lastLoginAt":"1652217402238","displayName":"xx1.xx@xx.xx","photoUrl":"","passwordHash":"fakeHash:salt=fakeSaltnp1rvsnirxN3eKmsxUCb:password=xx1.xx@xx.xx","salt":"fakeSaltnp1rvsnirxN3eKmsxUCb","passwordUpdatedAt":1656700936373,"customAttributes":"{\"userRoles\":[\"BBB\", \"admin\"]}","providerUserInfo":[{"providerId":"password","email":"xx1.xx@xx.xx","federatedId":"xx1.xx@xx.xx","rawId":"xx1.xx@xx.xx","displayName":"xx1.xx@xx.xx","photoUrl":""}],"validSince":"1656700936","email":"xx1.xx@xx.xx","emailVerified":false,"disabled":false}]}
+{
+    "kind": "identitytoolkit#DownloadAccountResponse",
+    "users": [
+        {
+            "localId": "N8yPrbGxIqLihPMUhZVZIGo382lH",
+            "createdAt": "1652215558160",
+            "lastLoginAt": "1652217402238",
+            "displayName": "xx.xx@xx.xx",
+            "photoUrl": "",
+            "passwordHash": "fakeHash:salt=fakeSaltnp1rvsnirxN3eKmsxUCb:password=xx.xx@xx.xx",
+            "salt": "fakeSaltnp1rvsnirxN3eKmsxUCb",
+            "passwordUpdatedAt": 1656700936373,
+            "customAttributes": "{\"hi\":\"AAA\"}",
+            "providerUserInfo": [
+                {
+                    "providerId": "password",
+                    "email": "xx.xx@xx.xx",
+                    "federatedId": "xx.xx@xx.xx",
+                    "rawId": "xx.xx@xx.xx",
+                    "displayName": "xx.xx@xx.xx",
+                    "photoUrl": ""
+                }
+            ],
+            "validSince": "1656700936",
+            "email": "xx.xx@xx.xx",
+            "emailVerified": false,
+            "disabled": false
+        },
+        {
+            "localId": "N8yPrbGxIqLihPMUhZVZIGo382lH1",
+            "createdAt": "1652215558160",
+            "lastLoginAt": "1652217402238",
+            "displayName": "xx1.xx@xx.xx",
+            "photoUrl": "",
+            "passwordHash": "fakeHash:salt=fakeSaltnp1rvsnirxN3eKmsxUCb:password=xx1.xx@xx.xx",
+            "salt": "fakeSaltnp1rvsnirxN3eKmsxUCb",
+            "passwordUpdatedAt": 1656700936373,
+            "customAttributes": "{\"userRoles\":[\"BBB\", \"admin\"], \"appUser\":true}",
+            "providerUserInfo": [
+                {
+                    "providerId": "password",
+                    "email": "xx1.xx@xx.xx",
+                    "federatedId": "xx1.xx@xx.xx",
+                    "rawId": "xx1.xx@xx.xx",
+                    "displayName": "xx1.xx@xx.xx",
+                    "photoUrl": ""
+                }
+            ],
+            "validSince": "1656700936",
+            "email": "xx1.xx@xx.xx",
+            "emailVerified": false,
+            "disabled": false
+        }
+    ]
+}

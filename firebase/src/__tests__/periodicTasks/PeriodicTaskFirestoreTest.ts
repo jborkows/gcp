@@ -33,25 +33,25 @@ describe("Testing db", () => {
         return new FirebaseRepository(() => context.firestore());
     }
 
-    const unauthenticatedRepo = ()=>{
+    const unauthenticatedRepo = () => {
         const notLogged: RulesTestContext = testEnv.unauthenticatedContext();
         return repositoryCreator(notLogged);
     }
 
-    const withNoClaims = ()=>{
+    const withNoClaims = () => {
         const context: RulesTestContext = testEnv.authenticatedContext("Bob");
         return repositoryCreator(context);
     }
-    
-    const withClaims = (claimName:string[])=>{
-        const context: RulesTestContext = testEnv.authenticatedContext("Bob", {userRoles: [...claimName]});
+
+    const withClaims = (claimName: string[]) => {
+        const context: RulesTestContext = testEnv.authenticatedContext("Bob", { userRoles: [...claimName], appUser:true });
         return repositoryCreator(context);
     }
 
-    const reader = ()=>withClaims(["reader"])
-    const writer = ()=>withClaims(["writer"])
-    const readWriter = ()=>withClaims(["writer", "reader"])
-    const admin = ()=>withClaims(["admin"])
+    const reader = () => withClaims(["reader"])
+    const writer = () => withClaims(["writer"])
+    const readWriter = () => withClaims(["writer", "reader"])
+    const admin = () => withClaims(["admin"])
 
     function sampleCreation(): PeriodicTaskCreation {
         return { name: "T1", description: "Description", rule: new EachDay() };
@@ -72,7 +72,7 @@ describe("Testing db", () => {
         await assertFails(repo.create(sampleCreation()));
     });
 
-    [{name:"writer", repoFn:writer}, {name:"readerWriter", repoFn:readWriter}, {name:"admin", repoFn:admin}].forEach(conf => {
+    [{ name: "writer", repoFn: writer }, { name: "readerWriter", repoFn: readWriter }, { name: "admin", repoFn: admin }].forEach(conf => {
         test(`${conf.name} should  be able to  create objects`, async () => {
             const repo: Repository = conf.repoFn();
             await assertSucceeds(repo.create(sampleCreation()));
@@ -80,9 +80,9 @@ describe("Testing db", () => {
     });
 
     [
-        {name:"unathenticated", repoFn:unauthenticatedRepo},
-        {name:"no claims", repoFn:withNoClaims},
-        ].forEach(conf => {
+        { name: "unathenticated", repoFn: unauthenticatedRepo },
+        { name: "no claims", repoFn: withNoClaims },
+    ].forEach(conf => {
         test(`${conf.name} should not be able to list`, async () => {
             const creationRepo: Repository = writer();
             await creationRepo.create(sampleCreation())
@@ -92,16 +92,19 @@ describe("Testing db", () => {
     });
 
     [
-        {name:"writer", repoFn:writer},
-        {name:"readerWriter", repoFn:readWriter},
-         {name:"reader", repoFn:reader},
-         {name:"admin", repoFn:admin}
-        ].forEach(conf => {
+        { name: "writer", repoFn: writer },
+        { name: "readerWriter", repoFn: readWriter },
+        { name: "reader", repoFn: reader },
+        { name: "admin", repoFn: admin }
+    ].forEach(conf => {
         test(`${conf.name} should  be able to list objects`, async () => {
             const creationRepo: Repository = writer();
             await creationRepo.create(sampleCreation())
             const repo: Repository = conf.repoFn();
-            await assertSucceeds(repo.list());
+            let found = await assertSucceeds(repo.list());
+            // expect(found.length).toBe(1)
+            // expect
+            
         });
     });
 

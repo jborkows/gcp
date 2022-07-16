@@ -1,5 +1,4 @@
 import { Temporal } from '@js-temporal/polyfill';
-import { type } from 'os';
 
 export type User = {
     id: string,
@@ -13,15 +12,20 @@ export type RuleType = typeof possibleRuleTypes[number];
 export interface RuleTemplate {
     type: RuleType,
     description: () => string,
-    nextExecution: (date: Temporal.PlainDate) => Temporal.PlainDate
+    nextExecution: (date: Temporal.PlainDate) => Temporal.PlainDate,
+    equals(other: any): boolean 
 }
 
-export const CannotConstructNEachDay = {} as const
+export const CannotConstructNEachDay = { message: "Just cannot"} as const
 
 export class EachDay implements RuleTemplate {
     type: 'EACH_DAY';
     description: () => string = () => "Każdego dnia"
     nextExecution: (date: Temporal.PlainDate) => Temporal.PlainDate = (date: Temporal.PlainDate) => date.add({ days: 1 })
+
+    equals(other: any): boolean {
+        return other instanceof EachDay
+    }
 }
 
 
@@ -34,14 +38,22 @@ export class EachNDay implements RuleTemplate {
     type: 'ONCE_PER_N_DAYS';
     description: () => string = () => `Każdego ${this.howMany} dnia`
     nextExecution: (date: Temporal.PlainDate) => Temporal.PlainDate = (date: Temporal.PlainDate) => date.add({ days: this.howMany })
+
+    equals(other: any): boolean {
+        return other instanceof EachNDay && this.howMany === other.howMany
+    }
 }
 
 
-export const safeEachNDay = (howMany: DaysNumber): EachDay | typeof CannotConstructNEachDay => {
+export const safeEachNDay = (howMany: DaysNumber): Rule | typeof CannotConstructNEachDay => {
     if (howMany <= 0) {
         return CannotConstructNEachDay
     } else {
-        return new EachNDay(howMany);
+        if(howMany > 1){
+            return new EachNDay(howMany);
+        }else{
+            return new EachDay()
+        }
     }
 }
 

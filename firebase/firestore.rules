@@ -6,6 +6,7 @@ service cloud.firestore {
     }
     match /PeriodicTask/{document} {
       allow write: if (hasRole("writer") || hasRole("admin"))
+      allow read: if isAppUser();
     }
     match /{document=**} {
       allow read, write: if false;
@@ -18,7 +19,9 @@ service cloud.firestore {
   }
 
   function isAppUser(){
-    return  request.auth.token.appUser == true;
+    return hasRole("writer") || hasRole("admin") || hasRole("reader")
+    // return  request.auth.token.appUser == true;
+
   }
   function existingData(){
     return resource.data

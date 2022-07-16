@@ -2,7 +2,7 @@ import { PeriodicTaskCreation } from "./commands";
 import { PeriodicTaskCompletionData } from "./domain";
 import { PeriodicTaskId, TaskState } from "./model";
 import { Repository } from "./service";
-import { doc, Firestore, getFirestore, setDoc } from "firebase/firestore"; 
+import { doc, Firestore, getFirestore, query, setDoc, collection, getDocs } from "firebase/firestore"; 
 import { Auth } from "firebase/auth";
 import { getApp } from "firebase/app";
 
@@ -31,8 +31,10 @@ export class FirebaseRepository implements Repository {
     update(id: string, p: PeriodicTaskCompletionData): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    list(): Promise<TaskState[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<TaskState[]> {
+        const taskStatesRef = collection(this.firestoreProvider(), this._table);
+        const quired = await getDocs(taskStatesRef) ;
+        return [] as TaskState[]
     }
     findById(id: string): Promise<PeriodicTaskCompletionData> {
         throw new Error("Method not implemented.");
