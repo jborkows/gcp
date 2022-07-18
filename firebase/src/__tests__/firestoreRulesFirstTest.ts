@@ -39,11 +39,11 @@ describe("Testing security rules", () => {
     });
 
 
-    test('user with custom claim appUser', async () => {
-        const alice = testEnv.authenticatedContext("alice", {appUser:true});
-        const docRef = doc(alice.firestore(), 'notes', 'fires');
-        await assertSucceeds(setDoc(docRef, { "text": "Note", }));
-    });
+    // test('user with custom claim appUser', async () => {
+    //     const alice = testEnv.authenticatedContext("alice", {appUser:true});
+    //     const docRef = doc(alice.firestore(), 'notes', 'fires');
+    //     await assertSucceeds(setDoc(docRef, { "text": "Note", }));
+    // });
 
     afterEach(async () => {
         if (!testEnv) {

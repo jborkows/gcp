@@ -1,44 +1,83 @@
+import { collection, doc, Firestore, FirestoreDataConverter, getDocs, QueryDocumentSnapshot, setDoc } from "firebase/firestore";
 import { PeriodicTaskCreation } from "./commands";
 import { PeriodicTaskCompletionData } from "./domain";
-import { PeriodicTaskId, TaskState } from "./model";
+import { EachDay, EachNDay, PeriodicTaskId, TaskState } from "./model";
 import { Repository } from "./service";
-import { doc, Firestore, getFirestore, query, setDoc, collection, getDocs } from "firebase/firestore"; 
-import { Auth } from "firebase/auth";
-import { getApp } from "firebase/app";
 
 
+
+const taskStateConverter: FirestoreDataConverter<TaskState> = {
+  toFirestore: (any) => {
+    throw new Error("Not used")
+  },
+  fromFirestore: (snapshot, options) => {
+    const data = snapshot.data(options);
+    return {
+      id: snapshot.id,
+      name: snapshot.id,
+      ruleDescription: data.ruleDescription,
+      nextExecution: data.nextExecution,
+      lastExecution: data.lastExecution
+    }
+  }
+};
 
 export class FirebaseRepository implements Repository {
-    private _table: string;
+  private _table: string;
 
-    constructor(readonly firestoreProvider:()=>Firestore){
-        this._table="PeriodicTask"
-    }
+  constructor(readonly firestoreProvider: () => Firestore) {
+    this._table = "PeriodicTask"
+  }
 
 
-    async create(p: PeriodicTaskCreation): Promise<PeriodicTaskId> {
+
+  async create(p: PeriodicTaskCreation): Promise<PeriodicTaskId> {
     //     name: string,
     //     description: string
     //     rule: Rule
     // readonly nextExecution: Temporal.PlainDate,
     // readonly lastExecution: { at: Temporal.PlainDate, by: User, comment: string | null } | null
 
-        await setDoc(doc(this.firestoreProvider(), this._table , p.name), {
-            description: p.description,
-          });
-        return p.name
+    const ruleType = () => {
+      if (p.rule instanceof EachNDay) {
+        return "EachNDay"
+      } else if (p.rule instanceof EachDay) {
+        return "EachDay"
+      } else {
+        throw new Error("Not implemented yet")
+      }
     }
-    update(id: string, p: PeriodicTaskCompletionData): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    async list(): Promise<TaskState[]> {
-        const taskStatesRef = collection(this.firestoreProvider(), this._table);
-        const quired = await getDocs(taskStatesRef) ;
-        return [] as TaskState[]
-    }
-    findById(id: string): Promise<PeriodicTaskCompletionData> {
-        throw new Error("Method not implemented.");
-    }
+
+    await setDoc(doc(this.firestoreProvider(), this._table, p.name), {
+      description: p.description,
+      ruleDescription: p.rule.description(),
+      ruleType: ruleType(),
+      howManyDays: p.rule instanceof EachNDay ? p.rule.howMany : null
+    });
+    return p.name
+  }
+  update(id: string, p: PeriodicTaskCompletionData): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  async list(): Promise<TaskState[]> {
+    const taskStatesRef = collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
+    const quired = await getDocs(taskStatesRef);
+    return quired.docs.map(x=>x.data())
+    // const data = asArray(quired)
+    // return data;
+    // let results:Array<TaskState> = []
+    // quired.forEach(result => {
+    // results.push(result.data())
+    // })
+    // return results;
+    
+  }
+
+
+
+  findById(id: string): Promise<PeriodicTaskCompletionData> {
+    throw new Error("Method not implemented.");
+  }
 
 
 }
@@ -68,3 +107,17 @@ const unsubscribe = onSnapshot(q, (querySnapshot) => {
   console.log("Current cities in CA: ", cities.join(", "));
 }, (error)=>{...});
 */
+
+interface ArrayReady<T> {
+  forEach(callback: (result: QueryDocumentSnapshot<T>) => void, thisArg?: unknown): void;
+}
+
+export function asArray<T>(obj: ArrayReady<T>): Array<T> {
+  let result = new Array<T>()
+  //@ts-ignore
+  obj.forEach((elem: T) => {
+    //@ts-ignore
+    result.push(elem.data());
+  });
+  return result
+}

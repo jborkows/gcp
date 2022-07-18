@@ -5,7 +5,6 @@ import {
     RulesTestContext,
     RulesTestEnvironment,
 } from "@firebase/rules-unit-testing"
-import { setDoc, doc, collection } from "firebase/firestore";
 import * as fs from 'fs';
 import * as path from 'path';
 import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from "../../periodicTasks";
@@ -13,6 +12,7 @@ import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from ".
 describe("Testing db", () => {
     const projectId = "demo-periodic"
     let testEnv: RulesTestEnvironment
+    
 
 
     beforeAll(async () => {
@@ -25,12 +25,12 @@ describe("Testing db", () => {
                 rules: fs.readFileSync(firestoreRules, "utf8"),
             },
         })
-
     })
 
     const repositoryCreator = (context: RulesTestContext): Repository => {
-        //@ts-ignore
-        return new FirebaseRepository(() => context.firestore());
+        const firestore = context.firestore()
+        // @ts-ignore
+        return new FirebaseRepository(() => firestore);
     }
 
     const unauthenticatedRepo = () => {
@@ -97,15 +97,25 @@ describe("Testing db", () => {
         { name: "reader", repoFn: reader },
         { name: "admin", repoFn: admin }
     ].forEach(conf => {
-        test(`${conf.name} should  be able to list objects`, async () => {
+        test(`${conf.name} should  be able to list and create objects`, async () => {
             const creationRepo: Repository = writer();
-            await creationRepo.create(sampleCreation())
-            const repo: Repository = conf.repoFn();
-            let found = await assertSucceeds(repo.list());
-            // expect(found.length).toBe(1)
-            // expect
-            
+            const dto = sampleCreation();
+            await creationRepo.create(dto)
+            await assertSucceeds(creationRepo.list());
         });
+    });
+
+    test(`created object should be listed`, async () => {
+        const creationRepo: Repository = writer();
+        const dto = sampleCreation();
+        await creationRepo.create(dto)
+
+        
+        let found = await creationRepo.list();
+        
+        expect(found.length).toBe(1)
+        expect(found[0].id).not.toBeNull()
+        expect(found[0].name).toBe(dto.name)
     });
 
 

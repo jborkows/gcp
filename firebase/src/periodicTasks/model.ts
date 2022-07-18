@@ -35,7 +35,7 @@ export class EachNDay implements RuleTemplate {
     constructor(howMany: DaysNumber) {
         this.howMany = howMany
     }
-    type: 'ONCE_PER_N_DAYS';
+    type:  'ONCE_PER_N_DAYS';
     description: () => string = () => `Każdego ${this.howMany} dnia`
     nextExecution: (date: Temporal.PlainDate) => Temporal.PlainDate = (date: Temporal.PlainDate) => date.add({ days: this.howMany })
 
