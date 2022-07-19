@@ -81,6 +81,7 @@ export class FirebaseRepository implements Repository {
   constructor(readonly firestoreProvider: () => firestore.Firestore) {
     this._table = "PeriodicTask"
   }
+  
 
   async create(p: PeriodicTaskCreation): Promise<model.PeriodicTaskId> {
     await firestore.setDoc(firestore.doc(this.firestoreProvider(), this._table, p.name), {
@@ -100,6 +101,10 @@ export class FirebaseRepository implements Repository {
     const taskStatesRef = firestore.collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
     const quired = await firestore.getDocs(taskStatesRef);
     return quired.docs.map(x => x.data())
+  }
+
+  onData(fn: (data: model.TaskState[]) => void) {
+    throw new Error("Method not implemented.");
   }
 
   async findById(id: string): Promise<PeriodicTaskCompletionData> {

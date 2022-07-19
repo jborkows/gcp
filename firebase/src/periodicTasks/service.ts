@@ -9,6 +9,7 @@ export interface Repository {
     create(p:PeriodicTaskCreation): Promise<PeriodicTaskId>
     update(id:PeriodicTaskId, p:PeriodicTaskCompletionData): Promise<void>
     list():Promise<TaskState[]>;
+    onData(fn:(data:TaskState[])=>void);
     findById(id:PeriodicTaskId):Promise<PeriodicTaskCompletionData>
 }
 
