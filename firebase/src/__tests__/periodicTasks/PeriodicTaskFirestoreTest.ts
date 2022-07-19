@@ -74,35 +74,6 @@ describe("Testing db", () => {
         await assertFails(creationRepo.create(dto))
     });
 
-    //TODO update test for users
-    //TODO serialization of rules
-
-
-
-    //     test('anonymous user should not be able to list objects', async () => {
-    //         const notLogged = testEnv.unauthenticatedContext();
-    //         import { collection, doc, setDoc } from "firebase/firestore"; 
-
-    // const citiesRef = collection(db, "cities")
-
-    //         const docRef = doc(notLogged.firestore(), repo.table, 'sth');
-    //         await assertFails(setDoc(docRef, { "text": "Note", }));
-    //     });
-
-
-    // test('user without custom claim', async () => {
-    //     const alice = testEnv.authenticatedContext("alice");
-    //     const docRef = doc(alice.firestore(), 'notes', 'fires');
-    //     await assertFails(setDoc(docRef, { "text": "Note", }));
-    // });
-
-
-    // test('user with custom claim appUser', async () => {
-    //     const alice = testEnv.authenticatedContext("alice", {appUser:true});
-    //     const docRef = doc(alice.firestore(), 'notes', 'fires');
-    //     await assertSucceeds(setDoc(docRef, { "text": "Note", }));
-    // });
-
     afterEach(async () => {
         if (!testEnv) {
             return;

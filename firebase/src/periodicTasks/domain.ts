@@ -5,7 +5,7 @@ import { PeriodicTaskId, Rule, User } from "./model";
 
 export interface PeriodicTaskCompletionData {
     readonly rule: Rule,
-    readonly nextExecution: Temporal.PlainDate,
+    readonly nextExecution: Temporal.PlainDate | null,
     readonly lastExecution: { at: Temporal.PlainDate, by: User, comment: string | null } | null
 }
 

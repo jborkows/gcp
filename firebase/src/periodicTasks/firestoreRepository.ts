@@ -1,7 +1,8 @@
-import { collection, doc, Firestore, FirestoreDataConverter, getDocs, QueryDocumentSnapshot, setDoc } from "firebase/firestore";
+import { Temporal } from "@js-temporal/polyfill";
+import { collection, doc, Firestore, FirestoreDataConverter, getDoc, getDocs, QueryDocumentSnapshot, setDoc, Timestamp } from "firebase/firestore";
 import { PeriodicTaskCreation } from "./commands";
 import { PeriodicTaskCompletionData } from "./domain";
-import { EachDay, EachNDay, PeriodicTaskId, TaskState } from "./model";
+import { CannotConstructNEachDay, EachDay, EachNDay, PeriodicTaskId, Rule, safeEachNDay, TaskState, User } from "./model";
 import { Repository } from "./service";
 
 
@@ -22,6 +23,16 @@ const taskStateConverter: FirestoreDataConverter<TaskState> = {
   }
 };
 
+const ruleType = (rule: Rule) => {
+  if (rule instanceof EachNDay) {
+    return "EachNDay"
+  } else if (rule instanceof EachDay) {
+    return "EachDay"
+  } else {
+    throw new Error("Not implemented yet")
+  }
+}
+
 export class FirebaseRepository implements Repository {
   private _table: string;
 
@@ -29,54 +40,82 @@ export class FirebaseRepository implements Repository {
     this._table = "PeriodicTask"
   }
 
-
-
   async create(p: PeriodicTaskCreation): Promise<PeriodicTaskId> {
-    //     name: string,
-    //     description: string
-    //     rule: Rule
-    // readonly nextExecution: Temporal.PlainDate,
-    // readonly lastExecution: { at: Temporal.PlainDate, by: User, comment: string | null } | null
-
-    const ruleType = () => {
-      if (p.rule instanceof EachNDay) {
-        return "EachNDay"
-      } else if (p.rule instanceof EachDay) {
-        return "EachDay"
-      } else {
-        throw new Error("Not implemented yet")
-      }
-    }
-
     await setDoc(doc(this.firestoreProvider(), this._table, p.name), {
       description: p.description,
       ruleDescription: p.rule.description(),
-      ruleType: ruleType(),
+      ruleType: ruleType(p.rule),
       howManyDays: p.rule instanceof EachNDay ? p.rule.howMany : null
     });
     return p.name
   }
+
   update(id: string, p: PeriodicTaskCompletionData): Promise<void> {
     throw new Error("Method not implemented.");
   }
+
   async list(): Promise<TaskState[]> {
     const taskStatesRef = collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
     const quired = await getDocs(taskStatesRef);
-    return quired.docs.map(x=>x.data())
-    // const data = asArray(quired)
-    // return data;
-    // let results:Array<TaskState> = []
-    // quired.forEach(result => {
-    // results.push(result.data())
-    // })
-    // return results;
-    
+    return quired.docs.map(x => x.data())
   }
 
+  async findById(id: string): Promise<PeriodicTaskCompletionData> {
+    const docRef = doc(this.firestoreProvider(), this._table, id);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      throw "Cannot find object"
+    }
 
+    const data = docSnap.data()
+    const ruleFromData = (): Rule => {
+      // ruleType
+      if (data.ruleType == "EachDay") {
+        return safeEachNDay(1) as Rule
+      } else if (data.ruleType == "EachNDay") {
+        const safe = safeEachNDay(data.howManyDays)
+        if (safe == CannotConstructNEachDay) {
+          throw new Error(`Invalid data for ${id} ${JSON.stringify(data)}`)
+        } else {
+          return safe as Rule;
+        }
+      } else {
+        throw new Error(`Invalid data for ${id} ${JSON.stringify(data)}`)
+      }
+    
+    }
 
-  findById(id: string): Promise<PeriodicTaskCompletionData> {
-    throw new Error("Method not implemented.");
+    const nextExecutionFromData = (): Temporal.PlainDate | null => {
+      const day = data.nextExecution
+      if(!day){
+        return null;
+      }
+      return Temporal.PlainDate.from(day);
+    }
+
+    const lastExecutionFromData = (): { at: Temporal.PlainDate, by: User, comment: string | null } | null => {
+      if (!data.lastExecution) {
+        return null;
+      }
+
+      const userFrom = (): User => ({
+        id: data.lastExecution.id,
+        name: data.lastExecution.name
+      })
+
+      return {
+        at: Temporal.PlainDate.from(data.lastExecution.at),
+        by: userFrom(),
+        comment: data.lastExecution.comment as string
+      }
+    }
+
+    return {
+      rule: ruleFromData(),
+      nextExecution: nextExecutionFromData(),
+      lastExecution: lastExecutionFromData()
+    }
+
   }
 
 

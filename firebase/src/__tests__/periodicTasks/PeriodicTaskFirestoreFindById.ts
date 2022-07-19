@@ -5,30 +5,47 @@ import {
     RulesTestContext,
     RulesTestEnvironment,
 } from "@firebase/rules-unit-testing"
+import { fail } from "assert";
 import * as fs from 'fs';
 import * as path from 'path';
 import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from "../../periodicTasks";
 import { Helper, testEnvInitialization, sampleCreation } from "./helpers";
 
 describe("Testing db", () => {
-    const projectId = "demo-periodic-list-create"
+    const projectId = "aaaaa"
     let testEnv: RulesTestEnvironment
     let helper: Helper
-    
+
     beforeAll(async () => {
         testEnv = await testEnvInitialization(projectId)
         helper = new Helper(testEnv)
     })
-  
-    test(`created object should be listed`, async () => {
+
+    test(`if cannot find object -> throw exception`, async () => {
+        const creationRepo: Repository = helper.writer();
+        const dto = sampleCreation();
+        // await creationRepo.create(dto)
+
+        try {
+            await creationRepo.findById(dto.name)
+            fail("Should not be possible")
+        } catch (e) {
+            expect(e).toBe('Cannot find object');
+        }
+    });
+
+
+    test(`should find one object in multiple entries`, async () => {
         const creationRepo: Repository = helper.writer();
         const dto = sampleCreation();
         await creationRepo.create(dto)
-        let found = await creationRepo.list();
-        expect(found.length).toBe(1)
-        expect(found[0].id).not.toBeNull()
-        expect(found[0].name).toBe(dto.name)
+        await creationRepo.create(sampleCreation())
+        await creationRepo.create(sampleCreation())
+        const found = await creationRepo.findById(dto.name)
+        expect(found.rule.equals(dto.rule)).toBeTruthy()
     });
+
+    //create update find
 
     afterEach(async () => {
         if (!testEnv) {
@@ -38,6 +55,9 @@ describe("Testing db", () => {
     });
 
     afterAll(async () => {
+        if (!testEnv) {
+            return;
+        }
         await testEnv.cleanup()
     })
 })
