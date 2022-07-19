@@ -1,3 +1,4 @@
+import { DocumentData } from "@firebase/firestore-types";
 import { Temporal } from "@js-temporal/polyfill";
 import { collection, doc, Firestore, FirestoreDataConverter, getDoc, getDocs, QueryDocumentSnapshot, setDoc, Timestamp } from "firebase/firestore";
 import { PeriodicTaskCreation } from "./commands";
@@ -5,7 +6,48 @@ import { PeriodicTaskCompletionData } from "./domain";
 import { CannotConstructNEachDay, EachDay, EachNDay, PeriodicTaskId, Rule, safeEachNDay, TaskState, User } from "./model";
 import { Repository } from "./service";
 
+type LastExecution =  { at: Temporal.PlainDate, by: User, comment: string | null } | null
+const lastExecutionFromData = (data:DocumentData):LastExecution => {
+  if (!data.lastExecution) {
+    return null;
+  }
 
+  const userFrom = (): User => ({
+    id: data.lastExecution.id,
+    name: data.lastExecution.name
+  })
+
+  return {
+    at: Temporal.PlainDate.from(data.lastExecution.at),
+    by: userFrom(),
+    comment: data.lastExecution.comment as string
+  }
+}
+
+const nextExecutionFromData = (data:DocumentData): Temporal.PlainDate | null => {
+  const day = data.nextExecution
+  if(!day){
+    return null;
+  }
+  return Temporal.PlainDate.from(day);
+}
+
+const ruleFromData = (data:DocumentData): Rule => {
+  // ruleType
+  if (data.ruleType == "EachDay") {
+    return safeEachNDay(1) as Rule
+  } else if (data.ruleType == "EachNDay") {
+    const safe = safeEachNDay(data.howManyDays)
+    if (safe == CannotConstructNEachDay) {
+      throw new Error(`Invalid data for ${data.id} ${JSON.stringify(data)}`)
+    } else {
+      return safe as Rule;
+    }
+  } else {
+    throw new Error(`Invalid data for ${data.id} ${JSON.stringify(data)}`)
+  }
+
+}
 
 const taskStateConverter: FirestoreDataConverter<TaskState> = {
   toFirestore: (any) => {
@@ -16,9 +58,9 @@ const taskStateConverter: FirestoreDataConverter<TaskState> = {
     return {
       id: snapshot.id,
       name: snapshot.id,
-      ruleDescription: data.ruleDescription,
-      nextExecution: data.nextExecution,
-      lastExecution: data.lastExecution
+      ruleDescription: ruleFromData(data).description(),
+      nextExecution: nextExecutionFromData(data),
+      lastExecution: lastExecutionFromData(data)
     }
   }
 };
@@ -68,57 +110,12 @@ export class FirebaseRepository implements Repository {
     }
 
     const data = docSnap.data()
-    const ruleFromData = (): Rule => {
-      // ruleType
-      if (data.ruleType == "EachDay") {
-        return safeEachNDay(1) as Rule
-      } else if (data.ruleType == "EachNDay") {
-        const safe = safeEachNDay(data.howManyDays)
-        if (safe == CannotConstructNEachDay) {
-          throw new Error(`Invalid data for ${id} ${JSON.stringify(data)}`)
-        } else {
-          return safe as Rule;
-        }
-      } else {
-        throw new Error(`Invalid data for ${id} ${JSON.stringify(data)}`)
-      }
-    
-    }
-
-    const nextExecutionFromData = (): Temporal.PlainDate | null => {
-      const day = data.nextExecution
-      if(!day){
-        return null;
-      }
-      return Temporal.PlainDate.from(day);
-    }
-
-    const lastExecutionFromData = (): { at: Temporal.PlainDate, by: User, comment: string | null } | null => {
-      if (!data.lastExecution) {
-        return null;
-      }
-
-      const userFrom = (): User => ({
-        id: data.lastExecution.id,
-        name: data.lastExecution.name
-      })
-
-      return {
-        at: Temporal.PlainDate.from(data.lastExecution.at),
-        by: userFrom(),
-        comment: data.lastExecution.comment as string
-      }
-    }
-
     return {
-      rule: ruleFromData(),
-      nextExecution: nextExecutionFromData(),
-      lastExecution: lastExecutionFromData()
+      rule: ruleFromData(data),
+      nextExecution: nextExecutionFromData(data),
+      lastExecution: lastExecutionFromData(data)
     }
-
   }
-
-
 }
 
 
