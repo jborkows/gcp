@@ -1,14 +1,8 @@
 import {
-    assertFails,
-    assertSucceeds,
-    initializeTestEnvironment,
-    RulesTestContext,
     RulesTestEnvironment,
 } from "@firebase/rules-unit-testing"
 import { fail } from "assert";
-import * as fs from 'fs';
-import * as path from 'path';
-import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from "../../periodicTasks";
+import { Repository } from "../../periodicTasks";
 import { Helper, testEnvInitialization, sampleCreation } from "./helpers";
 
 describe("Testing db", () => {

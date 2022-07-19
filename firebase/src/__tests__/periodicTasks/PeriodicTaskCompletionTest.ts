@@ -1,7 +1,7 @@
 import { Temporal } from "@js-temporal/polyfill";
 
 import * as lib from "../../periodicTasks";
-import { EachDay, EachNDay } from "../../periodicTasks";
+import { EachNDay } from "../../periodicTasks";
 
 
 describe("Marking as completed", () => {
@@ -57,7 +57,7 @@ describe("Marking as completed", () => {
 
 
     it("marking the data should modify last execution and next execution", () => {
-        const rule = new EachNDay(5)
+        const rule = new lib.EachNDay(5)
         const spy = jest.spyOn(rule, 'nextExecution');
         const nextExecution = rule.nextExecution(lastExecutionDate);
         const periodicTasks = new lib.PeriodicTaskCompletion(

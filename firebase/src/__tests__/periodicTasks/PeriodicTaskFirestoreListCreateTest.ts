@@ -1,25 +1,17 @@
-import {
-    assertFails,
-    assertSucceeds,
-    initializeTestEnvironment,
-    RulesTestContext,
-    RulesTestEnvironment,
-} from "@firebase/rules-unit-testing"
-import * as fs from 'fs';
-import * as path from 'path';
-import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from "../../periodicTasks";
+import {RulesTestEnvironment,} from "@firebase/rules-unit-testing"
+import { Repository } from "../../periodicTasks";
 import { Helper, testEnvInitialization, sampleCreation } from "./helpers";
 
 describe("Testing db", () => {
     const projectId = "demo-periodic-list-create"
     let testEnv: RulesTestEnvironment
     let helper: Helper
-    
+
     beforeAll(async () => {
         testEnv = await testEnvInitialization(projectId)
         helper = new Helper(testEnv)
     })
-  
+
     test(`created object should be listed`, async () => {
         const creationRepo: Repository = helper.writer();
         const dto = sampleCreation();

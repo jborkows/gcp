@@ -1,6 +1,4 @@
 import {
-    assertFails,
-    assertSucceeds,
     initializeTestEnvironment,
     RulesTestContext,
     RulesTestEnvironment,
@@ -8,7 +6,7 @@ import {
 import { randomInt } from "crypto";
 import * as fs from 'fs';
 import * as path from 'path';
-import { EachDay, PeriodicTaskCreation, Repository, FirebaseRepository } from "../../periodicTasks";
+import * as periodicTasks from "../../periodicTasks";
 export async function testEnvInitialization(projectId:string):Promise<    RulesTestEnvironment>{
     const src = path.resolve(__dirname, '..');
     const root = path.resolve(path.resolve(src, '..'), "..");
@@ -22,10 +20,10 @@ export async function testEnvInitialization(projectId:string):Promise<    RulesT
 }
 
 
- const repositoryCreator = (context: RulesTestContext): Repository => {
+ const repositoryCreator = (context: RulesTestContext): periodicTasks.Repository => {
     const firestore = context.firestore()
     // @ts-ignore
-    return new FirebaseRepository(() => firestore);
+    return new periodicTasks.FirebaseRepository(() => firestore);
 }
 
 export class Helper {
@@ -56,6 +54,6 @@ test("Fake test", ()=>{})
 
 
 
-export function sampleCreation(): PeriodicTaskCreation {
-    return { name: "T" + randomInt(103400), description: "Description" + randomInt(103400), rule: new EachDay() };
+export function sampleCreation(): periodicTasks.PeriodicTaskCreation {
+    return { name: "T" + randomInt(103400), description: "Description" + randomInt(103400), rule: new periodicTasks.EachDay() };
 }

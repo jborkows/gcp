@@ -1,18 +1,18 @@
 import { DocumentData } from "@firebase/firestore-types";
 import { Temporal } from "@js-temporal/polyfill";
-import { collection, doc, Firestore, FirestoreDataConverter, getDoc, getDocs, QueryDocumentSnapshot, setDoc, Timestamp } from "firebase/firestore";
+import * as firestore from "firebase/firestore";
 import { PeriodicTaskCreation } from "./commands";
 import { PeriodicTaskCompletionData } from "./domain";
-import { CannotConstructNEachDay, EachDay, EachNDay, PeriodicTaskId, Rule, safeEachNDay, TaskState, User } from "./model";
+import * as model from "./model";
 import { Repository } from "./service";
 
-type LastExecution =  { at: Temporal.PlainDate, by: User, comment: string | null } | null
+type LastExecution =  { at: Temporal.PlainDate, by: model.User, comment: string | null } | null
 const lastExecutionFromData = (data:DocumentData):LastExecution => {
   if (!data.lastExecution) {
     return null;
   }
 
-  const userFrom = (): User => ({
+  const userFrom = (): model.User => ({
     id: data.lastExecution.id,
     name: data.lastExecution.name
   })
@@ -32,16 +32,16 @@ const nextExecutionFromData = (data:DocumentData): Temporal.PlainDate | null => 
   return Temporal.PlainDate.from(day);
 }
 
-const ruleFromData = (data:DocumentData): Rule => {
+const ruleFromData = (data:DocumentData): model.Rule => {
   // ruleType
   if (data.ruleType == "EachDay") {
-    return safeEachNDay(1) as Rule
+    return model.safeEachNDay(1) as model.Rule
   } else if (data.ruleType == "EachNDay") {
-    const safe = safeEachNDay(data.howManyDays)
-    if (safe == CannotConstructNEachDay) {
+    const safe = model.safeEachNDay(data.howManyDays)
+    if (safe == model.CannotConstructNEachDay) {
       throw new Error(`Invalid data for ${data.id} ${JSON.stringify(data)}`)
     } else {
-      return safe as Rule;
+      return safe as model.Rule;
     }
   } else {
     throw new Error(`Invalid data for ${data.id} ${JSON.stringify(data)}`)
@@ -49,7 +49,7 @@ const ruleFromData = (data:DocumentData): Rule => {
 
 }
 
-const taskStateConverter: FirestoreDataConverter<TaskState> = {
+const taskStateConverter: firestore.FirestoreDataConverter<model.TaskState> = {
   toFirestore: (any) => {
     throw new Error("Not used")
   },
@@ -65,10 +65,10 @@ const taskStateConverter: FirestoreDataConverter<TaskState> = {
   }
 };
 
-const ruleType = (rule: Rule) => {
-  if (rule instanceof EachNDay) {
+const ruleType = (rule: model.Rule) => {
+  if (rule instanceof model.EachNDay) {
     return "EachNDay"
-  } else if (rule instanceof EachDay) {
+  } else if (rule instanceof model.EachDay) {
     return "EachDay"
   } else {
     throw new Error("Not implemented yet")
@@ -78,16 +78,16 @@ const ruleType = (rule: Rule) => {
 export class FirebaseRepository implements Repository {
   private _table: string;
 
-  constructor(readonly firestoreProvider: () => Firestore) {
+  constructor(readonly firestoreProvider: () => firestore.Firestore) {
     this._table = "PeriodicTask"
   }
 
-  async create(p: PeriodicTaskCreation): Promise<PeriodicTaskId> {
-    await setDoc(doc(this.firestoreProvider(), this._table, p.name), {
+  async create(p: PeriodicTaskCreation): Promise<model.PeriodicTaskId> {
+    await firestore.setDoc(firestore.doc(this.firestoreProvider(), this._table, p.name), {
       description: p.description,
       ruleDescription: p.rule.description(),
       ruleType: ruleType(p.rule),
-      howManyDays: p.rule instanceof EachNDay ? p.rule.howMany : null
+      howManyDays: p.rule instanceof model.EachNDay ? p.rule.howMany : null
     });
     return p.name
   }
@@ -96,15 +96,15 @@ export class FirebaseRepository implements Repository {
     throw new Error("Method not implemented.");
   }
 
-  async list(): Promise<TaskState[]> {
-    const taskStatesRef = collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
-    const quired = await getDocs(taskStatesRef);
+  async list(): Promise<model.TaskState[]> {
+    const taskStatesRef = firestore.collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
+    const quired = await firestore.getDocs(taskStatesRef);
     return quired.docs.map(x => x.data())
   }
 
   async findById(id: string): Promise<PeriodicTaskCompletionData> {
-    const docRef = doc(this.firestoreProvider(), this._table, id);
-    const docSnap = await getDoc(docRef);
+    const docRef = firestore.doc(this.firestoreProvider(), this._table, id);
+    const docSnap = await firestore.getDoc(docRef);
     if (!docSnap.exists()) {
       throw "Cannot find object"
     }
@@ -145,7 +145,7 @@ const unsubscribe = onSnapshot(q, (querySnapshot) => {
 */
 
 interface ArrayReady<T> {
-  forEach(callback: (result: QueryDocumentSnapshot<T>) => void, thisArg?: unknown): void;
+  forEach(callback: (result: firestore.QueryDocumentSnapshot<T>) => void, thisArg?: unknown): void;
 }
 
 export function asArray<T>(obj: ArrayReady<T>): Array<T> {
