@@ -8,71 +8,34 @@ import {
 import * as fs from 'fs';
 import * as path from 'path';
 import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from "../../periodicTasks";
+import { Helper, sampleCreation, testEnvInitialization } from "./helpers";
 
 describe("Testing db", () => {
     const projectId = "demo-periodic"
     let testEnv: RulesTestEnvironment
-    
-
+    let helper: Helper
 
     beforeAll(async () => {
-        const src = path.resolve(__dirname, '..');
-        const root = path.resolve(path.resolve(src, '..'), "..");
-        const firestoreRules = path.resolve(root, "firestore.rules")
-        testEnv = await initializeTestEnvironment({
-            projectId: projectId,
-            firestore: {
-                rules: fs.readFileSync(firestoreRules, "utf8"),
-            },
-        })
+        testEnv = await testEnvInitialization(projectId)
+        helper = new Helper(testEnv)
     })
 
-    const repositoryCreator = (context: RulesTestContext): Repository => {
-        const firestore = context.firestore()
-        // @ts-ignore
-        return new FirebaseRepository(() => firestore);
-    }
-
-    const unauthenticatedRepo = () => {
-        const notLogged: RulesTestContext = testEnv.unauthenticatedContext();
-        return repositoryCreator(notLogged);
-    }
-
-    const withNoClaims = () => {
-        const context: RulesTestContext = testEnv.authenticatedContext("Bob");
-        return repositoryCreator(context);
-    }
-
-    const withClaims = (claimName: string[]) => {
-        const context: RulesTestContext = testEnv.authenticatedContext("Bob", { userRoles: [...claimName], appUser:true });
-        return repositoryCreator(context);
-    }
-
-    const reader = () => withClaims(["reader"])
-    const writer = () => withClaims(["writer"])
-    const readWriter = () => withClaims(["writer", "reader"])
-    const admin = () => withClaims(["admin"])
-
-    function sampleCreation(): PeriodicTaskCreation {
-        return { name: "T1", description: "Description", rule: new EachDay() };
-    }
-
     test('anonymous user should not be able to  create objects', async () => {
-        const repo: Repository = unauthenticatedRepo()
+        const repo: Repository = helper.unauthenticatedRepo()
         await assertFails(repo.create(sampleCreation()));
     });
 
     test('user without claims should not be able to  create objects', async () => {
-        const repo: Repository = unauthenticatedRepo()
+        const repo: Repository = helper.unauthenticatedRepo()
         await assertFails(repo.create(sampleCreation()));
     });
 
     test('reader should not create objects', async () => {
-        const repo: Repository = unauthenticatedRepo()
+        const repo: Repository = helper.unauthenticatedRepo()
         await assertFails(repo.create(sampleCreation()));
     });
 
-    [{ name: "writer", repoFn: writer }, { name: "readerWriter", repoFn: readWriter }, { name: "admin", repoFn: admin }].forEach(conf => {
+    [{ name: "writer", repoFn: ()=>helper.writer() }, { name: "readerWriter", repoFn: ()=>helper.readWriter() }, { name: "admin", repoFn: ()=>helper.admin() }].forEach(conf => {
         test(`${conf.name} should  be able to  create objects`, async () => {
             const repo: Repository = conf.repoFn();
             await assertSucceeds(repo.create(sampleCreation()));
@@ -80,11 +43,11 @@ describe("Testing db", () => {
     });
 
     [
-        { name: "unathenticated", repoFn: unauthenticatedRepo },
-        { name: "no claims", repoFn: withNoClaims },
+        { name: "unathenticated", repoFn: ()=>helper.unauthenticatedRepo() },
+        { name: "no claims", repoFn: ()=>helper.withNoClaims() },
     ].forEach(conf => {
         test(`${conf.name} should not be able to list`, async () => {
-            const creationRepo: Repository = writer();
+            const creationRepo: Repository = helper.writer();
             await creationRepo.create(sampleCreation())
             const repo: Repository = conf.repoFn();
             await assertFails(repo.list());
@@ -92,32 +55,24 @@ describe("Testing db", () => {
     });
 
     [
-        { name: "writer", repoFn: writer },
-        { name: "readerWriter", repoFn: readWriter },
-        { name: "reader", repoFn: reader },
-        { name: "admin", repoFn: admin }
+        { name: "writer", repoFn: ()=>helper.writer() },
+        { name: "readerWriter", repoFn: ()=>helper.readWriter() },
+        { name: "admin", repoFn: ()=>helper.admin() }
     ].forEach(conf => {
-        test(`${conf.name} should  be able to list and create objects`, async () => {
-            const creationRepo: Repository = writer();
+        test(`${conf.name} should be able to list and create objects`, async () => {
+            const creationRepo: Repository = conf.repoFn();
             const dto = sampleCreation();
             await creationRepo.create(dto)
             await assertSucceeds(creationRepo.list());
         });
     });
 
-    test(`created object should be listed`, async () => {
-        const creationRepo: Repository = writer();
+    test(`reader should be able to list but not create objects`, async () => {
+        const creationRepo: Repository = helper.reader();
+        await assertSucceeds(creationRepo.list());
         const dto = sampleCreation();
-        await creationRepo.create(dto)
-
-        
-        let found = await creationRepo.list();
-        
-        expect(found.length).toBe(1)
-        expect(found[0].id).not.toBeNull()
-        expect(found[0].name).toBe(dto.name)
+        await assertFails(creationRepo.create(dto))
     });
-
 
     //TODO update test for users
     //TODO serialization of rules
@@ -159,4 +114,6 @@ describe("Testing db", () => {
         await testEnv.cleanup()
     })
 })
+
+
 

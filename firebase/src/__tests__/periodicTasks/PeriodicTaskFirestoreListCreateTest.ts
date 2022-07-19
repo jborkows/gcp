@@ -8,44 +8,23 @@ import {
 import * as fs from 'fs';
 import * as path from 'path';
 import { EachDay, FirebaseRepository, PeriodicTaskCreation, Repository } from "../../periodicTasks";
+import { Helper, testEnvInitialization, sampleCreation } from "./helpers";
 
 describe("Testing db", () => {
     const projectId = "demo-periodic-list-create"
     let testEnv: RulesTestEnvironment
+    let helper: Helper
     
-
-
     beforeAll(async () => {
-        const src = path.resolve(__dirname, '..');
-        const root = path.resolve(path.resolve(src, '..'), "..");
-        const firestoreRules = path.resolve(root, "firestore.rules")
-        testEnv = await initializeTestEnvironment({
-            projectId: projectId,
-            firestore: {
-                rules: fs.readFileSync(firestoreRules, "utf8"),
-            },
-        })
+        testEnv = await testEnvInitialization(projectId)
+        helper = new Helper(testEnv)
     })
 
-    const repositoryCreator = (context: RulesTestContext): Repository => {
-        const firestore = context.firestore()
-        // @ts-ignore
-        return new FirebaseRepository(() => firestore);
-    }
-
-    const withClaims = (claimName: string[]) => {
-        const context: RulesTestContext = testEnv.authenticatedContext("Bob", { userRoles: [...claimName], appUser:true });
-        return repositoryCreator(context);
-    }
-    const writer = () => withClaims(["writer"])
-    
-    function sampleCreation(): PeriodicTaskCreation {
-        return { name: "T1", description: "Description", rule: new EachDay() };
-    }
+ 
 
   
     test(`created object should be listed`, async () => {
-        const creationRepo: Repository = writer();
+        const creationRepo: Repository = helper.writer();
         const dto = sampleCreation();
         await creationRepo.create(dto)
 
