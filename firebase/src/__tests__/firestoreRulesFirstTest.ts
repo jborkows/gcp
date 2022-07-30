@@ -1,10 +1,5 @@
-import {
-    assertFails,
-    assertSucceeds,
-    initializeTestEnvironment,
-    RulesTestEnvironment,
-} from "@firebase/rules-unit-testing"
-import { setDoc, doc } from "firebase/firestore";
+import {assertFails, initializeTestEnvironment, RulesTestEnvironment,} from "@firebase/rules-unit-testing"
+import {doc, setDoc} from "firebase/firestore";
 import * as fs from 'fs';
 import * as path from 'path';
 

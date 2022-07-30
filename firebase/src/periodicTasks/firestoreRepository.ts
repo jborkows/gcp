@@ -1,13 +1,14 @@
 import { DocumentData } from "@firebase/firestore-types";
 import { Temporal } from "@js-temporal/polyfill";
 import * as firestore from "firebase/firestore";
+import { onSnapshot, query, TaskState, updateDoc } from "firebase/firestore";
 import { PeriodicTaskCreation } from "./commands";
 import { PeriodicTaskCompletionData } from "./domain";
 import * as model from "./model";
 import { Repository } from "./service";
 
-type LastExecution =  { at: Temporal.PlainDate, by: model.User, comment: string | null } | null
-const lastExecutionFromData = (data:DocumentData):LastExecution => {
+type LastExecution = { at: Temporal.PlainDate, by: model.User, comment: string | null } | null
+const lastExecutionFromData = (data: DocumentData): LastExecution => {
   if (!data.lastExecution) {
     return null;
   }
@@ -24,16 +25,15 @@ const lastExecutionFromData = (data:DocumentData):LastExecution => {
   }
 }
 
-const nextExecutionFromData = (data:DocumentData): Temporal.PlainDate | null => {
+const nextExecutionFromData = (data: DocumentData): Temporal.PlainDate | null => {
   const day = data.nextExecution
-  if(!day){
+  if (!day) {
     return null;
   }
   return Temporal.PlainDate.from(day);
 }
 
-const ruleFromData = (data:DocumentData): model.Rule => {
-  // ruleType
+const ruleFromData = (data: DocumentData): model.Rule => {
   if (data.ruleType == "EachDay") {
     return model.safeEachNDay(1) as model.Rule
   } else if (data.ruleType == "EachNDay") {
@@ -58,7 +58,7 @@ const taskStateConverter: firestore.FirestoreDataConverter<model.TaskState> = {
     return {
       id: snapshot.id,
       name: snapshot.id,
-      ruleDescription: ruleFromData(data).description(),
+      ruleDescription: data.ruleDescription,
       nextExecution: nextExecutionFromData(data),
       lastExecution: lastExecutionFromData(data)
     }
@@ -81,7 +81,7 @@ export class FirebaseRepository implements Repository {
   constructor(readonly firestoreProvider: () => firestore.Firestore) {
     this._table = "PeriodicTask"
   }
-  
+
 
   async create(p: PeriodicTaskCreation): Promise<model.PeriodicTaskId> {
     await firestore.setDoc(firestore.doc(this.firestoreProvider(), this._table, p.name), {
@@ -93,18 +93,35 @@ export class FirebaseRepository implements Repository {
     return p.name
   }
 
-  update(id: string, p: PeriodicTaskCompletionData): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(id: string, p: PeriodicTaskCompletionData): Promise<void> {
+    const docRef = firestore.doc(this.firestoreProvider(), this._table, id);
+    await updateDoc(docRef, {
+      nextExecution: p.nextExecution ? (p.nextExecution).toString() : null,
+      lastExecution: !p.lastExecution ? null : acceptableByFirestore(p.lastExecution)
+    });
   }
 
   async list(): Promise<model.TaskState[]> {
-    const taskStatesRef = firestore.collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
-    const quired = await firestore.getDocs(taskStatesRef);
-    return quired.docs.map(x => x.data())
+    const taskStatesRef = this.listAllQueryRef();
+    const quired = firestore.getDocs(taskStatesRef);
+    const data = await quired;
+    return data.docs.map(x => x.data())
   }
 
-  onData(fn: (data: model.TaskState[]) => void) {
-    throw new Error("Method not implemented.");
+
+  async onData(fn: (data: model.TaskState[]) => void) {
+    const q = query(this.listAllQueryRef())
+    onSnapshot(q, (querySnapshot) => {
+      const elements: Array<model.TaskState> = []
+      querySnapshot.forEach((doc) => {
+        elements.push(doc.data());
+      });
+      fn(elements);
+    });
+  }
+
+  private listAllQueryRef(): firestore.Query<model.TaskState> {
+    return firestore.collection(this.firestoreProvider(), this._table).withConverter(taskStateConverter);
   }
 
   async findById(id: string): Promise<PeriodicTaskCompletionData> {
@@ -123,32 +140,6 @@ export class FirebaseRepository implements Repository {
   }
 }
 
-
-// const db = getFirestore(getApp());
-// let x = new FirebaseRepository(()=>db)
-/*
-import { doc, onSnapshot } from "firebase/firestore";
-
-const unsub = onSnapshot(
-  doc(db, "cities", "SF"), 
-  { includeMetadataChanges: true }, 
-  (doc) => {
-    // ...
-  });
-
-
-  import { collection, query, where, onSnapshot } from "firebase/firestore";
-
-const q = query(collection(db, "cities"), where("state", "==", "CA"));
-const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  const cities = [];
-  querySnapshot.forEach((doc) => {
-      cities.push(doc.data().name);
-  });
-  console.log("Current cities in CA: ", cities.join(", "));
-}, (error)=>{...});
-*/
-
 interface ArrayReady<T> {
   forEach(callback: (result: firestore.QueryDocumentSnapshot<T>) => void, thisArg?: unknown): void;
 }
@@ -161,4 +152,13 @@ export function asArray<T>(obj: ArrayReady<T>): Array<T> {
     result.push(elem.data());
   });
   return result
+}
+
+function acceptableByFirestore(lastExecution: { at: Temporal.PlainDate; by: model.User; comment: string; }) {
+  return {
+    at: lastExecution.at.toString(),
+    id: lastExecution.by.id,
+    name: lastExecution.by.name,
+    comment: lastExecution.comment
+  }
 }

@@ -1,5 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
-import { CannotConstructNEachDay, safeEachNDay, RuleTemplate } from "../../periodicTasks/model";
+import { CannotConstructNEachDay, safeEachNDay, RuleTemplate } from "../../periodicTasks";
 
 describe("Each N day template", () => {
 

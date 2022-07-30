@@ -1,7 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 
 import * as lib from "../../periodicTasks";
-import { EachNDay } from "../../periodicTasks";
 
 
 describe("Marking as completed", () => {
@@ -10,7 +9,7 @@ describe("Marking as completed", () => {
     const userA: lib.User = { id: "some id", name: "AAAA" };
     const userB: lib.User = { id: "some other id", name: "BBBBB" };
     const lastExecutionDate = Temporal.PlainDate.from("2022-01-01")
-    
+
     it("should be able to mark as completed", () => {
         const periodicTasks = new lib.PeriodicTaskCompletion(
             "some id",
@@ -23,7 +22,7 @@ describe("Marking as completed", () => {
                     comment: "AAA"
                 }
 
-            }    
+            }
         );
         const processed = periodicTasks.accept(new lib.DoneTask({
             user: userB,
@@ -42,7 +41,7 @@ describe("Marking as completed", () => {
                 rule: eachDay,
                 nextExecution: nextExecution,
                 lastExecution: null
-            }    
+            }
         );
         const executedAt = Temporal.PlainDate.from("2022-02-01");
         const processed = periodicTasks.accept(new lib.DoneTask({
@@ -66,7 +65,7 @@ describe("Marking as completed", () => {
                 rule: rule,
                 nextExecution: nextExecution,
                 lastExecution: null
-            }    
+            }
         );
         const executedAt = Temporal.PlainDate.from("2022-02-01");
         const doneTask = new lib.DoneTask({
@@ -76,11 +75,11 @@ describe("Marking as completed", () => {
         });
         const processed = periodicTasks.accept(doneTask)
 
-        const {data } = processed
-        if(data.nextExecution == null){
+        const { data } = processed
+        if (data.nextExecution == null) {
             fail("Cannot be empty")
         }
-        if(data.lastExecution == null){
+        if (data.lastExecution == null) {
             fail("Cannot be empty")
         }
         expect(spy).toHaveBeenCalled();

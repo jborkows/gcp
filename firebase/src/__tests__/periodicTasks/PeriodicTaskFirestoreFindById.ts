@@ -18,7 +18,6 @@ describe("Testing db", () => {
     test(`if cannot find object -> throw exception`, async () => {
         const creationRepo: Repository = helper.writer();
         const dto = sampleCreation();
-        // await creationRepo.create(dto)
 
         try {
             await creationRepo.findById(dto.name)
